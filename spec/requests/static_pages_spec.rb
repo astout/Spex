@@ -6,7 +6,7 @@ describe "Static pages" do
 
     it "should have the content 'Goal Zero Tech Specs'" do
       visit '/static_pages/home'
-      expect(page).to have_content('Goal Zero Tech Specs')
+      expect(page).to have_content('GZSpex')
     end
   end
 
@@ -15,6 +15,11 @@ describe "Static pages" do
     it "should have the content 'Help'" do
       visit '/static_pages/help'
       expect(page).to have_content('Help')
+    end
+
+    it "should have the content 'Goal Zero Tech Specs'" do
+      visit '/static_pages/home'
+      expect(page).to have_content('GZSpex')
     end
   end
 end

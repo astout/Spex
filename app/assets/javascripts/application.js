@@ -12,5 +12,19 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require bootstrap
 //= require turbolinks
 //= require_tree .
+
+$(function()
+{
+    // $("div.alert-notice").attr('class', 'alert alert-info');
+    micropostCharCount();
+    // if()
+});
+
+function micropostCharCount() {
+    var currentLength = $("textarea#micropost_content").val().length;
+    var remaining = 140 - currentLength;
+    $("span#char-counter").html("Characters left: " + remaining);
+}
