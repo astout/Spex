@@ -1,0 +1,7 @@
+<ol class="property_associations" id="parents">
+    <% if @parent_relations.any? %>
+        <%= render partial: 'parent_item', collection: @parent_relations %>
+        <%= will_paginate @parent_relations %>
+    <% end %>
+</ol>
+  

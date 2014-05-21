@@ -19,12 +19,21 @@
 $(function()
 {
     // $("div.alert-notice").attr('class', 'alert alert-info');
-    micropostCharCount();
+    // micropostCharCount();
     // if()
 });
 
-function micropostCharCount() {
-    var currentLength = $("textarea#micropost_content").val().length;
-    var remaining = 140 - currentLength;
-    $("span#char-counter").html("Characters left: " + remaining);
+$('.link_to_add_property_association').bind('ajax:beforeSend', function() {
+
+});
+
+$('.link_to_add_property_association').bind('ajax:complete', function() {
+    
+});
+
+function add_parent (parent_id) {
+    $('#add_property_'+parent_id).hide();
+    var html = "<li id="+parent_id+">"+parent_id+"</li> ";
+    $('#parents').append(html);
 }
+

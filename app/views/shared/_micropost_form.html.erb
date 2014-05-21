@@ -1,9 +1,0 @@
-<%= bootstrap_form_for(@micropost, inline_errors: false) do |f| %>
-    <%= render 'shared/error_messages', object: f.object %>
-    <div class="field">
-        <%= f.text_area :content, placeholder: "Compose new micropost...", maxlength: "140",
-                onkeyup: "micropostCharCount()",  hide_label: true %>
-    </div>
-    <%= f.submit "Post", class: "btn btn-large btn-primary btn75" %>
-    <span id="char-counter"></span>
-<% end %>

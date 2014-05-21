@@ -1,15 +1,15 @@
-<% @user ||= current_user %>
+<% @property %>
 <div class="stats">
-  <a href="<%= following_user_path(@user) %>">
-    <strong id="following" class="stat">
-      <%= @user.followed_users.count %>
+  <a href="<%= children_property_path(@property) %>">
+    <strong id="children" class="stat">
+      <%= @property.children.count %>
     </strong>
-    following
+    children
   </a>
-  <a href="<%= followers_user_path(@user) %>">
-    <strong id="followers" class="stat">
-      <%= @user.followers.count %>
+  <a href="<%= parents_property_path(@property) %>">
+    <strong id="parents" class="stat">
+      <%= @properties.parents.count %>
     </strong>
-    followers
+    parents
   </a>
 </div>

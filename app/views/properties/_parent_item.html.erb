@@ -1,0 +1,10 @@
+<li id="<%= parent_item.parent_id %>">
+    <span class="user">
+      <%= link_to parent_item.parent.name, parent_item.parent %>
+    </span>
+  <% if current_user.admin? %>
+    | <%= link_to "remove", parent_item, method: :delete,
+                                     data: { confirm: "You sure?" },
+                                     title: parent_item.parent.name %>
+  <% end %>
+</li>

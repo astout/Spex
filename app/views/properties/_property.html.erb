@@ -1,0 +1,7 @@
+<li>
+  <%= link_to property.name, property %>
+  <% if current_user.admin? %>
+    | <%= link_to "delete", property, method: :delete,
+                                  data: { confirm: "You sure?" } %>
+  <% end %>
+</li>

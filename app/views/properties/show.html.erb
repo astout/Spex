@@ -1,0 +1,30 @@
+<% provide(:title, @property.name) %>
+<div class="row">
+    <aside class="col-xs-4">
+        <section>
+            <h1>
+                <%= @property.name %>
+            </h1>
+            <small class="note"><%= @property.default_label %></small>
+            <div style="float: right">
+            <%= link_to "Edit", edit_property_path(@property), class: "btn btn75 btn-primary" %>
+            </div>
+        </section>
+        <section>
+        </section>
+    </aside>
+    <div class="col-xs-8">
+        <h3>Parents</h3>
+        <%= render 'parents' %>
+        <hr/>
+        <h3>Children</h3>
+        <%= render 'children' %>
+    </div>
+</div>
+<div class="row">
+    <hr/>
+    <h4>Add Properties</h4>
+    <span class="col-xs-10 col-xs-offset-1">
+        <%= render 'add_properties' %>
+    </span>
+</div>

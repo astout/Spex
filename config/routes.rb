@@ -1,5 +1,13 @@
 Spex::Application.routes.draw do
+  get "properties/new"
   resources :users
+  resources :property_associations
+  resources :properties do
+    member do
+      get :children, :parents
+      post :own
+    end  
+  end
 
   resources :sessions, only: [:new, :create, :destroy]
   root 'static_pages#home'

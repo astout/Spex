@@ -1,0 +1,5 @@
+<%= bootstrap_form_for(property_associations_path(parent: add_property, child: current_property), html: { method: :post }, inline_errors: false, remote: true) do |f| %>
+  <div><%=%></div>
+  <div><%=%></div>
+  <%= f.submit "Add As Parent", class: "btn btn-primary", style: "width: 150px" %>
+<% end %>

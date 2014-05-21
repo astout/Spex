@@ -196,11 +196,15 @@ input {
 }
 
 input.btn150 {
+  float: right;
+  right: 0px;
   width: 150px;
 }
 
 input.btn75{
   width: 75px;
+  right: 0px;
+  float: right;
 }
 
 input[name='commit'] {
@@ -237,7 +241,7 @@ input[name='commit'] {
 
 /* microposts */
 
-.microposts {
+.property_associations {
   list-style: none;
   margin: 10px 0 0 0;
 
@@ -282,6 +286,10 @@ div#navigation-group {
 span#char-counter {
   color: $gray-light;
   float: right;
+}
+
+small.note {
+    color: $gray-light;
 }
 
 // div#nav-btn-group {
