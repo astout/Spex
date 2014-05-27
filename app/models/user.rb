@@ -1,6 +1,6 @@
 class User < ActiveRecord::Base
   before_save do
-    self.email = email.downcase
+    self.email = email.downcase unless self.email.blank?
     self.login = login.downcase
   end
   before_create :create_remember_token
@@ -11,7 +11,7 @@ class User < ActiveRecord::Base
       length: { minimum: 3, maximum: 18 },
       uniqueness: { case_sensitive: false }
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
-    validates :email, presence: true, format: { with: VALID_EMAIL_REGEX },
+    validates :email, format: { with: VALID_EMAIL_REGEX }, allow_blank: true,
       uniqueness: { case_sensitive: false }
   validates :role,  presence: true
   has_secure_password

@@ -1,11 +1,22 @@
 Spex::Application.routes.draw do
+  # get "entities/index"
+  get "entities/new"
+  # get "entities/edit"
+  # get "entities/show"
   get "properties/new"
   resources :users
   resources :property_associations
+  resources :entity_property_relationships
   resources :properties do
     member do
       get :children, :parents
       post :own
+    end  
+  end
+  resources :entities do
+    member do
+      get :properties
+      post :employ
     end  
   end
 

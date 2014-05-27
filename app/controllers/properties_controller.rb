@@ -14,11 +14,6 @@ class PropertiesController < ApplicationController
     @child_relations = @property.child_relations.paginate(page: params[:page])
     @parents = @property.parents.paginate(page: params[:page])
     @parent_relations = PropertyAssociation.where(child_id: @property.id).paginate(page: params[:page])
-    # @children = WillPaginate::Collection.create(page: params[:page], per_page: 10, children.length) do |pager|
-    #   pager.replace children
-    # end
-    # @children = PropertyAssociation.find_by(parent_id: params[:id])
-    # @parents = PropertyAssociation.find_by(child_id: params[:id])
   end
 
   def own
@@ -27,7 +22,6 @@ class PropertiesController < ApplicationController
   end
 
   def new
-    # redirect_to(root_url) unless current_user.admin?
     @property = Property.new
   end
 
@@ -56,12 +50,7 @@ class PropertiesController < ApplicationController
   end
 
   def destroy
-    # Property.find(params[:id]).destroy if current_user.admin?
-    # flash[:success] = "Property deleted."
-    # redirect_to properties_url
     @property = Property.find(params[:id])
-    @property.flee_all!
-    @property.disown_all!
     @property.destroy
     flash[:success] = "Property deleted."
     redirect_to properties_url

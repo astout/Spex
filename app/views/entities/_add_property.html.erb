@@ -1,0 +1,11 @@
+<% unless current_entity.employs?(add_property) %>
+    <li id="add_property_<%= add_property.id %>">
+        <span class="user">
+          <%= link_to add_property.name, add_property %>
+        </span>
+      <% if current_user.admin?  %>
+        |
+        <%= link_to "Add Property", entity_property_relationships_path(entity: current_entity, property: add_property), class: "link_to_add_entity_property_relationship", method: :post %>
+      <% end %>
+    </li>
+<% end %>

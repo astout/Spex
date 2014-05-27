@@ -1,24 +1,20 @@
-<% provide(:title, @property.name) %>
+<% provide(:title, @entity.name) %>
 <div class="row">
     <aside class="col-xs-4">
         <section>
             <h1>
-                <%= @property.name %>
+                <%= @entity.name %>
             </h1>
-            <small class="note"><%= @property.default_label %></small>
+            <small class="note"><%= @entity.label %></small>
             <div style="float: right">
-            <%= link_to "Edit", edit_property_path(@property), class: "btn btn75 btn-primary btn-sm" %>
+            <%= link_to "Edit", edit_entity_path(@entity), class: "btn btn75 btn-primary btn-sm" %>
             </div>
         </section>
         <section>
         </section>
     </aside>
     <div class="col-xs-8">
-        <h3>Parents</h3>
-        <%= render 'parents' %>
-        <hr/>
-        <h3>Children</h3>
-        <%= render 'children' %>
+        <%= render 'properties' %>
     </div>
 </div>
 <div class="row">

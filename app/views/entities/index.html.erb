@@ -1,0 +1,11 @@
+<% provide(:title, 'All Entities') %>
+<h1>All Entities</h1>
+
+<%= will_paginate %>
+
+<%= link_to "Create New", new_entity_path, class: "btn btn-primary btn-sm", style: "float: right"%>
+<ul class="entities">
+  <%= render @entities %>
+</ul>
+
+<%= will_paginate %>
