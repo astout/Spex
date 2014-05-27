@@ -301,6 +301,24 @@ small.note {
     color: $gray-light;
 }
 
+div#property-associations {
+  float: left;
+  width: 50%;
+}
+
+div#entity-employers {
+  float: left;
+  width: 50%;
+}
+
+div.panel {
+  min-width: 65px;
+}
+
+// div#property-relationships {
+//   width: 95%;
+// }
+
 // div#nav-btn-group {
 //  float: left;
 // }

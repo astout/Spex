@@ -8,7 +8,6 @@ class PropertiesController < ApplicationController
   end
 
   def show
-    @properties = Property.paginate(page: params[:page])
     @property = Property.find(params[:id])
     @children = @property.children.paginate(page: params[:page])
     @child_relations = @property.child_relations.paginate(page: params[:page])
@@ -37,6 +36,7 @@ class PropertiesController < ApplicationController
 
   def edit
     @property = Property.find(params[:id])
+    @properties = Property.paginate(page: params[:page])
   end
 
   def update

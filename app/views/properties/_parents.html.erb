@@ -1,7 +1,12 @@
-<ol class="property_associations" id="parents">
-    <% if @parent_relations.any? %>
-        <%= render partial: 'parent_item', collection: @parent_relations %>
-        <%= will_paginate @parent_relations %>
-    <% end %>
-</ol>
+<div class="panel panel-default property_associations" id="parents">
+    <div class="panel-heading">
+        <h5 class="panel-title">Parents</h5>
+    </div>
+    <div class="panel-body">
+        <% if @parent_relations.any? %>
+            <%= render partial: 'parent_item', collection: @parent_relations %>
+            <%= will_paginate @parent_relations %>
+        <% end %>
+    </div>
+</div>
   
