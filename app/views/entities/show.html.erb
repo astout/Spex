@@ -1,26 +1,18 @@
 <% provide(:title, @entity.name) %>
 <div class="row">
     <aside class="col-xs-4">
+        <small><a style="color: #494A4A" href="<%= entities_path %>">Entities</a></small>
         <section>
             <h1>
                 <%= @entity.name %>
             </h1>
             <small class="note"><%= @entity.label %></small>
             <div style="float: right">
-            <%= link_to "Edit", edit_entity_path(@entity), class: "btn btn75 btn-primary btn-sm" %>
+            <a href="<%= edit_entity_path(@entity) %>" class="btn btn75 btn-primary btn-sm" data-toggle="tooltip" data-placement="bottom" title="Edit attributes &amp; properties">Edit</a>
             </div>
         </section>
-        <section>
-        </section>
     </aside>
-    <div class="col-xs-8">
-        <%= render 'properties' %>
+    <div class="col-xs-8" id="entity_properties">
+        <%= render 'show_properties' %>
     </div>
-</div>
-<div class="row">
-    <hr/>
-    <h4>Add Properties</h4>
-    <span class="col-xs-10 col-xs-offset-1">
-        <%= render 'add_properties' %>
-    </span>
 </div>

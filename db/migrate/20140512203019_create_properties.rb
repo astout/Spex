@@ -4,10 +4,12 @@ class CreateProperties < ActiveRecord::Migration
       t.string :name
       t.string :units
       t.string :units_short
-      t.string :type
+      t.string :default_label
+      t.string :default_value
+      t.integer :default_visibility
 
       t.timestamps
     end
-    add_index :properties, [:name]
+    add_index :properties, [:name], unique: true
   end
 end

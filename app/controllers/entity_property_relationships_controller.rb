@@ -9,9 +9,21 @@ class EntityPropertyRelationshipsController < ApplicationController
     @property = Property.find(params[:property])
     @relationship = EntityPropertyRelationship.new(entity_id: @entity.id, property_id: @property.id)
     if @relationship.save
-      flash[:success] = "Property Added to " + @entity.name
+      child_results = create_child_eprs(@entity, @property)
+      result = !child_results.any? {|item| item[:result] == false}
+      if result
+        flash[:success] = "'" + @property.name + "' added to '" + @entity.name + "'"
+      else
+        message = ""
+        child_results.each do |item|
+          if item[:result] == false
+            message += "'" + item[:property].name + "' not able to be added.\n"
+          end
+        end
+        flash.now[:danger] = message
+      end
     else
-      flash.now[:danger] = "Property Not Added " + @entity.name 
+      flash.now[:danger] = "'" + @property.name + "' not Added " + @entity.name 
     end
     redirect_to session.delete(:return_to)
   end
@@ -23,4 +35,22 @@ class EntityPropertyRelationshipsController < ApplicationController
     flash[:success] = "'" + @relation.property.name + "' removed from '" + @relation.entity.name + "'"
     redirect_to session.delete(:return_to)
   end
+
+  private
+
+    def create_child_eprs(entity, property)
+      results = []
+      result = nil
+      property.descendants.each do |descendant|
+        relationship = EntityPropertyRelationship.new(entity_id: entity.id, property_id: descendant.id)
+        if relationship.save
+          result = true
+        else
+          result = false
+        end
+        r = {property: descendant, result: result}
+        results ||= r
+      end
+    end
+
 end

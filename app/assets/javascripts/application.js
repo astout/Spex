@@ -18,10 +18,40 @@
 
 $(function()
 {
-    // $("div.alert-notice").attr('class', 'alert alert-info');
-    // micropostCharCount();
-    // if()
+    $('.panel-collapse').collapse("hide");
+    $('.panel-collapse').collapse("show");
+    $('.panel-collapse').collapse("hide");
+    
+    $("a[data-toggle='tooltip']").tooltip();
+    // collapisbles();
+
 });
+
+function collapisbles () {
+    $(".nav-sidenav > li").on("show.bs.collapse", function () {
+        $(this).addClass("sidenav-active-background");
+    });
+    $(".panel").on("hidden.bs.collapse", function (e) {
+        e.stopPropagation();
+        $('.glyphicon-chevron-down').addClass("glyphicon-chevron-right");
+        $('.glyphicon-chevron-down').removeClass("glyphicon-chevron-down");
+        alert("hidden");
+    });
+
+}
+
+function toggleCollapseGlyph (tag) {
+    if($(tag).hasClass("glyphicon-chevron-right"))
+    {
+        $(tag).removeClass("glyphicon-chevron-right");
+        $(tag).addClass("glyphicon-chevron-down");
+    }
+    else if ($(tag).hasClass("glyphicon-chevron-down")) 
+    {
+        $(tag).removeClass("glyphicon-chevron-down");
+        $(tag).addClass("glyphicon-chevron-right");
+    }
+}
 
 $('.link_to_add_property_association').bind('ajax:beforeSend', function() {
 
