@@ -15,19 +15,12 @@ class Property < ActiveRecord::Base
   #Adds the given property as the group of this property
   def serve!(group)
     group.own!(self)
-    # return if group.class != Group
-    # temp = Group.find_by(id: group.id)
-    # return if temp.nil?
-    # temp = Property.find_by(id: self.id)
-    # return if temp.nil?
-    # GroupPropertyRelationship.create!(group_id: group.id, property_id: self.id, order: group.properties.count)
   end
 
   #True if the given property is an immediate group of this property
   def serves?(group)
     return if group.class != Group
     group.owns?(self)
-    # GroupPropertyRelationship.where(group_id: group.id, property_id: self.id).any?
   end
 
   #An array of all immediate group properties of this property
@@ -43,19 +36,10 @@ class Property < ActiveRecord::Base
     GroupPropertyRelationship.where(property_id: self.id)
   end
 
-
   #Breaks the relationship of this property to the given group
   def flee!(group)
     return if group.class != Group
     group.disown!(self)
-    # relationship = GroupPropertyRelationship.find_by(group_id: group.id, property_id: self.id)
-    # return if relationship.nil?
-    # if relationship.order.nil?
-    #   return relationship.destroy
-    # end
-    # index = relationship.order
-    # relationship.destroy
-    # self.update_order(nil, index)
   end
 
   #Break relationship between property and all its groups
@@ -69,22 +53,6 @@ class Property < ActiveRecord::Base
   # # # PROPERTY TO ENTITY
   ########################
 
-
-  # #will also create an indirect relationship between the descendants
-  # #of this property and the given the entity
-  # def serve_entity!(entity)
-  #   return if entity.class != Entity
-  #   entity = Entity.find_by(id: entity.id)
-  #   return if entity.nil?
-  #   last_index = entity.properties.count - 1
-  #   EntityPropertyRelationship.create!(entity_id: entity.id, property_id: self.id, order: last_index)
-  # end
-
-  # #implies a direct relationship between this property and the given entity
-  # def serves_entity_directly?(entity)
-  #   return if entity.class != Entity
-  #   entity.employs?(self)
-  # end
 
   #implies a vicarious relationship between this property and the given entity
   #means that this property or one of its groups is employed by the given entity
@@ -106,23 +74,5 @@ class Property < ActiveRecord::Base
   def entity_relations
     EntityPropertyRelationship.where(property_id: self.id)
   end
-
-  # #breaks the direct relationship from this property and the given entity
-  # def flee_entity!(entity)
-  #   return if entity.class != Entity
-  #   relationship = EntityPropertyRelationship.find_by(entity_id: entity.id, property_id: self.id)
-  #   return if relationship.nil?
-  #   return if !relationship.group_id.nil?
-  #   index = relationship.order
-  #   relationship.destroy
-  #   entity.update_order(index)
-  # end
-
-  # #breaks all direct relationships from this property and the entities it serves
-  # def flee_all_entities!
-  #   self.entities.each do |entity|
-  #     self.flee_entity!(entity)
-  #   end
-  # end
-
+  
 end

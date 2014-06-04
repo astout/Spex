@@ -12,23 +12,21 @@ class Entity < ActiveRecord::Base
   # # # ENTITY TO GROUP
   #####################
 
+  #creates an EntityGroupRelationship between this entity and the given group
   def own!(group)
     return if group.class != Group
     group = Group.find_by(id: group.id)
     return if group.nil?
     EntityGroupRelationship.create!(entity_id: self.id, group_id: group.id, order: self.groups.count)
-
-    # group.properties.each do |property|
-    #   self.utilize!(property, group)
-    # end
   end
 
+  # returns true if there exists an EntityGroupRelationship between the entity and the given group
   def owns?(group)
     return if group.class != Group
     self.groups.any? {|g| g[:id] == group.id}
-    # EntityGroupRelationship.where(entity_id: self.id, group_id: group.id)
   end
 
+  #returns an array of groups associated with this entity through EntityGroupRelationships
   def groups
     groups = []
     self.group_relations.each do |r|
@@ -37,22 +35,28 @@ class Entity < ActiveRecord::Base
     groups
   end
 
+  #returns the EntityGroupRelationships associated with this entity sorted
+  #by the order field
   def group_relations
     relations = EntityGroupRelationship.where(entity_id: self.id)
     relations.sort_by { |r| r[:order] }
   end
 
+  #gives the EntityGroupRelationship between the entity and the given group
   def relation_for(group)
     return if group.class != Group
     self.group_relations.select { |r| r[:group_id] == group.id }.first
   end
 
+  #gives the EntityPropertyRelationship between the entity and the given property via the
+  #given group
   def relation_for_via(property, group)
     return if group.class != Group
     return if property.class != Property
     self.property_relations.select { |r| r[:property_id] == property.id && r[:group_id] == group.id }.first
   end
 
+  #destroys the EntityGroupRelationship between the entity and the given group
   def disown!(group)
     return if group.class != Group
     e = Entity.find_by(id: self.id)
@@ -65,7 +69,6 @@ class Entity < ActiveRecord::Base
     index = relationship.order
     relationship.destroy
     self.update_order(index)
-    EntityPropertyRelationship.destroy_all(group_id: group.id)
   end
 
   #removes all relationships between this entity and its groups
@@ -79,27 +82,8 @@ class Entity < ActiveRecord::Base
   # # # ENTITY TO PROPERTY
   ########################
 
-  def utilize!(property, group)
-    #check classes of parameters, also checks not nil
-    return if property.class != Property
-    return if group.class != Group
-    #obtains the true db copies of the parameters
-    property = Property.find_by(id: property.id)
-    group = Group.find_by(id: group.id)
-    #set order to be the count of properties for this entity via the group
-    # order = self.property_relations_via(group).count
-    #store the relationship of the property and group
-    pr = group.relation_for(property)
-    return if pr.nil?
-    #set order to be the default order
-    order = pr.order
-    if self.property_relations.select { |r| r[:group_id] == group.id && r[:order] == order }.any?
-      order = self.property_relations_via(group).count    
-    end
-    EntityPropertyRelationship.create!(entity_id: self.id, group_id: group.id, 
-      property_id: property.id, order: order)
-  end
-
+  #returns true if there is a EntityPropertyRelationship between the entity and
+  #the given property
   def utilizes?(property)
     return if property.class != Property
     property = Property.find_by(id: property.id)
@@ -111,30 +95,12 @@ class Entity < ActiveRecord::Base
   def property_relations
     relations = EntityPropertyRelationship.where(entity_id: self.id)
     relations.sort_by { |r| r[:order] }
-    # self.entity_property_relationships
   end
 
   def property_relations_via(group)
-    # EntityPropertyRelationship.where(entity_id: self.id group_id: group.id)
     relations = self.property_relations.select { |r| r[:group_id] == group.id }
     relations.sort_by { |r| r[:order] }
   end
-
-  # def toss_via!(property, group)
-  #   return if property.class != Property
-  #   return if group.class != Group
-  #   e = Entity.find_by(id: self.id)
-  #   return if e.nil?
-  #   relationship = EntityPropertyRelationship.find_by(entity_id: self.id, property_id: property.id, group_id: group.id)
-  #   return if relationship.nil?
-  #   if relationship.order.nil?
-  #     return relationship.destroy
-  #   end
-  #   index = relationship.order
-  #   relationship.destroy
-  #   self.update_group_order(index)
-  #   # EntityPropertyRelationship.destroy_all(property_id: property.id)
-  # end
 
   # an array of all employed properties
   def properties
@@ -149,7 +115,6 @@ class Entity < ActiveRecord::Base
   def properties_via(group)
     properties = []
     property_relations_via(group).each do |relationship|
-      # property = Property.find_by(id: relationship.property_id)
       property = relationship.property
       properties.push(property)
     end
@@ -200,21 +165,17 @@ class Entity < ActiveRecord::Base
       next if r == relationship
       if r.order.nil?
         r.update_attribute(:order, last -= 1)
-        # r.order = last -= 1
-        # r.save
       else
         if r.order < line
           r.update_attribute(:order, r.order + 1)
-          # r.order += 1 
-          # r.save
         end
       end
     end
     relationship.update_attribute(:order, 0)
-    # relationship.order = 0
-    # relationship.save
   end
 
+  #moves the given property up (decrement order) in order with the associated group
+  #also moves the property above it down (increment order)
   def up_via!(property, group)
     #parameter passed a property type?
     return if property.class != Property
@@ -228,14 +189,14 @@ class Entity < ActiveRecord::Base
     return if relationship.order == 0
     #relationship after property
     swap = self.property_relations_via(group)[relationship.order - 1]
-    # swap = self.relation_at_via(relationship.order - 1, group)
-    # swap = relationships.select { |r| r[:order] == relationship.order + 1 }
     #move the property below the passed property up
     swap.update_attribute(:order, swap.order + 1)
     #move the passed property down
     relationship.update_attribute(:order, relationship.order - 1)
   end
 
+  #moves the given property down (increment order) in order with the associated group
+  #also moves the property below it up (decrement order)
   def down_via!(property, group)
     #parameter passed a property type?
     return if property.class != Property
@@ -249,8 +210,6 @@ class Entity < ActiveRecord::Base
     return if relationship.order == relationships.count - 1
     #relationship after property
     swap = self.property_relations_via(group)[relationship.order + 1]
-    # swap = self.relation_at_via(relationship.order + 1, group)
-    # swap = relationships.select { |r| r[:order] == relationship.order + 1 }
     #move the property below the passed property up
     swap.update_attribute(:order, swap.order - 1)
     #move the passed property down
@@ -286,19 +245,13 @@ class Entity < ActiveRecord::Base
       next if r == relationship
       if r.order.nil?
         r.update_attribute(:order, last -= 1)
-        # r.order = last -= 1
-        # r.save
       else
         if r.order > line
           r.update_attribute(:order, r.order - 1)
-          # r.order -= 1
-          # r.save
         end
       end
     end
     relationship.update_attribute(:order, relationships.count - 1)
-    # relationship.order = relationships.count - 1
-    # relationship.save
   end
 
   #returns the property that is first in ordering
@@ -311,16 +264,6 @@ class Entity < ActiveRecord::Base
     Property.find_by(id: last_relationship.property_id)
   end
 
-  #returns the property that is last in ordering
-  # def last
-  #   relationships = self.property_relations
-  #   last_index = relationships.count - 1
-  #   last_order_relationship = relationships.select { |child| child[:order] == last_index }[0]
-  #   return if last_order_relationship.nil?
-  #   Property.find_by(id: last_order_relationship.property_id)
-  # end
-
-  #################
   # # # GROUP ORDER
   #################
 
@@ -358,19 +301,13 @@ class Entity < ActiveRecord::Base
       next if r == relationship
       if r.order.nil?
         r.update_attribute(:order, last -= 1)
-        # r.order = last -= 1
-        # r.save
       else
         if r.order < line
           r.update_attribute(:order, r.order + 1)
-          # r.order += 1 
-          # r.save
         end
       end
     end
     relationship.update_attribute(:order, 0)
-    # relationship.order = 0
-    # relationship.save
   end
 
   #returns the property that is first in ordering
@@ -378,7 +315,6 @@ class Entity < ActiveRecord::Base
     first_relationship = self.group_relations.select { |r| r[:order] == 0 }.first
     return if first_relationship.nil?
     first_relationship.group
-    # Group.find_by(id: first_relationship.group_id)
   end
 
   #moves the specified group up in order and moves the group above it down
@@ -388,7 +324,6 @@ class Entity < ActiveRecord::Base
     return if relationship.nil?
     return if relationship.order == 0
     r = self.group_relations[relationship.order - 1]
-    # r = self.relation_at(relationship.order - 1)
     r.update_attribute(:order, relationship.order)
     relationship.update_attribute(:order, relationship.order - 1)
   end
@@ -426,19 +361,13 @@ class Entity < ActiveRecord::Base
       next if r == relationship
       if r.order.nil?
         r.update_attribute(:order, last -= 1)
-        # r.order = last -= 1
-        # r.save
       else
         if r.order > line
           r.update_attribute(:order, last - 1)
-          # r.order -= 1
-          # r.save
         end
       end
     end
     relationship.update_attribute( :order, relationships.count - 1 )
-    # relationship.order = relationships.count - 1
-    # relationship.save
   end
 
   #returns the property that is last in ordering
@@ -448,7 +377,6 @@ class Entity < ActiveRecord::Base
     last_relationship = relationships.select { |child| child[:order] == last_index }.first
     return if last_relationship.nil?
     last_relationship.group
-    # Group.find_by(id: last_relationship.property_id)
   end
 
 end

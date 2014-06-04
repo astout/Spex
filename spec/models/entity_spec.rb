@@ -26,7 +26,7 @@ describe Entity do
   it { should respond_to(:relation_for) }
   it { should respond_to(:relation_for_via) }
   it { should respond_to(:own!) }
-  it { should respond_to(:utilize!) }
+  # it { should respond_to(:utilize!) }
   it { should respond_to(:owns?) }
   it { should respond_to(:utilizes?) }
   it { should respond_to(:property_relations) }
@@ -420,45 +420,44 @@ describe Entity do
 
   describe "Property Relationships" do
 
-    describe "#utilize!" do
-      it "should not be able to utilize non-Property type" do
-        @entity = Entity.create!(name: "entity")
-        @group = Group.create!(name: "group")
+    # describe "#utilize!" do
+    #   it "should not be able to utilize non-Property type" do
+    #     @entity = Entity.create!(name: "entity")
+    #     @group = Group.create!(name: "group")
 
-        @a = [1]
-        @entity.utilize!(@a, @group).should eq(nil)
+    #     @a = [1]
+    #     @entity.utilize!(@a, @group).should eq(nil)
 
-        @a = 1
-        @entity.utilize!(@a, @group).should eq(nil)
+    #     @a = 1
+    #     @entity.utilize!(@a, @group).should eq(nil)
 
-        @a = Entity.create!(name: "test")
-        @entity.utilize!(@a, @group).should eq(nil)
+    #     @a = Entity.create!(name: "test")
+    #     @entity.utilize!(@a, @group).should eq(nil)
         
-      end
+    #   end
 
-      it "should create an entity property relationship" do
-        @entity = Entity.create!(name: "entity")
+    #   it "should create an entity property relationship" do
+    #     @entity = Entity.create!(name: "entity")
 
-        @property = Property.create!(name: "property")
+    #     @property = Property.create!(name: "property")
 
-        @group = Group.create!(name: "group")
-        @group.own!(@property)
+    #     @group = Group.create!(name: "group")
+    #     @group.own!(@property)
 
-        @entity.utilize!(@property, @group).class.should eq(EntityPropertyRelationship)
-      end
-    end
+    #     @entity.utilize!(@property, @group).class.should eq(EntityPropertyRelationship)
+    #   end
+    # end
 
     describe "#utilizes?" do
       it "should return true if a relationship exists" do
         @entity = Entity.create!(name: "entity")
-        @entity.save
 
         @property = Property.create!(name: "property")
 
         @group = Group.create!(name: "group")
         @group.own!(@property)
 
-        @entity.utilize!(@property, @group)
+        @entity.own!(@group)
 
         @entity.utilizes?(@property).should eq(true)
       end
