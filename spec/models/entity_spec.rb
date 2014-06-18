@@ -21,12 +21,9 @@ describe Entity do
   it { should respond_to(:entity_property_relationships) }
   it { should respond_to(:entity_group_relationships) }
   it { should respond_to(:group_relations) }
-  # it { should respond_to(:relation_at) }
-  # it { should respond_to(:relation_at_via) }
   it { should respond_to(:relation_for) }
   it { should respond_to(:relation_for_via) }
   it { should respond_to(:own!) }
-  # it { should respond_to(:utilize!) }
   it { should respond_to(:owns?) }
   it { should respond_to(:utilizes?) }
   it { should respond_to(:property_relations) }

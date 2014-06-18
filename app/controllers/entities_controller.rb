@@ -1,10 +1,18 @@
 class EntitiesController < ApplicationController
+  # helper_method :entity_sort_column, :entity_sort_direction, :group_sort_column, :group_sort_direction
+
   before_action do
-    redirect_to root_url unless current_user.admin?
+    unless current_user.nil?
+      redirect_to root_url unless current_user.admin?
+    else
+      redirect_to root_url
+    end
   end
+ 
 
   def index
-    @entities = Entity.paginate(page: params[:page])
+    # @entities = Entity.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(page: params[:entities_page])
+    @entities = Entity.search(params[:entity_search]).order(entity_sort_column + ' ' + entity_sort_direction).paginate(page: params[:entities_page])
   end
 
   def new
@@ -12,13 +20,52 @@ class EntitiesController < ApplicationController
   end
 
   def create
-    @entity = Entity.new(entity_params)
-    if @entity.save
-      flash[:success] = "'" + @entity.name + "' created."
-      redirect_to @entity
-    else
-      render 'new'
+    @entity = Entity.find_by(name: entity_params[:name])
+    @result = {msg: "", r: -1}
+    @entities = Entity.search(params[:entity_search]).order(entity_sort_column + ' ' + entity_sort_direction).paginate(page: params[:entities_page], per_page: 10, order: 'created_at DESC')
+
+    respond_to do |format|
+      if @entity.nil?
+        @entity = Entity.new(entity_params)
+        if !@entity.save
+          @result[:r] = 0
+          @result[:msg] = "'#{@entity.name}' failed to save."
+        else
+          @result[:r] = 1
+          @result[:msg] = "'#{@entity.name}' was saved."
+          #entities needs to be updated to get the latest addition
+          @entities = Entity.search(params[:entity_search]).order(entity_sort_column + ' ' + entity_sort_direction).paginate(page: params[:entities_page], per_page: 10, order: 'created_at DESC')
+        end
+      else
+        @result[:r] = 0
+        @result[:msg] = "Name: '#{@entity.name}' is already taken."
+      end
+      params.delete :commit
+      params.delete :entity
+      format.js
+      format.html { redirect_to hub_path }
     end
+
+
+    # @entity = Entity.new(entity_params)
+    # @result = {msg: "", r: -1}
+
+    # respond_to do |format|
+    #   if !@entity.save
+    #     @result[:r] = 0
+    #     @result[:msg] = "'#{@entity.name}' failed to save."
+    #   else
+    #     @result[:r] = 1
+    #     @result[:msg] = "'#{@entity.name}' was saved."
+    #   end
+    #   format.js
+    # end
+    # if @entity.save
+    #   flash[:success] = "'" + @entity.name + "' created."
+    #   redirect_to @entity
+    # else
+    #   render 'new'
+    # end
   end
 
   def edit
@@ -54,6 +101,20 @@ class EntitiesController < ApplicationController
     @entity.destroy
     flash[:success] = "'" + @entity.name + "' deleted"
     redirect_to entities_url
+  end
+
+  def groups
+    puts " - - - - - - - - - - - - - HEY LOOK HERE - - - - - - - - - - - - - "
+    puts params[:id]
+    @fetched_entity = Entity.find(params[:id])
+    @entitys_groups = @fetched_entity.groups.paginate(page: params[:entitys_groups_page], per_page: 10, order: 'created_at DESC')
+
+    # respond_to do |format|
+    #   #
+    # end
+    # format.js
+    # format.html { redirect_to entities_path }
+    # puts
   end
 
   private

@@ -11,8 +11,8 @@ module EntitiesHelper
     entity == current_entity
   end
 
-  def link_to_add_property(entity, property)
-    link_to "Add Property", controller: :entity_property_relationships, 
-      action: :create,  method: :post, entity_id: entity.id, property_id: property.id
-  end  
+  # def link_to_add_property(entity, property)
+  #   link_to "Add Property", controller: :entity_property_relationships, 
+  #     action: :create,  method: :post, entity_id: entity.id, property_id: property.id
+  # end  
 end

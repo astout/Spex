@@ -18,14 +18,52 @@
 
 $(function()
 {
-    $('.panel-collapse').collapse("hide");
-    $('.panel-collapse').collapse("show");
-    $('.panel-collapse').collapse("hide");
-    
-    $("a[data-toggle='tooltip']").tooltip();
-    // collapisbles();
+
+    $('#entities').on('click', "th a", function () {
+        $.getScript(this.href);
+        return false;
+    });
+
+    $('#groups').on('click', "th a", function () {
+        $.getScript(this.href);
+        return false;
+    });
+
+    $("body").on("click", '.pagination a', function(e){
+      e.preventDefault();
+      $.getScript(this.href);
+      return false;
+    });
+
+    $("input#group_search_field").on('input', function () {
+      $("#search_group").submit();
+    });
+
+    $("input#entity_search_field").on('input', function () {
+
+      // $(this).css("background-color", "red"); //alert("changed");
+      // $.ajax({
+      //           url: this.id+"/groups",
+      //           // type: "GET",
+      //           // data: {id: $(this).id},
+      //           // success: function(data) {
+      //           //     alert("what just happened?");
+      //           // }
+      //       });
+      $("#search_entity").submit();
+    });
+
+
+    $("body").on("click", '.table tr.entity', function(e){
+      // e.preventDefault();
+      $.getScript("entities/"+this.id+"/groups");
+      // return false;
+    });
+
+    $("[data-toggle='tooltip']").tooltip();
 
 });
+
 
 function collapisbles () {
     $(".nav-sidenav > li").on("show.bs.collapse", function () {
@@ -66,4 +104,14 @@ function add_parent (parent_id) {
     var html = "<li id="+parent_id+">"+parent_id+"</li> ";
     $('#parents').append(html);
 }
+
+var printObj = function(obj) {
+    var arr = [];
+    $.each(obj, function(key, val) {
+        var next = key + ": ";
+        next += $.isPlainObject(val) ? printObj(val) : val;
+        arr.push( next );
+    });
+    return "{ " +  arr.join(", ") + " }";
+};
 

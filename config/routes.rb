@@ -1,28 +1,42 @@
 Spex::Application.routes.draw do
-  # get "entities/index"
+  get "hub/main"
+  post "hub/create_entity"
+  post "hub/create_group"
+  post "hub/create_property"
+  post "hub/create_entity_group_relation"
+  post "hub/create_group_property_relation"
+  get "groups/new"
   get "entities/new"
-  # get "entities/edit"
-  # get "entities/show"
   get "properties/new"
   resources :users
-  resources :property_associations
+  resources :group_property_relationships
+  resources :entity_group_relationships
   resources :entity_property_relationships
   resources :properties do
     member do
-      get :children, :parents
+      get :groups, :entities
+      post :serve
+    end  
+  end
+  resources :groups do
+    member do
+      get :properties, :entities
       post :own
     end  
   end
   resources :entities do
     member do
-      get :properties
-      post :employ
+      get :groups, :properties
+      post :own
     end  
   end
 
   resources :sessions, only: [:new, :create, :destroy]
   root 'static_pages#home'
+  match '/hub/create_entity', to: 'hub#main',   via: 'get'
+  match '/hub/create_group', to: 'hub#main',    via: 'get'
   match '/signup',  to: 'users#new',            via: 'get'
+  match '/hub',     to: 'hub#main',             via: 'get'
   match '/signin',  to: 'sessions#new',         via: 'get'
   match '/signout', to: 'sessions#destroy',     via: 'delete'
   match '/help',    to: 'static_pages#help',    via: 'get'

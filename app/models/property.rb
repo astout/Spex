@@ -64,7 +64,6 @@ class Property < ActiveRecord::Base
   #an array of all the entities that utilize this property
   def entities
     result = []
-    # result ||= self.entities
     self.groups.each do |group|
       result |= group.entities
     end

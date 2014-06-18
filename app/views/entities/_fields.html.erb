@@ -1,7 +1,11 @@
-<!--%= render 'shared/error_messages', object: f.object %-->
+<%= hidden_field_tag :entity_direction, params[:entity_direction] %>
 
-<%= f.text_field :name %>
+<%= hidden_field_tag :entity_sort, params[:entity_sort] %>
 
-<%= f.text_field :label %>
+<%= hidden_field_tag :entity_event, true %>
 
-<%= f.text_field :img %>
+<%= f.text_field :name, class: "input-sm" %>
+
+<%= f.text_field :label, class: "input-sm"  %>
+
+<%= f.text_field :img, class: "input-sm"  %>

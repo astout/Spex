@@ -1,15 +1,36 @@
 <% provide(:title, 'All Entities') %>
 
+<!-- Reload defaults -->
+<a style="color: #494A4A" href="<%= entities_path %>">Entities</a>
+
 <h1>All Entities</h1>
 
+<!-- Link to Entity creation form -->
 <%= link_to "Create New", new_entity_path, class: "btn btn-primary btn-sm", style: "float: right; margin-bottom: 10px"%>
 <br/>
 <br/>
 
-<%= will_paginate %>
+<!-- Search Form -->
+<%= render partial: 'search', locals: { path: entities_path } %>
 
-<ul class="entities">
-  <%= render @entities %>
-</ul>
+<!-- List -->
+<table class="table entities">
+    <th>
+        <%= entity_sortable "name" %>
+    </th>
+    <th>
+        <%= entity_sortable "label" %>
+    </th>
+    <th>
+        <%= entity_sortable "created_at", "Created" %>
+    </th>
+    <th>
+        <%= entity_sortable "updated_at", "Updated" %>
+    </th>
+    <th>
+        Remove
+    </th>
+  <%= render partial: 'entity', collection: @entities, locals: { created: true } %>
+</table>
 
-<%= will_paginate %>
+<%= will_paginate @entities, inner_window: 2, outer_window: 2, param_name: 'entities_page' %>
