@@ -1,0 +1,9 @@
+$("#debug").html('<%= params %>');
+
+<% unless params[:search] == "entity" %>
+    $('#groups').html('<%= j render "groups/groups"  %>');
+<% end %>
+
+<% unless params[:search] == "group" %>
+    $('#entities').html('<%= j render "entities/entities"  %>');
+<% end %>

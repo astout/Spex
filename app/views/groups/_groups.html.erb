@@ -1,0 +1,16 @@
+<table class="table groups">
+    <th>
+        <%= group_sortable "name" %>
+    </th>
+    <th>
+        <%= group_sortable "default_label", "Label" %>
+    </th>
+    <th>
+        <%= group_sortable "updated_at", "Updated" %>
+    </th>
+    <th>
+        Remove
+    </th>
+  <%= render partial: 'groups/group', collection: @groups, locals: { created: false }  %>
+</table>
+<%= will_paginate @groups, inner_window: 0, outer_window: 0, param_name: 'groups_page', params: { group_event: true } %>

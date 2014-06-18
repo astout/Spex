@@ -1,0 +1,16 @@
+<table class="table entities">
+    <th>
+        <%= entity_sortable "name" %>
+    </th>
+    <th>
+        <%= entity_sortable "label" %>
+    </th>
+    <th>
+        <%= entity_sortable "updated_at", "Updated" %>
+    </th>
+    <th>
+        Remove
+    </th>
+  <%= render partial: 'entities/entity', collection: @entities, locals: { created: false }  %>
+</table>
+<%= will_paginate @entities, inner_window: 0, outer_window: 0, param_name: 'entities_page', params: { entity_event: true } %>

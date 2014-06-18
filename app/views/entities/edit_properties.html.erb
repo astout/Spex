@@ -1,0 +1,22 @@
+<% provide(:title, "Edit entity") %>
+<small class="note">Update <%= link_to @entity.name, @entity, style: "color: gray" %></small>
+
+<div class="row">
+    <aside class="col-xs-4">
+        <%= bootstrap_form_for(@entity, inline_errors: false) do |f| %>
+          <%= render 'fields', f: f %>
+          <%= f.submit "Save changes", class: "btn btn-sm btn-primary", style: "width: 100px; float: right"%>
+        <% end %>
+        <small><a href="#add-properties">Add Properties</a></small>
+    </aside>
+    <div class="col-xs-8" id="entity_properties">
+        <%= render 'edit_properties' %>
+    </div>
+</div>
+<div class="row" id="add-properties">
+    <hr/>
+    <h4>Add Properties</h4>
+    <span class="col-xs-10 col-xs-offset-1">
+        <%= render 'add_properties' %>
+    </span>
+</div>

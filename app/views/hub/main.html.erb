@@ -1,0 +1,50 @@
+<div id="hub-alert"></div>
+<div class="row">
+    <aside class="col-xs-4 v-divider">
+        <a style="color: #494A4A" href="<%= entities_path %>">Entities</a>
+        <section>
+            <h6>
+                Create New Entity
+            </h6>
+            <%= render 'new_entity' %>
+        </section>
+        <section>
+            <h6>
+                Existing Entities
+            </h6>
+            <%= render partial: 'search_entity', locals: { path: hub_path } %>
+            <div id="entities">
+                <%= render 'entities/entities' %>
+            </div>
+            <div id='ajax-test'></div>
+        </section>
+    </aside>
+    <aside class="col-xs-4 v-divider">
+        <a style="color: #494A4A" href="<%= groups_path %>">Groups</a>
+        <section>
+            <h6>
+                Selected Entity's Groups
+            </h6>
+            <div id="entitys-groups-alert"></div>
+            <div id="entitys_groups"> 
+            </div>
+        </section>
+        <section>
+            <h6>
+                Create New Group
+            </h6>
+            <%= render 'new_group' %>
+        </section>
+        <section>
+            <h6>
+                Existing Groups
+            </h6>
+            <%= render partial: 'search_group', locals: { path: hub_path } %>
+            <div id="groups">
+                <%= render 'groups/groups' %>
+            </div>
+            <div id='ajax-test'></div>
+        </section>
+    </aside>
+</div>
+<p></p>
