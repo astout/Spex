@@ -23,17 +23,18 @@
         <a style="color: #494A4A" href="<%= groups_path %>">Groups</a>
         <section>
             <h6>
+                Create New Group
+            </h6>
+            <%= render 'new_group' %>
+        </section>
+        <section>
+            <h6>
                 Selected Entity's Groups
             </h6>
             <div id="entitys-groups-alert"></div>
             <div id="entitys_groups"> 
+                <%= render partial: 'entities/groups' %>
             </div>
-        </section>
-        <section>
-            <h6>
-                Create New Group
-            </h6>
-            <%= render 'new_group' %>
         </section>
         <section>
             <h6>
@@ -47,4 +48,3 @@
         </section>
     </aside>
 </div>
-<p></p>

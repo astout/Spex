@@ -1,32 +1,34 @@
-html = "<%= j will_paginate @entitys_groups, param_name: 'entitys_groups_page', inner_window: 0, outer_window: 0 %>";
+console.log("hello 1");
 
-html += "<ul class='item-list'>";
-html += "  <%= j render @entitys_groups %>";
-html += "</ul>";
+var entitys_groups_html += "  <%= j render 'entities/groups' %>";
 
-html += "<%= j will_paginate @entitys_groups, param_name: 'entitys_groups_page', inner_window: 0, outer_window: 0 %>";
+$("#ajax-test").html('<%= @entitys_group_relations %>');
 
-$('#entitys_groups').html(html)
+console.log("hello 2");
 
-$('input[id^=entity]').val('');
+console.log("<%= @result[:r] %>");
 
-function flash_alert() {
-    var result = "<% unless @result.nil? %>";
-        result+= "<% if @result[:r] == 1 %>";
-        result+= "    <div class='alert alert-success'>";
-        result+= "    <%= @result[:msg] %>";
-        result+= "    </div>";
-        result+= "<% else %>";
-        result+= "    <div class='alert alert-danger'>";
-        result+= "        <%= @result[:msg] %>";
-        result+= "    </div>";
-        result+= "<% end %>";
 
-    result+= "<% else %>";
-    result+= "    <div class='alert alert-danger'>";
-    result+= "        There was an error retrieving #{@fetched_entity.name}'s groups";
-    result+= "    </div>";
-    result+= "<% end %>";
+$('#entitys_groups').html(entitys_groups_html)
 
-    return result;
-}
+var alert_html = "";
+
+<% unless @result.nil? %>
+    <% if @result[:r] == 1 %>
+        alert_html += "    <div class='alert alert-success'>";
+        alert_html += "    <%= @result[:msg] %>";
+        alert_html += "    </div>";
+        //clear the entity form fields
+        // $('input[id^=entity]').val('');
+    <% else %>
+        alert_html += "    <div class='alert alert-danger'>";
+        alert_html += "        <%= @result[:msg] %>";
+        alert_html += "    </div>";
+    <% end %>
+<% else %>
+    alert_html += "    <div class='alert alert-danger'>";
+    alert_html += "        There was an error retrieving #{@fetched_entity.name}'s groups";
+    alert_html += "    </div>";
+<% end %>
+
+$('#entitys-groups-alert').html(alert_html);

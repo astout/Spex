@@ -1,5 +1,5 @@
 class HubController < ApplicationController
-  helper_method :entity_sort_column, :entity_sort_direction, :group_sort_column, :group_sort_direction
+  helper_method :entity_sort_column, :entity_sort_direction, :group_sort_column, :group_sort_direction, :entitys_group_sort_column, :entitys_group_sort_direction
 
   before_action do
     unless current_user.nil?
@@ -68,6 +68,30 @@ class HubController < ApplicationController
     end
   end
 
+  def entitys_groups
+    @fetched_entity = Entity.find_by(id: params[:entity_id])
+    @result = {msg: "", r: -1}
+    @entitys_group_relations = []
+
+    respond_to do |format|
+      if @fetched_entity.nil?
+        @result[:r] = 0
+        @result[:msg] = "The fetched entity couldn't be found."
+      else
+        @entitys_group_relations = @fetched_entity.group_relations.paginate(page: params[:entitys_groups_page], per_page: 10, order: 'order ASC')
+        if @entitys_group_relations.empty?
+          @result[:r] = 2
+          @result[:msg] = "No groups for '#{@fetched_entity.name}'"
+        else
+          @result[:r] = 1
+          @result[:msg] = ""
+        end
+      end
+      format.js
+      format.html { redirect_to hub_path }
+    end
+  end
+
   def create_property
     #not yet implemented
   end
@@ -104,6 +128,14 @@ class HubController < ApplicationController
       
     def group_sort_direction
       %w[asc desc].include?(params[:group_direction]) ? params[:group_direction] : "desc"
+    end
+
+    def entitys_group_sort_column
+      EntityGroupRelationship.column_names.include?(params[:entitys_group_sort]) || Group.column_names.include?(params[:entitys_group_sort]) ? params[:entitys_group_sort] : "order"
+    end
+
+    def entitys_group_sort_direction
+      %w[asc desc].include?(params[:entitys_group_direction]) ? params[:entitys_group_direction] : "desc"
     end
 
 end

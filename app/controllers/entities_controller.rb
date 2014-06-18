@@ -1,5 +1,6 @@
 class EntitiesController < ApplicationController
   # helper_method :entity_sort_column, :entity_sort_direction, :group_sort_column, :group_sort_direction
+  helper_method :entitys_group_sort_column, :entitys_group_sort_direction
 
   before_action do
     unless current_user.nil?
@@ -40,8 +41,6 @@ class EntitiesController < ApplicationController
         @result[:r] = 0
         @result[:msg] = "Name: '#{@entity.name}' is already taken."
       end
-      params.delete :commit
-      params.delete :entity
       format.js
       format.html { redirect_to hub_path }
     end
@@ -104,23 +103,36 @@ class EntitiesController < ApplicationController
   end
 
   def groups
-    puts " - - - - - - - - - - - - - HEY LOOK HERE - - - - - - - - - - - - - "
-    puts params[:id]
     @fetched_entity = Entity.find(params[:id])
-    @entitys_groups = @fetched_entity.groups.paginate(page: params[:entitys_groups_page], per_page: 10, order: 'created_at DESC')
+    @result = {msg: "", r: -1}
+    @entitys_group_relations = []
 
-    # respond_to do |format|
-    #   #
-    # end
-    # format.js
-    # format.html { redirect_to entities_path }
-    # puts
+    respond_to do |format|
+      if @fetched_entity.nil?
+        @result[:r] = 0
+        @result[:msg] = "The fetched entity couldn't be found."
+      else
+        @result[:r] = 1
+        @result[:msg] = ""
+        @entitys_group_relations = @fetched_entity.group_relations.paginate(page: params[:entitys_groups_page], per_page: 10, order: 'order ASC')
+      end
+      format.js
+      format.html { redirect_to hub_path }
+    end
   end
 
   private
 
     def entity_params
       params.require(:entity).permit(:name, :label, :img)
+    end
+
+    def entitys_group_sort_column
+      EntityGroupRelationship.column_names.include?(params[:entitys_group_sort]) || Group.column_names.include?(params[:entitys_group_sort]) ? params[:entitys_group_sort] : "order"
+    end
+
+    def entitys_group_sort_direction
+      %w[asc desc].include?(params[:entitys_group_direction]) ? params[:entitys_group_direction] : "desc"
     end
 
 end

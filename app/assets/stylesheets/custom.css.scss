@@ -36,6 +36,12 @@ textarea {
   }
 }
 
+.small-font {
+  text-align: center;
+  font-size: 0.9em;
+  line-height: 1em;
+}
+
 /* typography */
 
 h1, h2, h3, h4, h5, h6 {
@@ -372,6 +378,22 @@ ul.item-list {
 tr.list-item {
   &:hover {
     background-color: $gray-lighter;
+    text-decoration: none;
+  }
+}
+
+tr.selected-entity {
+  background-color: #AADFFF; //soft-blue
+  &:hover {
+    background-color: #AFDFE8; //other blue
+    text-decoration: none;
+  }
+}
+
+tr.selected-group {
+  background-color: #AADFFF; //soft-blue
+  &:hover {
+    background-color: #AFDFE8; //other blue
     text-decoration: none;
   }
 }

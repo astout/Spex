@@ -35,6 +35,7 @@ Spex::Application.routes.draw do
   root 'static_pages#home'
   match '/hub/create_entity', to: 'hub#main',   via: 'get'
   match '/hub/create_group', to: 'hub#main',    via: 'get'
+  match '/hub/entitys_groups', to: 'hub#entitys_groups',  via: 'get'
   match '/signup',  to: 'users#new',            via: 'get'
   match '/hub',     to: 'hub#main',             via: 'get'
   match '/signin',  to: 'sessions#new',         via: 'get'

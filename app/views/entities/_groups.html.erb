@@ -1,0 +1,24 @@
+<% if defined? @entitys_group_relations %>
+    <% unless @entitys_group_relations.empty? %>
+        <table class="table entitys_groups">
+            <th>
+                Name
+            </th>
+            <th>
+                Label
+            </th>
+            <th>
+                Order
+            </th>
+            <th>
+                Remove
+            </th>
+            <%= render partial: 'entities/group_relationship', collection: @entitys_group_relations, locals: { created: false }  %>
+        </table>
+        <%= will_paginate @entitys_group_relations, inner_window: 0, outer_window: 0, param_name: 'entitys_groups_page', params: { entitys_group_event: true } %>
+    <% end %>
+<% else %>
+    <div class='alert alert-info small-font'>
+        <i>No Entity selected.</i>
+    </div>
+<% end %>

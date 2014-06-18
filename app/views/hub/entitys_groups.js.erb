@@ -1,0 +1,23 @@
+var entitys_groups_html = "  <%= j render partial: 'entities/groups' %>";
+
+$('#entitys_groups').html(entitys_groups_html)
+
+var alert_html = "";
+
+<% unless @result.nil? %>
+    <% if @result[:r] == 0 %>
+        alert_html += "    <div class='alert alert-danger small-font'>";
+        alert_html += "        <p><%= @result[:msg] %></p>";
+        alert_html += "    </div>";
+    <% elsif @result[:r] == 2 %>
+        alert_html += "    <div class='alert alert-info small-font'>";
+        alert_html += "        <i><%= @result[:msg] %></i>";
+        alert_html += "    </div>";
+    <% end %>
+<% else %>
+    alert_html += "    <div class='alert alert-danger small-font'>";
+    alert_html += "        <p>There was an error retrieving #{@fetched_entity.name}'s groups</p>";
+    alert_html += "    </div>";
+<% end %>
+
+$('#entitys-groups-alert').html(alert_html);

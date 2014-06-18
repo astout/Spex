@@ -12,4 +12,15 @@ class EntityGroupRelationship < ActiveRecord::Base
   end
 
   before_destroy { |r| EntityPropertyRelationship.destroy_all group_id: "#{r.group_id}", entity_id: "#{r.entity_id}" }
+
+  ######################################
+  # # # ENTITY GROUP RELATIONSHIP SEARCH
+  ######################################
+
+  #instance function
+  #returns entities that match the given search string
+  #It searches the name, label, created, and updated fields for partial matches
+  # def self.search(search)
+  #   self.group.search(search)
+  # end
 end

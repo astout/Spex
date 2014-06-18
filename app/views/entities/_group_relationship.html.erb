@@ -1,0 +1,20 @@
+<tr id=<%= "#{group_relationship.id}" %> class="list-item entity_group_relationship">
+    <td>
+      <%= link_to group_relationship.group.name, group_relationship %>
+    </td>
+    <td>
+      <%= link_to group_relationship.label || "", group_relationship %>
+    </td>
+    <td>
+      <%= group_relationship.order+1 %>
+    </td>
+    <% if current_user.admin? %>
+      <td>
+        <%= link_to "", group_relationship, method: :delete, 
+               data: { confirm: "You sure?" },
+               title: group_relationship.group.name, 
+                class: "glyphicon glyphicon-trash xs",
+                style: "margin-left: 5px; color: #FF4F4D" %>
+      </td>
+    <% end %>
+</tr>

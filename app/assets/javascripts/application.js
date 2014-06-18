@@ -40,24 +40,31 @@ $(function()
     });
 
     $("input#entity_search_field").on('input', function () {
-
-      // $(this).css("background-color", "red"); //alert("changed");
-      // $.ajax({
-      //           url: this.id+"/groups",
-      //           // type: "GET",
-      //           // data: {id: $(this).id},
-      //           // success: function(data) {
-      //           //     alert("what just happened?");
-      //           // }
-      //       });
       $("#search_entity").submit();
     });
 
-
     $("body").on("click", '.table tr.entity', function(e){
-      // e.preventDefault();
-      $.getScript("entities/"+this.id+"/groups");
-      // return false;
+      $.getScript("hub/entitys_groups?entity_id="+this.id);
+      if( $(this).hasClass("selected-entity") )
+      {
+        $(this).removeClass("selected-entity");
+        return;
+      }
+      $(".selected-entity").removeClass("selected-entity");
+      $(this).addClass("selected-entity");
+    });
+
+    $("body").on("click", '.table tr.group', function(e){
+      // $(".selected-item").removeClass("selected-entity");
+      if( $(this).hasClass("selected-group") )
+      {
+        $(this).removeClass("selected-group");
+      }
+      else
+      {
+        $(this).addClass("selected-group");
+      }
+
     });
 
     $("[data-toggle='tooltip']").tooltip();

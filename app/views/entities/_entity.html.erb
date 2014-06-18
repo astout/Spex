@@ -3,7 +3,7 @@
       <%= link_to entity.name, entity %>
     </td>
     <td>
-      <%= link_to entity.label, entity %>
+      <%= link_to entity.label || "", entity %>
     </td>
     <% if !defined? created && created == true %>
       <td>
