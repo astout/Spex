@@ -18,59 +18,8 @@
 
 $(function()
 {
-
-    $('#entities').on('click', "th a", function () {
-        $.getScript(this.href);
-        return false;
-    });
-
-    $('#groups').on('click', "th a", function () {
-        $.getScript(this.href);
-        return false;
-    });
-
-    $("body").on("click", '.pagination a', function(e){
-      e.preventDefault();
-      $.getScript(this.href);
-      return false;
-    });
-
-    $("input#group_search_field").on('input', function () {
-      $("#search_group").submit();
-    });
-
-    $("input#entity_search_field").on('input', function () {
-      $("#search_entity").submit();
-    });
-
-    $("body").on("click", '.table tr.entity', function(e){
-      $.getScript("hub/entitys_groups?entity_id="+this.id);
-      if( $(this).hasClass("selected-entity") )
-      {
-        $(this).removeClass("selected-entity");
-        return;
-      }
-      $(".selected-entity").removeClass("selected-entity");
-      $(this).addClass("selected-entity");
-    });
-
-    $("body").on("click", '.table tr.group', function(e){
-      // $(".selected-item").removeClass("selected-entity");
-      if( $(this).hasClass("selected-group") )
-      {
-        $(this).removeClass("selected-group");
-      }
-      else
-      {
-        $(this).addClass("selected-group");
-      }
-
-    });
-
     $("[data-toggle='tooltip']").tooltip();
-
 });
-
 
 function collapisbles () {
     $(".nav-sidenav > li").on("show.bs.collapse", function () {
@@ -122,3 +71,15 @@ var printObj = function(obj) {
     return "{ " +  arr.join(", ") + " }";
 };
 
+
+window.getParameterByName = function( name,href )
+{
+  name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+  var regexS = "[\\?&]"+name+"=([^&#]*)";
+  var regex = new RegExp( regexS );
+  var results = regex.exec( href );
+  if( results == null )
+    return "";
+  else
+    return decodeURIComponent(results[1].replace(/\+/g, " "));
+}

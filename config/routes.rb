@@ -1,7 +1,11 @@
 Spex::Application.routes.draw do
   get "hub/main"
   post "hub/create_entity"
+  post "hub/entitys_groups"
+  post "hub/delete_entity"
+  post "hub/entity_add_groups"
   post "hub/create_group"
+  post "hub/delete_groups"
   post "hub/create_property"
   post "hub/create_entity_group_relation"
   post "hub/create_group_property_relation"
@@ -34,8 +38,11 @@ Spex::Application.routes.draw do
   resources :sessions, only: [:new, :create, :destroy]
   root 'static_pages#home'
   match '/hub/create_entity', to: 'hub#main',   via: 'get'
-  match '/hub/create_group', to: 'hub#main',    via: 'get'
-  match '/hub/entitys_groups', to: 'hub#entitys_groups',  via: 'get'
+  match '/hub/create_group',  to: 'hub#main',    via: 'get'
+  match '/hub/delete_entity', to: 'hub#main',   via: 'get'
+  match '/hub/delete_groups',  to: 'hub#main',    via: 'get'
+  match '/hub/entity_add_groups', to: 'hub#main',    via: 'get'
+  match '/hub/entitys_groups', to: 'hub#main',  via: 'get'
   match '/signup',  to: 'users#new',            via: 'get'
   match '/hub',     to: 'hub#main',             via: 'get'
   match '/signin',  to: 'sessions#new',         via: 'get'

@@ -1,9 +1,11 @@
 $("#debug").html('<%= params %>');
 
 <% unless params[:search] == "entity" %>
-    $('#groups').html('<%= j render "groups/groups"  %>');
+    $('#groups').html("<%= j render partial: 'groups/groups', locals: { show_created: false, show_remove: false } %>");
 <% end %>
 
-<% unless params[:search] == "group" %>
-    $('#entities').html('<%= j render "entities/entities"  %>');
+<% unless params[:search] == "group" || params[:group_event] == "true" %>
+    $('#entities').html("<%= j render partial: 'entities/entities', locals: { show_created: false, show_remove: false } %>");
 <% end %>
+
+persistStyling();

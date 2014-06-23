@@ -28,7 +28,8 @@ class Group < ActiveRecord::Base
   #returns an array of entities associated with the group
   def entities
     entities = []
-    entity_relations.each do |relationship|
+    relations = self.entity_relations
+    relations.each do |relationship|
       entity = Entity.find_by(id: relationship.entity_id)
       entities.push(entity)
     end
@@ -81,7 +82,8 @@ class Group < ActiveRecord::Base
   #the IDs of the immediate properties of the group
   def properties
     properties = []
-    property_relations.each do |relationship|
+    relations = self.property_relations
+    relations.each do |relationship|
       properties.push relationship.property
     end
     properties

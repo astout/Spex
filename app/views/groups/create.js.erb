@@ -1,7 +1,5 @@
 $('#hub-alert').html(flash_alert);
-html = "<%= j render 'groups/groups' %>";
-
-$('#groups').html(html);
+$('#groups').html("<%= j render partial: 'groups/groups', locals: { show_created: false, show_remove: false } %>");
 $('input[id^=group]').val('');
 
 

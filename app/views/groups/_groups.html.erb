@@ -5,12 +5,19 @@
     <th>
         <%= group_sortable "default_label", "Label" %>
     </th>
+    <% if show_created %>
+        <th>
+            <%= group_sortable "created_at", "Created" %>
+        </th>
+    <% end %>
     <th>
         <%= group_sortable "updated_at", "Updated" %>
     </th>
-    <th>
-        Remove
-    </th>
-  <%= render partial: 'groups/group', collection: @groups, locals: { created: false }  %>
+    <% if show_remove %>
+        <th>
+            Remove
+        </th>
+    <% end %>
+  <%= render partial: 'groups/group', collection: @groups, locals: { show_created: show_created, show_remove: show_remove }  %>
 </table>
 <%= will_paginate @groups, inner_window: 0, outer_window: 0, param_name: 'groups_page', params: { group_event: true } %>

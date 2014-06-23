@@ -16,8 +16,24 @@ var alert_html = "";
     <% end %>
 <% else %>
     alert_html += "    <div class='alert alert-danger small-font'>";
-    alert_html += "        <p>There was an error retrieving #{@fetched_entity.name}'s groups</p>";
+    alert_html += "        <p>There was an error retrieving #{@selected_entity.name}'s groups</p>";
     alert_html += "    </div>";
 <% end %>
 
 $('#entitys-groups-alert').html(alert_html);
+
+$('#groups').html("<%= j render partial: 'groups/groups', locals: { show_created: false, show_remove: false } %>");
+
+if(selected_groups.length > 0 && selected_entity > -1)
+{
+    <% @selected_entity.groups.each do |group| %>
+        var index = $.inArray( <%= group.id %> + "" , selected_groups ) 
+        if ( index > -1 )
+        {
+            console.log ("deselecting: <%= group.id %>")
+            groupDeselect(<%= group.id %> + "");
+        }
+    <% end %>
+}
+
+persistStyling();

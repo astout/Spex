@@ -2,6 +2,7 @@
     <%= hidden_field_tag :group_direction, params[:group_direction] %>
     <%= hidden_field_tag :group_sort, params[:group_sort] %>
     <%= hidden_field_tag :group_event, true %>
+    <%= hidden_field_tag :selected_entity, "" %>
     <%= hidden_field_tag :search, "group" %>
     <div class="input-group input-group-sm " style="margin-bottom: 15px">
         <%= text_field_tag :group_search, params[:group_search], class: "form-control", id: "group_search_field" %>

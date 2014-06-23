@@ -96,10 +96,21 @@ class EntitiesController < ApplicationController
   end
 
   def destroy
-    @entity = Entity.find(params[:id])
-    @entity.destroy
-    flash[:success] = "'" + @entity.name + "' deleted"
-    redirect_to entities_url
+    respond_to do |format|
+      format.js { 
+        redirect_to "/hub/delete_entity?id=#{params[:id]}"
+      }
+      format.html { 
+        @entity = Entity.find(params[:id])
+        result = @entity.destroy
+        if result
+          flash[:success] = "'" + @entity.name + "' deleted"
+        else
+          flash[:danger] = "Unable to delete '" + @entity.name + "'"
+        end
+        redirect_to entities_url 
+      }
+    end
   end
 
   def groups

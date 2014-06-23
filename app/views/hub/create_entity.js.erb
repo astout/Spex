@@ -1,8 +1,5 @@
-var entities_html = "  <%= j render 'entities/entities' %>";
-
-$('#entities').html(entities_html)
+$('#entities').html("<%= j render partial: 'entities/entities', locals: { show_created: false, show_remove: false } %>");
 $('input[id=entity_search_field]').val('');
-
 
 var alert_html = "";
 
@@ -25,3 +22,5 @@ var alert_html = "";
 <% end %>
 
 $('#hub-alert').html(alert_html);
+
+persistStyling();

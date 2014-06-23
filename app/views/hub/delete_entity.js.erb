@@ -1,5 +1,5 @@
-$('#groups').html("<%= j render partial: 'groups/groups', locals: { show_created: false, show_remove: false } %>");
-$('input[id=group_search_field]').val('');
+$('#entities').html("<%= j render partial: 'entities/entities', locals: { show_created: false, show_remove: false } %>");
+// $('#entity_search_field').val('');
 
 var alert_html = "";
 
@@ -8,8 +8,9 @@ var alert_html = "";
         alert_html += "    <div class='alert alert-success'>";
         alert_html += "    <%= @result[:msg] %>";
         alert_html += "    </div>";
-        //clear the group form fields
-        $('input[id^=group]').val('');
+        entityDeselect();
+        //clear the entity form fields
+        // $('input[id^=entity]').val('');
     <% else %>
         alert_html += "    <div class='alert alert-danger'>";
         alert_html += "        <%= @result[:msg] %>";
@@ -17,7 +18,7 @@ var alert_html = "";
     <% end %>
 <% else %>
     alert_html += "    <div class='alert alert-danger'>";
-    alert_html += "        There was an error saving #{@group.name}";
+    alert_html += "        There was an error deleting " + <%= @entity.name %> ;
     alert_html += "    </div>";
 <% end %>
 

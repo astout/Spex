@@ -234,7 +234,6 @@ input.btn75{
   float: right;
 }
 
-
 input[name='commit'] {
   margin-bottom: 20px;
 }
@@ -417,6 +416,46 @@ aside.v-divider {
     font-family: 'Glyphicons Halflings';
     content: "\e114";    
     color: grey;   
+  }
+}
+
+div#add-selected-groups {
+  background-repeat: no-repeat;  
+  background-position: right center;
+  float: right;
+  font-family: 'FontAwesome';
+  font-size: 1em;
+  line-height: 2em;
+  &.enabled {
+    color: #21B82F;
+    &:hover {
+      cursor: pointer;
+      color: #198C24;
+    }
+  }
+  &.enabled:after {
+    float: right;
+    padding-left: 5px;
+    font-family: 'FontAwesome';
+    content: "\f0fe";    //fa-plus-square
+    font-size: 2em;
+  }
+  &.disabled {
+    color: grey; 
+  }
+  &.disabled:after {
+    float: right;
+    padding-left: 5px;
+    font-family: 'FontAwesome';
+    content: "\f0fe";    //fa-plus-square
+    font-size: 2em;
+  }
+}
+
+div.alert {
+  p {
+    font-size: 1em;
+    line-height: 1em;
   }
 }
 

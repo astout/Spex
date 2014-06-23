@@ -5,7 +5,7 @@
     <td>
       <%= link_to group.default_label, group %>
     </td>
-    <% if !defined? created && created == true %>
+    <% if show_created %>
       <td>
         <%= "#{group.created_at.strftime('%m/%d/%Y')}" %>
       </td>
@@ -13,14 +13,14 @@
     <td>
       <%= "#{group.updated_at.strftime('%m/%d/%Y %H:%M')}" %>
     </td>
-      <% if current_user.admin? %>
-        <td>
+      <% if current_user.admin? && show_remove %>
+        <td class="delete-group">
           <%= link_to "", group, method: :delete, 
-                 data: { confirm: "You sure?" },
-                 title: group.name, 
-                  class: "glyphicon glyphicon-trash xs",
-                  style: "margin-left: 5px; color: #FF4F4D" %>
+                data: { confirm: "You sure?" },
+                title: "delete #{group.name}?", 
+                class: "glyphicon glyphicon-trash xs",
+                style: "margin-left: 5px; color: #FF4F4D"
+          %>
         </td>
       <% end %>
 </tr>
-<p></p>

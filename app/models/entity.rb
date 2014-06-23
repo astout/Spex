@@ -29,7 +29,8 @@ class Entity < ActiveRecord::Base
   #returns an array of groups associated with this entity through EntityGroupRelationships
   def groups
     groups = []
-    self.group_relations.each do |r|
+    relations = self.group_relations
+    relations.each do |r|
       groups.push r.group
     end
     groups
@@ -38,6 +39,7 @@ class Entity < ActiveRecord::Base
   #returns the EntityGroupRelationships associated with this entity sorted
   #by the order field
   def group_relations
+    puts "- - - - CALLED GET GROUP RELATIONS - - - -"
     relations = EntityGroupRelationship.where(entity_id: self.id)
     relations.sort_by { |r| r[:order] }
   end
@@ -105,7 +107,8 @@ class Entity < ActiveRecord::Base
   # an array of all employed properties
   def properties
     properties = []
-    property_relations.each do |relationship|
+    relations = self.property_relations
+    relations.each do |relationship|
       properties.push relationship.property
     end
     properties
@@ -299,7 +302,8 @@ class Entity < ActiveRecord::Base
     else
       line = relationship.order
     end
-    self.group_relations.each do |r|
+    relations = self.group_relations
+    relations.each do |r|
       next if r == relationship
       if r.order.nil?
         r.update_attribute(:order, last -= 1)

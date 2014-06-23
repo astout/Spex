@@ -43,10 +43,21 @@ class GroupsController < ApplicationController
   end
 
   def destroy
-    @group = Group.find(params[:id])
-    @group.destroy
-    flash[:success] = "'" + @group.name + "' deleted"
-    redirect_to groups_url
+    respond_to do |format|
+      format.js { 
+        redirect_to "/hub/delete_group?id=#{params[:id]}"
+      }
+      format.html { 
+        @group = Group.find(params[:id])
+        result = @group.destroy
+        if result
+          flash[:success] = "'" + @group.name + "' deleted"
+        else
+          flash[:danger] = "Unable to delete '" + @group.name + "'"
+        end
+        redirect_to groups_url 
+      }
+    end
   end
 
   private

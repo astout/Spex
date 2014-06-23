@@ -13,8 +13,11 @@
                 Existing Entities
             </h6>
             <%= render partial: 'search_entity', locals: { path: hub_path } %>
+            <div id="clear-selected-entity" class="btn btn-default btn-sm disabled">Clear</div>
+            <div id="delete-selected-entity" class="btn btn-danger btn-sm disabled">Delete</div>
+            <div style="padding-top: 10px"></div>
             <div id="entities">
-                <%= render 'entities/entities' %>
+                <%= render partial: 'entities/entities', locals: { show_created: false, show_remove: false } %>
             </div>
             <div id='ajax-test'></div>
         </section>
@@ -41,8 +44,12 @@
                 Existing Groups
             </h6>
             <%= render partial: 'search_group', locals: { path: hub_path } %>
+            <div id="clear-selected-groups" class="btn btn-default btn-sm disabled">Clear</div>
+            <div id="delete-selected-groups" class="btn btn-danger btn-sm disabled">Delete</div>
+            <div id="add-selected-groups" class="disabled">Add Selected</div>
+            <div style="padding-top: 10px"></div>
             <div id="groups">
-                <%= render 'groups/groups' %>
+                <%= render partial: 'groups/groups', locals: { show_created: false, show_remove: false } %>
             </div>
             <div id='ajax-test'></div>
         </section>
