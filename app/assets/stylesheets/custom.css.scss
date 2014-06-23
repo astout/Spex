@@ -389,6 +389,14 @@ tr.selected-entity {
   }
 }
 
+tr.selected-entitys-group {
+  background-color: #AADFFF; //soft-blue
+  &:hover {
+    background-color: #AFDFE8; //other blue
+    text-decoration: none;
+  }
+}
+
 tr.selected-group {
   background-color: #AADFFF; //soft-blue
   &:hover {

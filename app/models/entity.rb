@@ -5,8 +5,15 @@ class Entity < ActiveRecord::Base
   has_many :groups, through: :entity_group_relationships, inverse_of: :entities
   validates :name, presence: true
 
-  before_destroy { |entity| EntityPropertyRelationship.destroy_all "entity_id = #{entity.id}" }
-  before_destroy { |entity| EntityGroupRelationship.destroy_all "entity_id = #{entity.id}" }
+  # before_destroy { |entity| EntityPropertyRelationship.destroy_all "entity_id = #{entity.id}" }
+  before_destroy do |entity|
+    EntityPropertyRelationship.destroy_all "entity_id = #{entity.id}"
+    groups = entity.groups
+    groups.each do |group|
+      entity.disown! group
+    end
+  end
+  # before_destroy { |entity| EntityGroupRelationship.destroy_all "entity_id = #{entity.id}" }
 
   #####################
   # # # ENTITY TO GROUP
@@ -39,7 +46,6 @@ class Entity < ActiveRecord::Base
   #returns the EntityGroupRelationships associated with this entity sorted
   #by the order field
   def group_relations
-    puts "- - - - CALLED GET GROUP RELATIONS - - - -"
     relations = EntityGroupRelationship.where(entity_id: self.id)
     relations.sort_by { |r| r[:order] }
   end

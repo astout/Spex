@@ -5,9 +5,20 @@ class Group < ActiveRecord::Base
   has_many :properties, through: :group_property_relationships, inverse_of: :groups
   validates :name, presence: true
 
-  before_destroy { |group| GroupPropertyRelationship.destroy_all "group_id = #{group.id}" }
-  before_destroy { |group| EntityGroupRelationship.destroy_all "group_id = #{group.id}" }
-  before_destroy { |group| EntityPropertyRelationship.destroy_all "group_id = #{group.id}" }
+  # before_destroy { |group| GroupPropertyRelationship.destroy_all "group_id = #{group.id}" }
+  # before_destroy { |group| EntityGroupRelationship.destroy_all "group_id = #{group.id}" }
+
+  before_destroy do |group| 
+    EntityPropertyRelationship.destroy_all "group_id = #{group.id}"
+    properties = group.properties
+    entities = group.entities
+    properties.each do |property|
+      group.disown! property
+    end
+    entities.each do |entity|
+      group.flee! entity
+    end
+  end
 
   #####################
   # # # GROUP TO ENTITY

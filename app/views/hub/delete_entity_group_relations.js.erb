@@ -1,11 +1,11 @@
 $('#entitys_groups').html("  <%= j render partial: 'entities/groups', locals: { show_created: false, show_remove: false } %>");
 
-clearSelectedGroups();
+var alert_html = "";
 
 alert_html = "" 
 <% unless @results.nil? || @results.empty? %>
     alert_html += "<div class='alert alert-success'>";
-    alert_html += "<p><strong>Groups Added to '<%= @selected_entity.name %>':</strong></p>";
+    alert_html += "<p><strong>Groups Removed from '<%= @selected_entity.name %>':</strong></p>";
     <% @results.each do |result| %>
         <% unless result[:group].nil? %>
             alert_html += "<p style='padding-left: 10px'>- <%=result[:group].name %> </p>"; 
@@ -19,8 +19,8 @@ alert_html = ""
 <% end %>
 alert_html += "</div>"
 
+$("#entitys-groups-alert").html(alert_html);
+
 $('#groups').html("<%= j render partial: 'groups/groups', locals: { show_created: false, show_remove: false } %>");
 
-$("#hub-alert").html(alert_html);
-$('#entitys-groups-alert').html("");
 persistStyling();

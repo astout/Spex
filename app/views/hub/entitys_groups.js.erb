@@ -1,4 +1,4 @@
-var entitys_groups_html = "  <%= j render partial: 'entities/groups' %>";
+var entitys_groups_html = "  <%= j render partial: 'entities/groups', locals: { show_created: false, show_remove: false } %>";
 
 $('#entitys_groups').html(entitys_groups_html)
 
@@ -31,7 +31,7 @@ if(selected_groups.length > 0 && selected_entity > -1)
         if ( index > -1 )
         {
             console.log ("deselecting: <%= group.id %>")
-            groupDeselect(<%= group.id %> + "");
+            toggleGroupSelect(<%= group.id %> + "");
         }
     <% end %>
 }

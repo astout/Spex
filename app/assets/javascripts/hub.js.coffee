@@ -5,6 +5,7 @@
 #globalize the selected items
 window.selected_entity = -1 #only one selected entity at a time
 window.selected_groups = [] #list of selected groups
+window.selected_entity_group_relations = [] #list of selected entity's groups
 window.group_sort = "created_at"
 window.entity_sort = "created_at"
 window.group_direction = "desc"
@@ -33,18 +34,6 @@ $ ->
         $.getScript(this.href)
         false
 
-    # #Ajaxify Entity Deleting
-    # $('tr.entity').on 'click', "td.delete-entity", (e) ->
-    #     e.preventDefault()
-    #     $.getScript(this.href)
-    #     false
-
-    #Ajaxify Entity Deleting
-    $('tr.group').on 'click', "td.delete-group", (e) ->
-        e.preventDefault()
-        $.getScript(this.href)
-        false
-
     #Every character change in Group Search field, submit query
     $("input#group_search_field").on 'input', ->
         $("input#selected_entity").val window.selected_entity
@@ -57,83 +46,50 @@ $ ->
     #On Entity list element click, highlight it and make it the selected entity
     #Also list any groups the entity owns
     $("body").on "click", '.table tr.entity', (e) ->
+
+        toggleEntitySelect(this.id)
         
-        #if it is already selected, deselect it
-        if $(this).hasClass "selected-entity"
-            $(this).removeClass "selected-entity"
-            window.selected_entity = -1
 
-        else #deselect what is selected and make the clicked entity selected
-            $(".selected-entity").removeClass("selected-entity")
-            $(this).addClass "selected-entity"
-            window.selected_entity = this.id
-            #look up the Entity's groups
-            params = $.param( { 
-                selected_entity: window.selected_entity, 
-                selected_groups: window.selected_groups, 
-                group_search: $("input#group_search_field").val(), 
-                group_direction: window.group_direction, 
-                group_sort: window.group_sort 
-                } )
-            $
-            #send the request to add the selected groups to the selected entity
-            $.ajax 
-                url: "/hub/entitys_groups?" + params
-                type: 'POST'
-
-        checkSelected()
+    #On EntityGroupRelationship element click, highlight it and make it the selected group
+    $("body").on "click", '.table tr.entity_group_relationship', (e) ->
+       
+        #get the group id
+        toggleEntitysGroupSelect this.id
 
 
     #on group list element click
     $("body").on "click", '.table tr.group', (e) ->
 
-        #get the group id
-        group_id = this.id
-
-        #if the clicked group is already selected
-        if $(this).hasClass "selected-group"
-
-            #deselect, remove styling
-            $(this).removeClass "selected-group"
-
-            groupDeselect group_id
-
-        else #if not selected
-            #add selected styling
-            $(this).addClass "selected-group"
-
-            groupSelect group_id
-        
+        toggleGroupSelect this.id
 
     #When the add groups button is clicked
     $("body").on "click", "#add-selected-groups", (e) ->
         
         #if it's enabled
         if $(this).hasClass "enabled"
-            #ajaxify the selected parameters
-            params = $.param( { selected_entity: window.selected_entity, selected_groups: window.selected_groups } )
-            #send the request to add the selected groups to the selected entity
-            $.ajax 
-                url: "/hub/entity_add_groups?" + params
-                type: 'POST'
+            addGroupsToEntity window.selected_groups, window.selected_entity
+            
 
     #When the clear groups button is clicked
     $("body").on "click", "#clear-selected-groups", (e) ->
 
         #if it's enabled
         unless $(this).hasClass "disabled"
-            window.selected_groups = []
-            checkSelected()
-            persistStyling()
+            clearSelectedGroups()
 
     #When the clear entity button is clicked
     $("body").on "click", "#clear-selected-entity", (e) ->
 
         #if it's enabled
         unless $(this).hasClass "disabled"
-            window.selected_entity = -1
-            checkSelected()
-            persistStyling()
+            clearSelectedEntity()
+
+    #When the clear groups button is clicked
+    $("body").on "click", "#clear-selected-entitys-groups", (e) ->
+
+        #if it's enabled
+        unless $(this).hasClass "disabled"
+            clearSelectedEntitysGroups()
 
     #When the delete entity button is clicked
     $("body").on "click", "#delete-selected-entity", (e) ->
@@ -141,27 +97,8 @@ $ ->
         #if it's enabled
         unless $(this).hasClass "disabled"
 
-            params = $.param( { 
-                selected_entity: window.selected_entity, 
-                selected_groups: window.selected_groups,
-                group_search: $("input#group_search_field").val(), 
-                entity_search: $("input#entity_search_field").val(), 
-                group_direction: window.group_direction, 
-                entity_direction: window.entity_direction, 
-                group_sort: window.group_sort,  
-                entity_sort: window.entity_sort  
-                } )
+            deleteEntity window.selected_entity
 
-            #clear entity search
-            # $("input#entity_search_field").val('')
-
-            #send the request to add the selected groups to the selected entity
-            $.ajax 
-                url: "/hub/delete_entity?" + params
-                type: 'POST'
-
-            checkSelected()
-            persistStyling()
 
     #When the delete groups button is clicked
     $("body").on "click", "#delete-selected-groups", (e) ->
@@ -169,44 +106,39 @@ $ ->
         #if it's enabled
         unless $(this).hasClass "disabled"
 
-            params = $.param( { 
-                selected_entity: window.selected_entity, 
-                selected_groups: window.selected_groups,
-                group_search: $("input#group_search_field").val(), 
-                entity_search: $("input#entity_search_field").val(), 
-                group_direction: window.group_direction, 
-                entity_direction: window.entity_direction, 
-                group_sort: window.group_sort, 
-                entity_sort: window.entity_sort  
-                } )
+            deleteGroups window.selected_groups
 
-            #send the request to add the selected groups to the selected entity
-            $.ajax 
-                url: "/hub/delete_groups?" + params
-                type: 'POST'
+    #When the delete groups button is clicked
+    $("body").on "click", "#delete-selected-entitys-groups", (e) ->
 
-            checkSelected()
-            persistStyling()
+        #if it's enabled
+        unless $(this).hasClass "disabled"
 
+            deleteEntitysGroups window.selected_entity_group_relations
+            
 
+toggleEntitySelect = (id) ->
+    $("tr.selected-entity").removeClass("selected-entity")
+    clearSelectedEntitysGroups()
 
-checkSelected = () ->
-    #if there are selected groups && a selected entity,
-    #enable the add-groups button
-    if window.selected_groups.length > 0 && window.selected_entity > -1
-        $("#add-selected-groups").removeClass("disabled")
-        $("#add-selected-groups").addClass("enabled")
+    if window.selected_entity == id
+        clearSelectedEntity()
+
     else
-        $("#add-selected-groups").removeClass("enabled")
-        $("#add-selected-groups").addClass("disabled")
+        $("tr#"+id+".entity").addClass "selected-entity"
+        window.selected_entity = id + ""
+        getEntitysGroups id
+        validateEntitySelection()
 
-    if window.selected_groups.length > 0
-        $("#clear-selected-groups").removeClass("disabled")
-        $("#delete-selected-groups").removeClass("disabled")
-    else
-        $("#clear-selected-groups").addClass("disabled")
-        $("#delete-selected-groups").addClass("disabled")
+window.toggleEntitySelect = toggleEntitySelect
 
+clearSelectedEntity = () ->
+    $("tr.selected-entity").removeClass "selected-entity"
+    window.selected_entity = -1
+    validateEntitySelection()
+window.clearSelectedEntity = clearSelectedEntity
+
+validateEntitySelection = () ->
     #clear the selected entity's groupsd partial if no entity is selected
     if window.selected_entity < 0
         _html = "<div class='alert alert-info small-font'>"
@@ -218,34 +150,159 @@ checkSelected = () ->
     else
         $("#clear-selected-entity").removeClass("disabled")
         $("#delete-selected-entity").removeClass("disabled")
+    validateAddGroupsToEntity()
+window.validateEntitySelection = validateEntitySelection
 
+deleteEntity = (id) ->
+    params = $.param( { 
+        selected_entity: id, 
+        selected_groups: window.selected_groups,
+        group_search: $("input#group_search_field").val(), 
+        entity_search: $("input#entity_search_field").val(), 
+        group_direction: window.group_direction, 
+        entity_direction: window.entity_direction, 
+        group_sort: window.group_sort,  
+        entity_sort: window.entity_sort  
+        } )
 
-groupDeselect = (id) ->
-    #remove from list of selected groups
+    #send the request to add the selected groups to the selected entity
+    $.ajax 
+        url: "/hub/delete_entity?" + params
+        type: 'POST'
+
+    validateEntitySelection()
+
+window.deleteEntity = deleteEntity  
+
+validateAddGroupsToEntity = () ->
+    #if there are selected groups && a selected entity,
+    #enable the add-groups button
+    if window.selected_groups.length > 0 && window.selected_entity > -1
+        $("#add-selected-groups").removeClass("disabled")
+        $("#add-selected-groups").addClass("enabled")
+    else
+        $("#add-selected-groups").removeClass("enabled")
+        $("#add-selected-groups").addClass("disabled")
+window.validateAddGroupsToEntity = validateAddGroupsToEntity
+
+addGroupsToEntity = (groups, entity) ->
+    #ajaxify the selected parameters
+    params = $.param( { selected_entity: window.selected_entity, selected_groups: window.selected_groups } )
+    #send the request to add the selected groups to the selected entity
+    $.ajax 
+        url: "/hub/entity_add_groups?" + params
+        type: 'POST'
+window.addGroupsToEntity = addGroupsToEntity  
+
+deleteEntityGroupRelations = (relationship_id) ->
+    params = $.param( { 
+        selected_entity: window.selected_entity,
+        selected_entity_group_relations: relationship_id, 
+        selected_groups: window.selected_groups,
+        group_search: $("input#group_search_field").val(), 
+        entity_search: $("input#entity_search_field").val(), 
+        group_direction: window.group_direction, 
+        entity_direction: window.entity_direction, 
+        group_sort: window.group_sort, 
+        entity_sort: window.entity_sort  
+        } )
+
+    #send the request to add the selected groups to the selected entity
+    $.ajax 
+        url: "/hub/delete_entity_group_relation?" + params
+        type: 'POST'
+
+    validateEntitysGroupSelection()
+window.deleteGroups = deleteGroups
+
+toggleGroupSelect = (id) ->
     index = $.inArray(id, window.selected_groups)
     if index > -1
+        $("tr#"+id+".group").removeClass "selected-group"
         window.selected_groups.splice(index, 1)
-    checkSelected()
-window.groupDeselect = groupDeselect
-
-groupSelect = (id) ->
-    index = $.inArray(id, window.selected_groups)
-    unless index > -1
+    else
+        $("tr#"+id+".group").addClass "selected-group"
         window.selected_groups.push(id)
-    checkSelected()
-window.groupSelect = groupSelect
+    validateGroupSelection()
+window.toggleGroupSelect = toggleGroupSelect
 
-entityDeselect = () ->
-    #remove from list of selected groups
-    window.selected_entity = -1
-    checkSelected()
-window.entityDeselect = entityDeselect
+validateGroupSelection = () ->
+    if window.selected_groups.length > 0
+        $("#clear-selected-groups").removeClass("disabled")
+        $("#delete-selected-groups").removeClass("disabled")
+    else
+        $("#clear-selected-groups").addClass("disabled")
+        $("#delete-selected-groups").addClass("disabled")
+    validateAddGroupsToEntity()
+window.validateGroupSelection = validateGroupSelection
 
-entitySelect = (id) ->
-    window.selected_entity = id + ""
-    checkSelected()
-window.entitySelect = entitySelect
+deleteGroups = (groups) ->
+    params = $.param( { 
+        selected_entity: window.selected_entity, 
+        selected_groups: groups,
+        group_search: $("input#group_search_field").val(), 
+        entity_search: $("input#entity_search_field").val(), 
+        group_direction: window.group_direction, 
+        entity_direction: window.entity_direction, 
+        group_sort: window.group_sort, 
+        entity_sort: window.entity_sort  
+        } )
 
+    #send the request to add the selected groups to the selected entity
+    $.ajax 
+        url: "/hub/delete_groups?" + params
+        type: 'POST'
+
+    validateGroupSelection()
+window.deleteGroups = deleteGroups
+
+clearSelectedGroups = () ->
+    window.selected_groups = []
+    $("tr.selected-group").removeClass "selected-group"
+    validateGroupSelection()
+window.clearSelectedGroups = clearSelectedGroups
+
+toggleEntitysGroupSelect = (id) ->
+    #if the clicked group is already selected
+    index = $.inArray id, window.selected_entity_group_relations
+    if index > -1
+        window.selected_entity_group_relations.splice(index, 1)
+        $("tr#"+id+".entity_group_relationship").removeClass "selected-entitys-group"
+    else
+        $("tr#"+id+".entity_group_relationship").addClass "selected-entitys-group"
+        window.selected_entity_group_relations.push(id)
+    validateEntitysGroupSelection()
+window.toggleEntitysGroupSelect = toggleEntitysGroupSelect
+
+validateEntitysGroupSelection = () ->
+    if window.selected_entity_group_relations.length > 0
+        $("#clear-selected-entitys-groups").removeClass("disabled")
+        $("#delete-selected-entitys-groups").removeClass("disabled")
+    else
+        $("#clear-selected-entitys-groups").addClass("disabled")
+        $("#delete-selected-entitys-groups").addClass("disabled")
+window.validateEntitysGroupSelection = validateEntitysGroupSelection
+
+clearSelectedEntitysGroups = () ->
+    window.selected_entity_group_relations = []
+    $("tr.selected-entitys-group").removeClass "selected-entitys-group"
+    validateEntitysGroupSelection()
+window.clearSelectedEntitysGroups = clearSelectedEntitysGroups
+
+getEntitysGroups = (id) ->
+    params = $.param( { 
+        selected_entity: id, 
+        selected_groups: window.selected_groups, 
+        group_search: $("input#group_search_field").val(), 
+        group_direction: window.group_direction, 
+        group_sort: window.group_sort 
+        } )
+    $
+    #send the request to add the selected groups to the selected entity
+    $.ajax 
+        url: "/hub/entitys_groups?" + params
+        type: 'POST'
+window.getEntitysGroups = getEntitysGroups
 
 persistStyling = () ->
     if window.selected_entity > -1
@@ -259,7 +316,11 @@ persistStyling = () ->
     else
         $("tr.selected-group").removeClass "selected-group"
 
+    if window.selected_entity_group_relations.length > 0
+        for relationship_id in window.selected_entity_group_relations
+            $("tr#"+relationship_id+".entity_group_relationship").addClass "selected-entitys-group"
+    else
+        $("tr.selected-entitys-group").removeClass "selected-entitys-group"
+
 #globalize persistStyling        
 window.persistStyling = persistStyling
-
-        

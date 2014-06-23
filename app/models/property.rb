@@ -5,8 +5,11 @@ class Property < ActiveRecord::Base
   has_many :groups, through: :group_property_relationships, inverse_of: :properties
   validates :name, presence: true
 
-  before_destroy { |property| GroupPropertyRelationship.destroy_all "property_id = #{property.id}" }
-  before_destroy { |property| EntityPropertyRelationship.destroy_all "property_id = #{property.id}" }
+  # before_destroy { |property| GroupPropertyRelationship.destroy_all "property_id = #{property.id}" }
+  before_destroy do |property| 
+    EntityPropertyRelationship.destroy_all "property_id = #{property.id}"
+    self.flee_all!
+  end
 
   #######################
   # # # PROPERTY TO GROUP

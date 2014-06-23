@@ -8,9 +8,7 @@ var alert_html = "";
         alert_html += "    <div class='alert alert-success'>";
         alert_html += "    <%= @result[:msg] %>";
         alert_html += "    </div>";
-        entityDeselect();
-        //clear the entity form fields
-        // $('input[id^=entity]').val('');
+        clearSelectedEntity();
     <% else %>
         alert_html += "    <div class='alert alert-danger'>";
         alert_html += "        <%= @result[:msg] %>";

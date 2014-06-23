@@ -1,5 +1,12 @@
 $('#groups').html("<%= j render partial: 'groups/groups', locals: { show_created: false, show_remove: false } %>");
 
+if( selected_entity > -1 )
+{
+    getEntitysGroups(selected_entity);
+}
+
+clearSelectedGroups();
+
 alert_html = "" 
 <% unless @results.nil? || @results.empty? %>
     alert_html += "<div class='alert alert-success'>";
@@ -8,8 +15,6 @@ alert_html = ""
         <% unless result[:group].nil? %>
             alert_html += "<p style='padding-left: 10px'>- <%=result[:group].name %> </p>"; 
             group_id = "<%= result[:group].id %>";
-            console.log("id: " + group_id);
-            groupDeselect(group_id);
         <% end %>
     <% end %>
 <% else %>

@@ -1,5 +1,6 @@
 <% if defined? @entitys_group_relations %>
     <% unless @entitys_group_relations.empty? %>
+        <%= render partial: 'entities/group_relation_actions' %>
         <table class="table entitys_groups">
             <th>
                 Name
@@ -7,13 +8,18 @@
             <th>
                 Label
             </th>
+            <% if show_created %>
+                Created
+            <% end %>
             <th>
                 Order
             </th>
-            <th>
-                Remove
-            </th>
-            <%= render partial: 'entities/group_relationship', collection: @entitys_group_relations, locals: { created: false }  %>
+            <% if show_remove %>
+                <th>
+                    Remove
+                </th>
+            <% end %>
+            <%= render partial: 'entities/group_relationship', collection: @entitys_group_relations, locals: { show_created: show_created, show_remove: show_remove }  %>
         </table>
         <%= will_paginate @entitys_group_relations, inner_window: 0, outer_window: 0, param_name: 'entitys_groups_page', params: { entitys_group_event: true } %>
     <% end %>

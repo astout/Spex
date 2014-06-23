@@ -17,18 +17,32 @@ class HubController < ApplicationController
     @selected_entity = Entity.find_by(id: params[:selected_entity])
   end
 
+  def selected_entity_group_relations
+    @selected_entity_group_relations = []
+    selected_relation_ids = params[:selected_entity_group_relations]
+    unless selected_relation_ids.nil?
+      selected_relation_ids.each do |id|
+        relation = EntityGroupRelationship.find_by id: id
+        unless relation.nil?
+          @selected_entity_group_relations.push relation
+        end
+      end
+    end
+    @selected_entity_group_relations
+  end
+
+  def entitys_group_relations
+    @entitys_group_relations = @selected_entity.group_relations.paginate(page: params[:entitys_groups_page], per_page: 10, order: 'order ASC')
+  end
+
   def selected_groups
-    count = 0
     @selected_groups = []
     selected_group_ids = params[:selected_groups]
     unless selected_group_ids.nil?
-      puts "THERE ARE SELECTED_GROUPS"
       selected_group_ids.each do |id|
-        count += 1
-        puts "QUERY: #{count}"
-        _group = Group.find_by(id: id)
-        unless _group.nil? 
-          @selected_groups.push _group
+        group = Group.find_by(id: id)
+        unless group.nil? 
+          @selected_groups.push group
         end
       end
     end
@@ -141,6 +155,27 @@ class HubController < ApplicationController
     end
   end
 
+  #deletes the groups passed as :selected_groups param
+  #:selected_groups is expeced to be an array
+  def delete_entity_group_relations
+    #get the valid set of selected group ids
+    self.selected_entity_group_relations
+
+    @results = []
+    @selected_entity_group_relations.each do |relation|
+      @results.push realtion ? { relation: relation.destroy, msg: "deleted" } : { relation: "", msg: "relation was nil" }
+    end
+
+    self.entities
+    self.groups
+    self.entities_group_relations
+
+    respond_to do |format|
+      format.js
+      format.html { redirect_to hub_path }
+    end
+  end
+
   def entitys_groups
     @result = {msg: "", r: -1}
     @entitys_group_relations = []
@@ -151,7 +186,7 @@ class HubController < ApplicationController
       @result[:r] = 0
       @result[:msg] = "The fetched entity couldn't be found."
     else
-      @entitys_group_relations = @selected_entity.group_relations.paginate(page: params[:entitys_groups_page], per_page: 10, order: 'order ASC')
+      self.entitys_group_relations
       if @entitys_group_relations.empty?
         @result[:r] = 2
         @result[:msg] = "No groups for '#{@selected_entity.name}'"
@@ -167,42 +202,57 @@ class HubController < ApplicationController
   end
 
   def entity_add_groups
+    self.selected_entity
+    self.selected_groups
+
+    @results = []
+    unless @selected_entity.nil?
+      @selected_groups.each do |group|
+        @results.push group ? { relation: @selected_entity.own!(group), group: group, msg: "added to #{@selected_entity.name}" } : { relation: "", group: "", msg: "group was nil" }
+      end
+    else
+      @results.push({ relation: "", group: "", msg: "entity was nil" })
+    end
+
     self.entities
     self.groups
-
-    @result = {msg: "", r: -1}
-    self.selected_entity
-    @selected_groups = params[:selected_groups]
-    matched_groups = []
+    self.entitys_group_relations
 
     respond_to do |format|
-      if @selected_entity.nil?
-        @result[:r] = 0
-        @result[:msg] = "The entity couldn't be found."
-      elsif @selected_groups.empty?
-        @result[:r] = 0
-        @result[:msg] = "There are no groups to add."
-      else
-        @selected_groups.each do |group_id|
-          group = Group.find_by(id: group_id)
-          if group.nil?
-            @result[:r] = 2
-            @result[:msg] += "\nGroup id: '#{group_id}' couldn't be found."
-          else
-            matched_groups.push group
-            @selected_entity.own! group
-          end
-        end
-        @selected_groups = matched_groups
-        @entitys_group_relations = @selected_entity.group_relations.paginate(page: params[:entitys_groups_page], per_page: 10, order: 'order ASC')
-        if @result[:r] < 0
-          @result[:r] = 1
-          @result[:msg] = "The groups were added to '#{@selected_entity.name}'"
-        end
-      end
       format.js
       format.html { redirect_to hub_path }
     end
+
+
+    # matched_groups = []
+
+    # respond_to do |format|
+    #   if @selected_entity.nil?
+    #     @result[:r] = 0
+    #     @result[:msg] = "The entity couldn't be found."
+    #   elsif @selected_groups.empty?
+    #     @result[:r] = 0
+    #     @result[:msg] = "There are no groups to add."
+    #   else
+    #     @selected_groups.each do |group|
+    #       if group.nil?
+    #         @result[:r] = 2
+    #         @result[:msg] += "\nGroup id: '#{group_id}' couldn't be found."
+    #       else
+    #         matched_groups.push group
+    #         @selected_entity.own! group
+    #       end
+    #     end
+    #     @selected_groups = matched_groups
+    #     @entitys_group_relations = @selected_entity.group_relations.paginate(page: params[:entitys_groups_page], per_page: 10, order: 'order ASC')
+    #     if @result[:r] < 0
+    #       @result[:r] = 1
+    #       @result[:msg] = "The groups were added to '#{@selected_entity.name}'"
+    #     end
+    #   end
+    #   format.js
+    #   format.html { redirect_to hub_path }
+    # end
   end
 
   def create_property
