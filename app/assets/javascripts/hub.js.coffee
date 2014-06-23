@@ -14,14 +14,14 @@ window.loadCount = 0
 $ ->
 
     #Ajaxify Entity List Sorting
-    $('#entities').on 'click', "th a", ->
+    $('#entities').on 'click', "th a", (e) ->
         window.entity_sort = getParameterByName "entity_sort", this.href
         window.entity_direction = getParameterByName "entity_direction", this.href
         $.getScript(this.href)
         false
 
     #Ajaxify Group List Sorting
-    $('#groups').on 'click', "th a", ->
+    $('#groups').on 'click', "th a", (e) ->
         window.group_sort = getParameterByName "group_sort", this.href
         window.group_direction = getParameterByName "group_direction", this.href
         $.getScript(this.href)

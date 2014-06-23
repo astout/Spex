@@ -18,8 +18,46 @@
 
 $(function()
 {
+
+    // $('#entities').on('click', "th a", function () {
+    //     $.getScript(this.href);
+    //     return false;
+    // });
+
+    // $('#groups').on('click', "th a", function () {
+    //     $.getScript(this.href);
+    //     return false;
+    // });
+
+    // $("body").on("click", '.pagination a', function(e){
+    //   e.preventDefault();
+    //   $.getScript(this.href);
+    //   return false;
+    // });
+
+    // $("input#group_search_field").on('input', function () {
+    //   $("#search_group").submit();
+    // });
+
+    // $("input#entity_search_field").on('input', function () {
+
+    //   // $(this).css("background-color", "red"); //alert("changed");
+    //   // $.ajax({
+    //   //           url: this.id+"/groups",
+    //   //           // type: "GET",
+    //   //           // data: {id: $(this).id},
+    //   //           // success: function(data) {
+    //   //           //     alert("what just happened?");
+    //   //           // }
+    //   //       });
+    //   $("#search_entity").submit();
+    // });
+
+
     $("[data-toggle='tooltip']").tooltip();
+
 });
+
 
 function collapisbles () {
     $(".nav-sidenav > li").on("show.bs.collapse", function () {
@@ -71,7 +109,6 @@ var printObj = function(obj) {
     return "{ " +  arr.join(", ") + " }";
 };
 
-
 window.getParameterByName = function( name,href )
 {
   name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
@@ -83,3 +120,4 @@ window.getParameterByName = function( name,href )
   else
     return decodeURIComponent(results[1].replace(/\+/g, " "));
 }
+
