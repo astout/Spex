@@ -5,22 +5,21 @@ var alert_html = "";
 
 <% unless @result.nil? %>
     <% if @result[:r] == 1 %>
-        alert_html += "    <div class='alert alert-success'>";
+        alert_html += "    <div class='alert alert-success small-font center'>";
         alert_html += "    <%= @result[:msg] %>";
         alert_html += "    </div>";
         //clear the entity form fields
         $('input[id^=entity]').val('');
     <% else %>
-        alert_html += "    <div class='alert alert-danger'>";
+        alert_html += "    <div class='alert alert-danger small-font center'>";
         alert_html += "        <%= @result[:msg] %>";
         alert_html += "    </div>";
     <% end %>
 <% else %>
-    alert_html += "    <div class='alert alert-danger'>";
+    alert_html += "    <div class='alert alert-danger small-font center'>";
     alert_html += "        There was an error saving #{@entity.name}";
     alert_html += "    </div>";
 <% end %>
 
-$('#hub-alert').html(alert_html);
-
+hubAlert("#entity-alert", alert_html);
 persistStyling();

@@ -4,7 +4,7 @@ clearSelectedGroups();
 
 alert_html = "" 
 <% unless @results.nil? || @results.empty? %>
-    alert_html += "<div class='alert alert-success'>";
+    alert_html += "<div class='alert alert-success small-font'>";
     alert_html += "<p><strong>Groups Added to '<%= @selected_entity.name %>':</strong></p>";
     <% @results.each do |result| %>
         <% unless result[:group].nil? %>
@@ -13,7 +13,7 @@ alert_html = ""
         <% end %>
     <% end %>
 <% else %>
-    alert_html += "<div class='alert alert-danger'>";
+    alert_html += "<div class='alert alert-danger small-font'>";
     alert_html += "<p><strong>Nothing Deleted:</strong></p>";
     alert_html += "<p style='padding-left: 10px'><i>The server returned no results.</i></p>";
 <% end %>
@@ -21,6 +21,7 @@ alert_html += "</div>"
 
 $('#groups').html("<%= j render partial: 'groups/groups', locals: { show_created: false, show_remove: false } %>");
 
-$("#hub-alert").html(alert_html);
-$('#entitys-groups-alert').html("");
+hubAlert("#entitys-groups-alert", alert_html);
 persistStyling();
+window.selected_entitys_max_group_order = <%= @selected_entity.groups.count %>
+validateEntitysGroupSelection();

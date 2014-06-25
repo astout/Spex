@@ -163,12 +163,35 @@ class HubController < ApplicationController
 
     @results = []
     @selected_entity_group_relations.each do |relation|
-      @results.push realtion ? { relation: relation.destroy, msg: "deleted" } : { relation: "", msg: "relation was nil" }
+      success = relation.group.flee! relation.entity
+      @results.push success ? { relation: relation, msg: "deleted" } : { relation: relation, msg: "not deleted" }
     end
 
     self.entities
     self.groups
-    self.entities_group_relations
+    self.entitys_group_relations
+
+    respond_to do |format|
+      format.js
+      format.html { redirect_to hub_path }
+    end
+  end
+
+  #top entity group relations
+  def top_entity_group_relations
+    #get the valid set of selected group relation ids
+    self.selected_entity_group_relations
+    count = @selected_entity_group_relations.count + 1
+
+    @results = []
+    @selected_entity_group_relations.reverse.each do |relation|
+      success = relation.entity.first! relation.group
+      @results.push success ? { relation: relation, msg: "moved to top", idx: count -= 1 } : { relation: relation, msg: "not moved", idx: count -= 1 }
+    end
+
+    self.entities
+    self.groups
+    self.entitys_group_relations
 
     respond_to do |format|
       format.js
@@ -182,9 +205,10 @@ class HubController < ApplicationController
     self.selected_groups
     self.groups
 
+    #assume nothing's selected
     if @selected_entity.nil?
-      @result[:r] = 0
-      @result[:msg] = "The fetched entity couldn't be found."
+      @result[:r] = 1
+      @result[:msg] = ""
     else
       self.entitys_group_relations
       if @entitys_group_relations.empty?
@@ -257,14 +281,6 @@ class HubController < ApplicationController
 
   def create_property
     puts "CALLED THIS"
-    #not yet implemented
-  end
-
-  def create_entity_group_relation
-    #not yet implemented
-  end
-
-  def create_group_property_relation
     #not yet implemented
   end
 

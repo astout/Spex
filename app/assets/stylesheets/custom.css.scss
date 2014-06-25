@@ -37,7 +37,6 @@ textarea {
 }
 
 .small-font {
-  text-align: center;
   font-size: 0.9em;
   line-height: 1em;
 }
@@ -97,6 +96,18 @@ td {
   &:hover {
     color: white;
     text-decoration: none;
+  }
+}
+
+span#quick-links {
+  padding-left: 5px;
+  padding-bottom: 5px;
+  a {
+    color: #44C76A;
+    &:hover {
+      color: #11AB3E;
+      text-decoration: none;
+    }
   }
 }
 
@@ -458,6 +469,45 @@ div#add-selected-groups {
     content: "\f0fe";    //fa-plus-square
     font-size: 2em;
   }
+}
+
+div.group-order-action {
+  background-repeat: no-repeat;  
+  background-position: right center;
+  float: right;
+  font-family: 'FontAwesome';
+  // font-size: 1em;
+  line-height: 2em;
+  &.enabled {
+    color: #21B82F;
+    &:hover {
+      cursor: pointer;
+      color: #198C24;
+    }
+  }
+  &.enabled:after {
+    float: left;
+    padding-left: 5px;
+    font-family: 'FontAwesome';
+    // content: "\f0fe";    //fa-plus-square
+    // font-size: 2em;
+  }
+  &.disabled {
+    color: grey; 
+  }
+  &.disabled:after {
+    float: left;
+    padding-left: 5px;
+    font-family: 'FontAwesome';
+    // content: "\f0fe";    //fa-plus-square
+    // font-size: 2em;
+  }
+}
+
+span#selected-entitys-group-order-actions {
+  background-repeat: no-repeat;  
+  background-position: right center;
+  float: right;
 }
 
 div.alert {

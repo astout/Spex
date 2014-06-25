@@ -6,6 +6,8 @@
 window.selected_entity = -1 #only one selected entity at a time
 window.selected_groups = [] #list of selected groups
 window.selected_entity_group_relations = [] #list of selected entity's groups
+window.selected_entity_group_orders = [] #list of selected entity's groups order
+window.selected_entitys_max_group_order = -1
 window.group_sort = "created_at"
 window.entity_sort = "created_at"
 window.group_direction = "desc"
@@ -13,6 +15,8 @@ window.entity_direction = "desc"
 window.loadCount = 0
 
 $ ->
+
+    console.log("I ran")
 
     #Ajaxify Entity List Sorting
     $('#entities').on 'click', "th a", (e) ->
@@ -54,7 +58,7 @@ $ ->
     $("body").on "click", '.table tr.entity_group_relationship', (e) ->
        
         #get the group id
-        toggleEntitysGroupSelect this.id
+        toggleEntitysGroupSelect this.id, $(this).data().order
 
 
     #on group list element click
@@ -114,8 +118,14 @@ $ ->
         #if it's enabled
         unless $(this).hasClass "disabled"
 
-            deleteEntitysGroups window.selected_entity_group_relations
+            deleteEntityGroupRelations window.selected_entity_group_relations
+
+    $("body").on "click", "#top-selected-entitys-groups", (e) ->
+
+        #if it's enabled
+        unless $(this).hasClass "disabled"
             
+            topEntityGroupRelations window.selected_entity_group_relations
 
 toggleEntitySelect = (id) ->
     $("tr.selected-entity").removeClass("selected-entity")
@@ -136,12 +146,14 @@ clearSelectedEntity = () ->
     $("tr.selected-entity").removeClass "selected-entity"
     window.selected_entity = -1
     validateEntitySelection()
+    getEntitysGroups window.selected_entity
+
 window.clearSelectedEntity = clearSelectedEntity
 
 validateEntitySelection = () ->
     #clear the selected entity's groupsd partial if no entity is selected
     if window.selected_entity < 0
-        _html = "<div class='alert alert-info small-font'>"
+        _html = "<div class='alert alert-info small-font center'>"
         _html += "<i>No Entity selected.</i></div>"
         $("#entitys_groups").html ""
         $("#entitys-groups-alert").html _html
@@ -194,10 +206,10 @@ addGroupsToEntity = (groups, entity) ->
         type: 'POST'
 window.addGroupsToEntity = addGroupsToEntity  
 
-deleteEntityGroupRelations = (relationship_id) ->
+deleteEntityGroupRelations = (relationship_ids) ->
     params = $.param( { 
         selected_entity: window.selected_entity,
-        selected_entity_group_relations: relationship_id, 
+        selected_entity_group_relations: relationship_ids, 
         selected_groups: window.selected_groups,
         group_search: $("input#group_search_field").val(), 
         entity_search: $("input#entity_search_field").val(), 
@@ -209,11 +221,29 @@ deleteEntityGroupRelations = (relationship_id) ->
 
     #send the request to add the selected groups to the selected entity
     $.ajax 
-        url: "/hub/delete_entity_group_relation?" + params
+        url: "/hub/delete_entity_group_relations?" + params
         type: 'POST'
 
-    validateEntitysGroupSelection()
-window.deleteGroups = deleteGroups
+window.deleteEntityGroupRelations = deleteEntityGroupRelations
+
+topEntityGroupRelations = (relationship_ids) ->
+    params = $.param( { 
+        selected_entity: window.selected_entity,
+        selected_entity_group_relations: relationship_ids, 
+        selected_groups: window.selected_groups,
+        group_search: $("input#group_search_field").val(), 
+        entity_search: $("input#entity_search_field").val(), 
+        group_direction: window.group_direction, 
+        entity_direction: window.entity_direction, 
+        group_sort: window.group_sort, 
+        entity_sort: window.entity_sort  
+        } )
+
+    #send the request to add the selected groups to the selected entity
+    $.ajax 
+        url: "/hub/top_entity_group_relations?" + params
+        type: 'POST'
+window.deleteEntityGroupRelations = deleteEntityGroupRelations
 
 toggleGroupSelect = (id) ->
     index = $.inArray(id, window.selected_groups)
@@ -262,8 +292,9 @@ clearSelectedGroups = () ->
     validateGroupSelection()
 window.clearSelectedGroups = clearSelectedGroups
 
-toggleEntitysGroupSelect = (id) ->
+toggleEntitysGroupSelect = (id, order) ->
     #if the clicked group is already selected
+    id += ""
     index = $.inArray id, window.selected_entity_group_relations
     if index > -1
         window.selected_entity_group_relations.splice(index, 1)
@@ -271,6 +302,14 @@ toggleEntitysGroupSelect = (id) ->
     else
         $("tr#"+id+".entity_group_relationship").addClass "selected-entitys-group"
         window.selected_entity_group_relations.push(id)
+
+    order += ""
+    index = $.inArray order, window.selected_entity_group_orders
+    if index > -1
+        window.selected_entity_group_orders.splice(index, 1)
+    else
+        window.selected_entity_group_orders.push order
+
     validateEntitysGroupSelection()
 window.toggleEntitysGroupSelect = toggleEntitysGroupSelect
 
@@ -281,10 +320,44 @@ validateEntitysGroupSelection = () ->
     else
         $("#clear-selected-entitys-groups").addClass("disabled")
         $("#delete-selected-entitys-groups").addClass("disabled")
+
+    orders = window.selected_entity_group_orders
+    maxOrder = window.selected_entitys_max_group_order + ""
+
+    if orders.length < 1
+        $("div.group-order-action").removeClass "enabled"
+        $("div.group-order-action").addClass "disabled"
+    else
+        index_first = $.inArray "1", orders
+        if index_first > -1
+            $("div#up-selected-entitys-groups").removeClass "enabled"
+            $("div#up-selected-entitys-groups").addClass "disabled"
+            $("div#top-selected-entitys-groups").removeClass "enabled"
+            $("div#top-selected-entitys-groups").addClass "disabled"
+        else
+            $("div#up-selected-entitys-groups").removeClass "disabled"
+            $("div#up-selected-entitys-groups").addClass "enabled"
+            $("div#top-selected-entitys-groups").removeClass "disabled"
+            $("div#top-selected-entitys-groups").addClass "enabled"
+        index_last = $.inArray maxOrder, orders
+        if index_last > -1
+            $("div#down-selected-entitys-groups").removeClass "enabled"
+            $("div#down-selected-entitys-groups").addClass "disabled"
+            $("div#bottom-selected-entitys-groups").removeClass "enabled"
+            $("div#bottom-selected-entitys-groups").addClass "disabled"
+        else
+            $("div#down-selected-entitys-groups").removeClass "disabled"
+            $("div#down-selected-entitys-groups").addClass "enabled"
+            $("div#bottom-selected-entitys-groups").removeClass "disabled"
+            $("div#bottom-selected-entitys-groups").addClass "enabled"
+
+
 window.validateEntitysGroupSelection = validateEntitysGroupSelection
 
 clearSelectedEntitysGroups = () ->
     window.selected_entity_group_relations = []
+    window.selected_entity_group_orders = []
+    window.selected_entitys_max_group_order = -1
     $("tr.selected-entitys-group").removeClass "selected-entitys-group"
     validateEntitysGroupSelection()
 window.clearSelectedEntitysGroups = clearSelectedEntitysGroups
@@ -321,6 +394,19 @@ persistStyling = () ->
             $("tr#"+relationship_id+".entity_group_relationship").addClass "selected-entitys-group"
     else
         $("tr.selected-entitys-group").removeClass "selected-entitys-group"
-
 #globalize persistStyling        
 window.persistStyling = persistStyling
+
+#creates an alert in the specified document id with the given html
+#clears all other alert divs
+hubAlert = (documentId, html) ->
+    #clear all alerts
+    $("#hub-alert").html ""
+    $("#entitys-groups-alert").html ""
+    $("#entity-alert").html ""
+    $("#group-alert").html ""
+
+    #update the given div to the html
+    $(documentId).html html
+
+window.hubAlert = hubAlert

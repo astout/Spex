@@ -1,5 +1,4 @@
 Spex::Application.routes.draw do
-  get "hub/main"
   post "hub/create_entity"
   post "hub/entitys_groups"
   post "hub/delete_entity"
@@ -7,8 +6,8 @@ Spex::Application.routes.draw do
   post "hub/create_group"
   post "hub/delete_groups"
   post "hub/create_property"
-  post "hub/create_entity_group_relation"
-  post "hub/create_group_property_relation"
+  post "hub/delete_entity_group_relations"
+  post "hub/top_entity_group_relations"
   get "groups/new"
   get "entities/new"
   get "properties/new"
@@ -42,6 +41,8 @@ Spex::Application.routes.draw do
   match '/hub/delete_entity', to: 'hub#main',   via: 'get'
   match '/hub/delete_groups',  to: 'hub#main',    via: 'get'
   match '/hub/entity_add_groups', to: 'hub#main',    via: 'get'
+  match '/hub/delete_entity_group_relations', to: 'hub#main',    via: 'get'
+  match '/hub/top_entity_group_relations', to: 'hub#main',    via: 'get'
   match '/hub/entitys_groups', to: 'hub#main',  via: 'get'
   match '/signup',  to: 'users#new',            via: 'get'
   match '/hub',     to: 'hub#main',             via: 'get'

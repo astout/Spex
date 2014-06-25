@@ -3,16 +3,16 @@ var alert_html = "";
 alert_html = "" 
 <% unless @results.nil? %>
     alert_html += "<div class='alert alert-success small-font'>";
-    alert_html += "<p><strong>Groups Removed from '<%= @selected_entity.name %>':</strong></p>";
-    <% @results.each do |result| %>
+    alert_html += "<p><strong>Groups Reordered for '<%= @selected_entity.name %>':</strong></p>";
+    <% @results.reverse.each do |result| %>
         <% unless result[:relation].nil? %>
-            alert_html += "<p style='padding-left: 10px'>- <%=result[:relation].group.name %> </p>";
+            alert_html += "<p style='padding-left: 10px'>- <%= result[:idx] %>.  <%= result[:relation].group.name %> </p>";
             toggleEntitysGroupSelect(<%= result[:relation].id %>, <%= result[:relation].order %> + 1); 
         <% end %>
     <% end %>
 <% else %>
     alert_html += "<div class='alert alert-danger small-font'>";
-    alert_html += "<p><strong>Nothing Deleted:</strong></p>";
+    alert_html += "<p><strong>Groups not reordered.</strong></p>";
     alert_html += "<p style='padding-left: 10px'><i>The server returned no results.</i></p>";
 <% end %>
 alert_html += "</div>"
@@ -24,7 +24,5 @@ $('#entitys_groups').html("  <%= j render partial: 'entities/groups', locals: { 
 $('#groups').html("<%= j render partial: 'groups/groups', locals: { show_created: false, show_remove: false } %>");
 
 persistStyling();
-
-window.selected_entitys_max_group_order = <%= @selected_entity.groups.count %>;
 
 validateEntitysGroupSelection();

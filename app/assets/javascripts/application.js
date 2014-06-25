@@ -11,6 +11,7 @@
 // about supported directives.
 //
 //= require jquery
+//= require jquery.turbolinks
 //= require jquery_ujs
 //= require bootstrap
 //= require turbolinks
@@ -18,44 +19,12 @@
 
 $(function()
 {
-
-    // $('#entities').on('click', "th a", function () {
-    //     $.getScript(this.href);
-    //     return false;
-    // });
-
-    // $('#groups').on('click', "th a", function () {
-    //     $.getScript(this.href);
-    //     return false;
-    // });
-
-    // $("body").on("click", '.pagination a', function(e){
-    //   e.preventDefault();
-    //   $.getScript(this.href);
-    //   return false;
-    // });
-
-    // $("input#group_search_field").on('input', function () {
-    //   $("#search_group").submit();
-    // });
-
-    // $("input#entity_search_field").on('input', function () {
-
-    //   // $(this).css("background-color", "red"); //alert("changed");
-    //   // $.ajax({
-    //   //           url: this.id+"/groups",
-    //   //           // type: "GET",
-    //   //           // data: {id: $(this).id},
-    //   //           // success: function(data) {
-    //   //           //     alert("what just happened?");
-    //   //           // }
-    //   //       });
-    //   $("#search_entity").submit();
-    // });
-
-
     $("[data-toggle='tooltip']").tooltip();
 
+    $("a.refresh").hover(
+        function() { $(this).addClass("fa-spin") },
+        function() { $(this).removeClass("fa-spin") }
+    )
 });
 
 
@@ -83,20 +52,6 @@ function toggleCollapseGlyph (tag) {
         $(tag).removeClass("glyphicon-chevron-down");
         $(tag).addClass("glyphicon-chevron-right");
     }
-}
-
-$('.link_to_add_property_association').bind('ajax:beforeSend', function() {
-
-});
-
-$('.link_to_add_property_association').bind('ajax:complete', function() {
-    
-});
-
-function add_parent (parent_id) {
-    $('#add_property_'+parent_id).hide();
-    var html = "<li id="+parent_id+">"+parent_id+"</li> ";
-    $('#parents').append(html);
 }
 
 var printObj = function(obj) {

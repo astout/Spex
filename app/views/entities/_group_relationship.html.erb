@@ -1,4 +1,4 @@
-<tr id=<%= "#{group_relationship.id}" %> class="list-item entity_group_relationship">
+<tr id=<%= "#{group_relationship.id}" %> class="list-item entity_group_relationship" data-order=<%= group_relationship.order+1 %> >
     <td>
       <%= link_to group_relationship.group.name, group_relationship %>
     </td>
