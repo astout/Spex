@@ -504,6 +504,14 @@ div.group-order-action {
   }
 }
 
+i#clear-alerts {
+  position: fixed;
+  bottom: 5px;
+  right: 15px;
+  color: #FF0000;
+  cursor: pointer;
+}
+
 span#selected-entitys-group-order-actions {
   background-repeat: no-repeat;  
   background-position: right center;

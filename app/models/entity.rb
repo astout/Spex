@@ -369,13 +369,13 @@ class Entity < ActiveRecord::Base
     else
       line = relationship.order
     end
-    relationships.each do |r|
+    relationships.reverse.each do |r|
       next if r == relationship
       if r.order.nil?
         r.update_attribute(:order, last -= 1)
       else
         if r.order > line
-          r.update_attribute(:order, last - 1)
+          r.update_attribute(:order, last -= 1)
         end
       end
     end

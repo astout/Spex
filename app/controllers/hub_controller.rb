@@ -199,6 +199,91 @@ class HubController < ApplicationController
     end
   end
 
+  #top entity group relations
+  def bottom_entity_group_relations
+    #get the valid set of selected group relation ids
+    self.selected_entity_group_relations
+    _index = @selected_entity_group_relations.first.entity.groups.count - @selected_entity_group_relations.count
+
+    @results = []
+    relations = @selected_entity_group_relations.sort_by { |r| r[:order] }
+    relations.to_enum.with_index(0).each do |relation, i|
+      success = relation.entity.last! relation.group
+      @results.push success ? { relation: relation, msg: "moved to bottom", idx: _index += 1 } : { relation: relation, msg: "not moved", idx: _index += 1 }
+    end
+
+    @results.reverse!
+
+    self.entities
+    self.groups
+    self.entitys_group_relations
+
+    respond_to do |format|
+      format.js { render 'top_entity_group_relations' }
+      format.html { redirect_to hub_path }
+    end
+  end
+
+  #up entity group relations
+  def up_entity_group_relations
+    #get the valid set of selected group relation ids
+    self.selected_entity_group_relations
+
+    @results = []
+    relations = @selected_entity_group_relations.sort_by { |r| r[:order] }
+    relations.to_enum.with_index(0).each do |relation, i|
+      if relation.order == i
+        @results.push({ relation: relation, msg: "not moved", idx: i+1 })
+      else
+        success = relation.entity.up! relation.group
+        @results.push success ? { relation: relation, msg: "moved", idx: relation.order } : { relation: relation, msg: "not moved", idx: relation.order + 1 }
+      end
+    end
+
+    @results.reverse!
+
+    self.entities
+    self.groups
+    self.entitys_group_relations
+
+    respond_to do |format|
+      format.js { render 'top_entity_group_relations' }
+      format.html { redirect_to hub_path }
+    end
+  end
+
+  #down entity group relations
+  def down_entity_group_relations
+    #get the valid set of selected group relation ids
+    self.selected_entity_group_relations
+
+    @results = []
+    relations = @selected_entity_group_relations.sort_by { |r| r[:order] }
+    relations.reverse.to_enum.with_index(0).each do |relation, i|
+      puts "Relation"
+      puts "#{relation.group.name}"
+      puts "Order"
+      puts "#{relation.order}"
+      puts "Index"
+      puts i
+      if relation.order == relation.entity.groups.count - 1 - i 
+        @results.push({ relation: relation, msg: "not moved", idx: i+1 })
+      else
+        success = relation.entity.down! relation.group
+        @results.push success ? { relation: relation, msg: "moved", idx: relation.order + 2 } : { relation: relation, msg: "not moved", idx: relation.order + 1 }
+      end
+    end
+
+    self.entities
+    self.groups
+    self.entitys_group_relations
+
+    respond_to do |format|
+      format.js { render 'top_entity_group_relations' }
+      format.html { redirect_to hub_path }
+    end
+  end
+
   def entitys_groups
     @result = {msg: "", r: -1}
     @entitys_group_relations = []

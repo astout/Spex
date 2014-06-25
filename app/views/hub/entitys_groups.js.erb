@@ -1,5 +1,7 @@
 var alert_html = "";
 
+alert_html = "";
+
 <% unless @result.nil? %>
     <% if @result[:r] == 0 %>
         alert_html += "    <div class='alert alert-danger small-font center'>";
@@ -16,7 +18,7 @@ var alert_html = "";
     alert_html += "    </div>";
 <% end %>
 
-if( alert_html.length > 1)
+if( selected_entity > -1 )
 {
     hubAlert("#entitys-groups-alert", alert_html);
 }

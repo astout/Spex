@@ -6,7 +6,9 @@ alert_html = ""
     alert_html += "<p><strong>Groups Reordered for '<%= @selected_entity.name %>':</strong></p>";
     <% @results.reverse.each do |result| %>
         <% unless result[:relation].nil? %>
-            alert_html += "<p style='padding-left: 10px'>- <%= result[:idx] %>.  <%= result[:relation].group.name %> </p>";
+            <% unless result[:msg] == "not moved" %>
+                alert_html += "<p style='padding-left: 10px'>- <%= result[:idx] %>.  <%= result[:relation].group.name %> </p>";
+            <% end %>
             toggleEntitysGroupSelect(<%= result[:relation].id %>, <%= result[:relation].order %> + 1); 
         <% end %>
     <% end %>
