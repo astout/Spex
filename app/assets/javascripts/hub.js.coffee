@@ -531,7 +531,9 @@ hubAlert = (documentId, html) ->
     $("#group-alert").html ""
 
     #update the given div to the html
-    unless documentId.blank?
+    if documentId.length < 1
+        $("#entitys-groups-alert").html ""
+    else
         $(documentId).html html
 
 window.hubAlert = hubAlert
