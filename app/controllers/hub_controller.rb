@@ -99,13 +99,12 @@ class HubController < ApplicationController
     self.groups
     # self.selected_entity
     # self.selected_groups
+    @result = {msg: "", r: -1}
+    @result[:r] = success ? 1 : 0
+    @result[:msg] = success ? "'#{@entity.name}' deleted." : "Unable to delete '#{@entity.name}'."
 
     respond_to do |format|
-      format.js {  
-        @result = {msg: "", r: -1}
-        @result[:r] = success ? 1 : 0
-        @result[:msg] = success ? "'#{@entity.name}' deleted." : "Unable to delete '#{@entity.name}'."
-      }
+      format.js
       format.html { redirect_to hub_path }
     end
   end
