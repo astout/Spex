@@ -76,5 +76,49 @@ class Property < ActiveRecord::Base
   def entity_relations
     EntityPropertyRelationship.where(property_id: self.id)
   end
+
+  ##################
+  # # # GROUP SEARCH
+  ##################
+
+  #class function
+  #returns groups that match the given search string
+  #It searches the name, label, created, and updated fields for partial matches
+  def self.search(search)
+    #return all entities if search is nil
+    return all if search.nil?
+
+    #split the search by spaces
+    _elements = search.split ' '
+
+    #return all if empty after split
+    unless _elements.empty?
+      #declare an array to store each binding element
+      elements = []
+
+      #for each word from the split search phrase
+      _elements.each do |e|
+        #wrap each word in '%' to allow partial matches
+        e = '%'+e+'%'
+        #add the string to the binding elements 4 times (1 for each field)
+        elements.concat [e]*4
+      end
+      #declare the where clause
+      clause = ''
+
+      #for each word from the search string
+      _elements.each do |element|
+        #append to the clause the full query
+        clause += '(name LIKE ? OR default_label LIKE ? OR created_at LIKE ? OR updated_at LIKE ?) AND '
+      end
+      #remove the trailing 'AND' from the clause
+      clause = clause.gsub(/(.*)( AND )(.*)/, '\1')
+
+      #call the query using the clause and each binding element
+      where clause, *elements
+    else
+      all # if _elements.empty?
+    end
+  end
   
 end

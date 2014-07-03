@@ -1,10 +1,13 @@
 Spex::Application.routes.draw do
   post "hub/create_entity"
   post "hub/entitys_groups"
+  post "hub/groups_properties"
   post "hub/delete_entity"
   post "hub/entity_add_groups"
+  post "hub/group_add_properties"
   post "hub/create_group"
   post "hub/delete_groups"
+  post "hub/delete_properties"
   post "hub/create_property"
   post "hub/delete_entity_group_relations"
   post "hub/top_entity_group_relations"

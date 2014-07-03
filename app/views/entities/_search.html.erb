@@ -1,7 +1,7 @@
 <%= form_tag path, method: 'get', remote: true do %>
     <%= hidden_field_tag :entity_direction, params[:entity_direction] %>
     <%= hidden_field_tag :entity_sort, params[:entity_sort] %>
-    <%= hidden_field_tag :entity_event, true %>
+    <%= hidden_field_tag :event, 'entity' %>
     <div class="input-group" style="margin-bottom: 15px">
         <%= text_field_tag :entity_search, params[:entity_search], class: "form-control" %>
         <span class="input-group-btn" >

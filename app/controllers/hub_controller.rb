@@ -1,5 +1,5 @@
 class HubController < ApplicationController
-  helper_method :entity_sort_column, :entity_sort_direction, :group_sort_column, :group_sort_direction, :entitys_group_sort_column, :entitys_group_sort_direction
+  helper_method :entity_sort_column, :entity_sort_direction, :group_sort_column, :group_sort_direction, :entitys_group_sort_column, :entitys_group_sort_direction, :property_sort_column, :property_sort_direction
 
   before_action do
     unless current_user.nil?
@@ -49,10 +49,24 @@ class HubController < ApplicationController
     @selected_groups
   end
 
+  def selected_properties
+    @selected_properties = []
+    selected_property_ids = params[:selected_properties]
+    unless selected_property_ids.nil?
+      selected_property_ids.each do |id|
+        property = Property.find_by(id: id)
+        unless property.nil? 
+          @selected_properties.push property
+        end
+      end
+    end
+    @selected_properties
+  end
+
   def groups
     self.selected_entity
     if @selected_entity.nil?
-    @groups = Group.search(params[:group_search]).order(group_sort_column + ' ' + group_sort_direction).paginate(page: params[:groups_page], per_page: 10)
+      @groups = Group.search(params[:group_search]).order(group_sort_column + ' ' + group_sort_direction).paginate(page: params[:groups_page], per_page: 10)
     else
       #store the entity's groups to eliminate repeated queries
       reject_groups = @selected_entity.groups
@@ -60,11 +74,35 @@ class HubController < ApplicationController
     end
   end
 
+  def properties
+    self.selected_entity_group_relations
+    self.selected_groups
+    reject_properties = []
+    if @selected_groups.blank?
+      #store the entity's groups to eliminate repeated queries
+      @selected_groups.each do |group|
+        reject_properties |= group.properties
+      end
+    elsif @selected_entity_group_relations.blank?
+      @selected_entity_group_relations.each do |relation|
+        reject_properties |= relation.group.properties
+      end
+    end
+    @properties = Property.search(params[:property_search]).order(property_sort_column + ' ' + property_sort_direction).reject { |property| reject_properties.any? { |g_property| g_property[:id] == property[:id] } }.paginate(page: params[:properties_page], per_page: 10)
+  end
+
   def main
     self.entities
     self.groups
+    self.properties
     @entity = Entity.new
     @group = Group.new
+    @property = Property.new
+
+    respond_to do |format|
+      format.js
+      format.html
+    end
   end
 
   def create_entity
@@ -283,11 +321,42 @@ class HubController < ApplicationController
     end
   end
 
+  #Gets the group_property_relationships for the selected groups
+  def groups_properties
+    @result = { msg: "", r: -1 }
+    @groups_property_relations = []
+    self.selected_groups
+    self.properties
+
+    #assume nothing's selected
+    if @selected_groups.blank?
+      @result[:r] = 2
+      @result[:msg] = "No groups selected."
+    else
+      @selected_groups.each do |group|
+        @groups_property_relations |= group.property_relations
+      end
+      if @groups_property_relations.blank?
+        @result[:r] = 2
+        @result[:msg] = "No properties for '#{@selected_groups.first.name}'"
+      else
+        @groups_property_relations = @groups_property_relations.paginate(page: params[:entitys_groups_page], per_page: 10, order: 'order ASC')
+        @result[:r] = 1
+        @result[:msg] = ""
+      end
+    end
+    respond_to do |format|
+      format.js
+      format.html { redirect_to hub_path }
+    end
+  end
+
   def entitys_groups
-    @result = {msg: "", r: -1}
+    @result = { msg: "", r: -1 }
     @entitys_group_relations = []
     self.selected_groups
     self.groups
+    @fetched_entitys_groups = true
 
     #assume nothing's selected
     if @selected_entity.nil?
@@ -304,7 +373,7 @@ class HubController < ApplicationController
       end
     end
     respond_to do |format|
-      format.js
+      format.js #{ render 'main' }
       format.html { redirect_to hub_path }
     end
   end
@@ -330,42 +399,78 @@ class HubController < ApplicationController
       format.js
       format.html { redirect_to hub_path }
     end
+  end
 
+  def group_add_properties
+    self.selected_groups
+    self.selected_properties
 
-    # matched_groups = []
+    @results = []
+    #there should only be one group selected, this is enforced client-side
+    unless @selected_groups.blank?
+      group = @selected_groups.first
+      unless group.nil?
+        @selected_properties.each do |property|
+          @results.push property ? { relation: group.own!(property), property: property, msg: "added to #{group.name}" } : { relation: "", property: "", msg: "property was nil" }
+        end
+      end
+    else
+      @results.push({ relation: "", group: "", msg: "group was nil" })
+    end
 
-    # respond_to do |format|
-    #   if @selected_entity.nil?
-    #     @result[:r] = 0
-    #     @result[:msg] = "The entity couldn't be found."
-    #   elsif @selected_groups.empty?
-    #     @result[:r] = 0
-    #     @result[:msg] = "There are no groups to add."
-    #   else
-    #     @selected_groups.each do |group|
-    #       if group.nil?
-    #         @result[:r] = 2
-    #         @result[:msg] += "\nGroup id: '#{group_id}' couldn't be found."
-    #       else
-    #         matched_groups.push group
-    #         @selected_entity.own! group
-    #       end
-    #     end
-    #     @selected_groups = matched_groups
-    #     @entitys_group_relations = @selected_entity.group_relations.paginate(page: params[:entitys_groups_page], per_page: 10, order: 'order ASC')
-    #     if @result[:r] < 0
-    #       @result[:r] = 1
-    #       @result[:msg] = "The groups were added to '#{@selected_entity.name}'"
-    #     end
-    #   end
-    #   format.js
-    #   format.html { redirect_to hub_path }
-    # end
+    self.groups
+    self.properties
+
+    respond_to do |format|
+      format.js
+      format.html { redirect_to hub_path }
+    end
   end
 
   def create_property
-    puts "CALLED THIS"
-    #not yet implemented
+    @property = Property.find_by(name: property_params[:name])
+    @result = {msg: "", r: -1}
+
+    respond_to do |format|
+      if @property.nil?
+        @property = Property.new(property_params)
+        if !@property.save
+          @result[:r] = 0
+          @result[:msg] = "'#{@property.name}' failed to save."
+        else
+          @result[:r] = 1
+          @result[:msg] = "'#{@property.name}' was saved."
+          #groups needs to be updated to get the latest addition
+        end
+      else
+        @result[:r] = 0
+        @result[:msg] = "Name: '#{@property.name}' is already taken."
+      end
+      self.properties
+      format.js
+      format.html { redirect_to hub_path }
+    end
+  end
+
+  #deletes the properties passed as :selected_properties param
+  #:selected_properties is expected to be an array
+  def delete_properties
+    #get the valid set of selected property ids
+    self.selected_properties
+
+    @results = []
+    @selected_properties.each do |property|
+      @results.push property ? { property: property.destroy, msg: "deleted" } : { property: nil, msg: "property was nil" }
+    end
+
+    self.entities
+    self.groups
+    self.properties
+
+    respond_to do |format|
+      format.js
+      format.html { redirect_to hub_path }
+    end
   end
 
   private
@@ -376,6 +481,10 @@ class HubController < ApplicationController
 
     def group_params
       params.require(:group).permit(:name, :default_label)
+    end
+
+    def property_params
+      params.require(:property).permit(:name, :units, :units_short, :default_label, :default_value)
     end
 
     def entity_sort_column
@@ -402,4 +511,11 @@ class HubController < ApplicationController
       %w[asc desc].include?(params[:entitys_group_direction]) ? params[:entitys_group_direction] : "desc"
     end
 
+    def property_sort_column
+      Property.column_names.include?(params[:property_sort]) ? params[:property_sort] : "created_at"
+    end
+
+    def property_sort_direction
+      %w[asc desc].include?(params[:property_direction]) ? params[:property_direction] : "desc"
+    end
 end

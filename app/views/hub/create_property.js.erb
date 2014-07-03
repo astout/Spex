@@ -1,5 +1,5 @@
-$('#entities').html("<%= j render partial: 'entities/entities', locals: { show_created: false, show_remove: false } %>");
-$('input[id=entity_search_field]').val('');
+$('#properties').html("<%= j render partial: 'properties/properties', locals: { show_units: false, show_created: false, show_remove: false } %>");
+$('input[id=property_search_field]').val('');
 
 var alert_html = "";
 
@@ -8,8 +8,8 @@ var alert_html = "";
         alert_html += "    <div class='alert alert-success small-font center'>";
         alert_html += "    <%= @result[:msg] %>";
         alert_html += "    </div>";
-        //clear the entity form fields
-        $('input[id^=entity]').val('');
+        //clear the property form fields
+        $('input[id^=property]').val('');
     <% else %>
         alert_html += "    <div class='alert alert-danger small-font center'>";
         alert_html += "        <%= @result[:msg] %>";
@@ -17,10 +17,10 @@ var alert_html = "";
     <% end %>
 <% else %>
     alert_html += "    <div class='alert alert-danger small-font center'>";
-    alert_html += "        There was an error saving #{@entity.name}";
+    alert_html += "        There was an error saving #{@property.name}";
     alert_html += "    </div>";
 <% end %>
 
-hubAlert("#entity-alert", alert_html);
+hubAlert("#property-alert", alert_html);
+
 persistStyling();
-ajaxPagination();

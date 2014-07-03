@@ -5,14 +5,21 @@ module ApplicationHelper
     title ||= column.titleize 
     css_class = (column == entity_sort_column) ? "current #{entity_sort_direction}" : nil  
     direction = (column == entity_sort_column && entity_sort_direction == "asc") ? "desc" : "asc"  
-    link_to title, params.merge(entity_sort: column, entity_direction: direction, entity_event: true, page: nil), {class: css_class}  
+    link_to title, params.merge(entity_sort: column, entity_direction: direction, event: "entity", page: nil), {class: css_class}  
   end
 
   def group_sortable(column, title = nil)
     title ||= column.titleize 
     css_class = (column == group_sort_column) ? "current #{group_sort_direction}" : nil  
     direction = (column == group_sort_column && group_sort_direction == "asc") ? "desc" : "asc"  
-    link_to title, params.merge(group_sort: column, group_direction: direction, group_event: true, page: nil), {class: css_class}  
+    link_to title, params.merge(group_sort: column, group_direction: direction, event: "group", page: nil), {class: css_class}  
+  end
+
+  def property_sortable(column, title = nil)
+    title ||= column.titleize 
+    css_class = (column == property_sort_column) ? "current #{property_sort_direction}" : nil  
+    direction = (column == property_sort_column && property_sort_direction == "asc") ? "desc" : "asc"  
+    link_to title, params.merge(property_sort: column, property_direction: direction, event: "property", page: nil), {class: css_class}  
   end
 
   def entitys_group_sortable(column, title = nil)

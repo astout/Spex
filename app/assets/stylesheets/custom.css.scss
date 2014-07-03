@@ -239,6 +239,12 @@ input.btn100 {
   width: 100px;
 }
 
+input.btn110 {
+  float: right;
+  right: 0px;
+  width: 110px;
+}
+
 input.btn75{
   width: 75px;
   right: 0px;
@@ -416,6 +422,14 @@ tr.selected-group {
   }
 }
 
+tr.selected-property {
+  background-color: #AADFFF; //soft-blue
+  &:hover {
+    background-color: #AFDFE8; //other blue
+    text-decoration: none;
+  }
+}
+
 aside.v-divider {
   border-right: 1px solid black;
 }
@@ -439,6 +453,39 @@ aside.v-divider {
 }
 
 div#add-selected-groups {
+  background-repeat: no-repeat;  
+  background-position: right center;
+  float: right;
+  font-family: 'FontAwesome';
+  font-size: 1em;
+  line-height: 2em;
+  &.enabled {
+    color: #21B82F;
+    &:hover {
+      cursor: pointer;
+      color: #198C24;
+    }
+  }
+  &.enabled:after {
+    float: right;
+    padding-left: 5px;
+    font-family: 'FontAwesome';
+    content: "\f0fe";    //fa-plus-square
+    font-size: 2em;
+  }
+  &.disabled {
+    color: grey; 
+  }
+  &.disabled:after {
+    float: right;
+    padding-left: 5px;
+    font-family: 'FontAwesome';
+    content: "\f0fe";    //fa-plus-square
+    font-size: 2em;
+  }
+}
+
+div#add-selected-properties {
   background-repeat: no-repeat;  
   background-position: right center;
   float: right;
@@ -504,6 +551,39 @@ div.group-order-action {
   }
 }
 
+div.property-order-action {
+  background-repeat: no-repeat;  
+  background-position: right center;
+  float: right;
+  font-family: 'FontAwesome';
+  // font-size: 1em;
+  line-height: 2em;
+  &.enabled {
+    color: #21B82F;
+    &:hover {
+      cursor: pointer;
+      color: #198C24;
+    }
+  }
+  &.enabled:after {
+    float: left;
+    padding-left: 5px;
+    font-family: 'FontAwesome';
+    // content: "\f0fe";    //fa-plus-square
+    // font-size: 2em;
+  }
+  &.disabled {
+    color: grey; 
+  }
+  &.disabled:after {
+    float: left;
+    padding-left: 5px;
+    font-family: 'FontAwesome';
+    // content: "\f0fe";    //fa-plus-square
+    // font-size: 2em;
+  }
+}
+
 i#clear-alerts {
   position: fixed;
   bottom: 5px;
@@ -513,6 +593,12 @@ i#clear-alerts {
 }
 
 span#selected-entitys-group-order-actions {
+  background-repeat: no-repeat;  
+  background-position: right center;
+  float: right;
+}
+
+span#selected-groups-property-order-actions {
   background-repeat: no-repeat;  
   background-position: right center;
   float: right;

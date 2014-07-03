@@ -4,10 +4,23 @@
     <aside class="col-xs-4 v-divider">
         <a style="color: #494A4A" href="<%= entities_path %>">Entities</a>
         <section>
-            <h6>
-                Create New Entity
-            </h6>
-            <%= render 'new_entity' %>
+            <div class="panel-group" id="accordion-new-entity">
+                <div class="panel panel-default">
+                    <div class="panel-heading" id="new-entity-collapse-heading" data-target="#collapse-new-entity" data-toggle="collapse" data-parent="#accordion-new-entity">
+                        <h4 class="panel-title">
+                            <a class="accordion-toggle collapsed" href="#collapse-new-entity"> 
+                                Create New Entity
+                                <i class="collapse-indicator glyphicon glyphicon-chevron-right pull-right"></i>
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapse-new-entity" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <%= render 'new_entity' %>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
         <section>
             <h6>
@@ -27,10 +40,23 @@
     <aside class="col-xs-4 v-divider">
         <a style="color: #494A4A" href="<%= groups_path %>">Groups</a>
         <section>
-            <h6>
-                Create New Group
-            </h6>
-            <%= render 'new_group' %>
+            <div class="panel-group" id="accordion-new-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading" id="new-group-collapse-heading" data-target="#collapse-new-group" data-toggle="collapse" data-parent="#accordion-new-group">
+                        <h4 class="panel-title">
+                            <a class="accordion-toggle collapsed" href="#collapse-new-group"> 
+                                Create New Group
+                                <i class="collapse-indicator glyphicon glyphicon-chevron-right pull-right"></i>
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapse-new-group" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <%= render 'new_group' %>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
         <section>
             <h6>
@@ -57,4 +83,52 @@
             <div id='ajax-test'></div>
         </section>
     </aside>
+    <aside class="col-xs-4 v-divider">
+        <a style="color: #494A4A" href="<%= properties_path %>">Properties</a>
+        <section>
+            <div class="panel-group" id="accordion-new-property">
+                <div class="panel panel-default">
+                    <div class="panel-heading" id="new-property-collapse-heading" data-target="#collapse-new-property" data-toggle="collapse" data-parent="#accordion-new-property">
+                        <h4 class="panel-title">
+                            <a class="accordion-toggle collapsed" href="#collapse-new-property"> 
+                                Create New Property
+                                <i class="collapse-indicator glyphicon glyphicon-chevron-right pull-right"></i>
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapse-new-property" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <%= render 'new_property' %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section>
+            <h6>
+                Selected Group's Properties
+            </h6>
+            <div id="groups-properties-alert"></div>
+            <div style="padding-top: 10px"></div>
+            <div id="groups_properties"> 
+                <%= render partial: 'groups/properties', locals: { show_units: false, show_created: false, show_remove: false } %>
+            </div>
+        </section>
+        <section>
+            <h6>
+                Existing Properties
+            </h6>
+            <div id="property-alert"></div>
+            <%= render partial: 'search_property', locals: { path: hub_path } %>
+            <div id="clear-selected-properties" class="btn btn-default btn-sm disabled">Clear</div>
+            <div id="delete-selected-properties" class="btn btn-danger btn-sm disabled">Delete</div>
+            <div id="add-selected-properties" class="disabled">Add Selected</div>
+            <div style="padding-top: 10px"></div>
+            <div id="properties">
+                <%= render partial: 'properties/properties', locals: { show_units: false, show_created: false, show_remove: false } %>
+            </div>
+            <div id='ajax-test'></div>
+        </section>
+    </aside>
 </div>
+<br/>

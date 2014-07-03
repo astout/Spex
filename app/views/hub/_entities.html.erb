@@ -13,4 +13,4 @@
     </th>
   <%= render partial: 'hub/entity', collection: @entities, locals: { created: false }  %>
 </table>
-<%= will_paginate @entities, inner_window: 0, outer_window: 0, param_name: 'entities_page', params: { entity_event: true } %>
+<%= will_paginate @entities, inner_window: 0, outer_window: 0, param_name: 'entities_page', params: { event: 'entity' } %>

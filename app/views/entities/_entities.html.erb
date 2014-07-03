@@ -20,4 +20,4 @@
     <% end %>
   <%= render partial: 'entities/entity', collection: @entities, locals: { show_created: show_created, show_remove: show_remove }  %>
 </table>
-<%= will_paginate @entities, inner_window: 0, outer_window: 0, param_name: 'entities_page', params: { entity_event: true } %>
+<%= will_paginate @entities, inner_window: 0, outer_window: 0, param_name: 'entities_page', params: { event: 'entity' } %>

@@ -1,0 +1,14 @@
+<%= form_tag path, method: 'get', url: { controller: "hub", action: "main" }, remote: true do %>
+    <%= hidden_field_tag :property_direction, params[:property_direction] %>
+    <%= hidden_field_tag :property_sort, params[:property_sort] %>
+    <%= hidden_field_tag :event, "property" %>
+    <%= hidden_field_tag :selected_entity, "" %>
+    <%= hidden_field_tag :selected_group, "" %>
+    <%= hidden_field_tag :search, "property" %>
+    <div class="input-group input-group-sm " style="margin-bottom: 15px">
+        <%= text_field_tag :property_search, params[:property_search], class: "form-control", id: "property_search_field" %>
+        <span class="input-group-btn" >
+            <%= submit_tag "Search", name: nil, class: "btn btn-default", id: "search_property" %>
+        </span>
+    </div>
+<% end %>
