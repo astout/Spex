@@ -1,11 +1,27 @@
-<h1> Create New Group</h1>
-
-<div class="row">
-  <div class="col-xs-10 col-xs-offset-1">
-    <%= bootstrap_form_for(@group, url: { controller: "hub", action: "create_group" }, method: :post, remote: true) do |f| %>
-      <%= render 'groups/fields', f: f %>
-      <%= hidden_field_tag :selected_entity, "" %>
-      <%= f.submit "Create Group", class: "btn btn-sm btn-primary btn100", id: "create-group" %>
-    <% end %>
-  </div>
+<div class="panel-group" id="accordion-new-group">
+    <div class="panel panel-default">
+        <div class="panel-heading" id="new-group-collapse-heading" data-target="#collapse-new-group" data-toggle="collapse" data-parent="#accordion-new-group">
+            <h4 class="panel-title">
+                <a class="accordion-toggle collapsed" href="#collapse-new-group"> 
+                    Create New Group
+                    <i class="collapse-indicator glyphicon glyphicon-chevron-right pull-right"></i>
+                </a>
+            </h4>
+        </div>
+        <div id="collapse-new-group" class="panel-collapse collapse">
+            <div class="panel-body">
+                <h6> New Group </h6>
+                <div class="row">
+                  <div class="col-xs-10 col-xs-offset-1">
+                    <%= bootstrap_form_for(@group, url: { controller: "hub", action: "create_group" }, method: :post, remote: true) do |f| %>
+                      <%= render 'groups/fields', f: f %>
+                      <%= hidden_field_tag :selected_entity, "" %>
+                      <%= f.submit "Create Group", class: "btn btn-sm btn-primary btn100", id: "create-group" %>
+                    <% end %>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+

@@ -4,23 +4,7 @@
     <aside class="col-xs-4 v-divider">
         <a style="color: #494A4A" href="<%= entities_path %>">Entities</a>
         <section>
-            <div class="panel-group" id="accordion-new-entity">
-                <div class="panel panel-default">
-                    <div class="panel-heading" id="new-entity-collapse-heading" data-target="#collapse-new-entity" data-toggle="collapse" data-parent="#accordion-new-entity">
-                        <h4 class="panel-title">
-                            <a class="accordion-toggle collapsed" href="#collapse-new-entity"> 
-                                Create New Entity
-                                <i class="collapse-indicator glyphicon glyphicon-chevron-right pull-right"></i>
-                            </a>
-                        </h4>
-                    </div>
-                    <div id="collapse-new-entity" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            <%= render 'new_entity' %>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <%= render 'new_entity' %>
         </section>
         <section>
             <h6>
@@ -40,23 +24,7 @@
     <aside class="col-xs-4 v-divider">
         <a style="color: #494A4A" href="<%= groups_path %>">Groups</a>
         <section>
-            <div class="panel-group" id="accordion-new-group">
-                <div class="panel panel-default">
-                    <div class="panel-heading" id="new-group-collapse-heading" data-target="#collapse-new-group" data-toggle="collapse" data-parent="#accordion-new-group">
-                        <h4 class="panel-title">
-                            <a class="accordion-toggle collapsed" href="#collapse-new-group"> 
-                                Create New Group
-                                <i class="collapse-indicator glyphicon glyphicon-chevron-right pull-right"></i>
-                            </a>
-                        </h4>
-                    </div>
-                    <div id="collapse-new-group" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            <%= render 'new_group' %>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <%= render 'new_group' %>
         </section>
         <section>
             <h6>
@@ -75,7 +43,7 @@
             <%= render partial: 'search_group', locals: { path: hub_path } %>
             <div id="clear-selected-groups" class="btn btn-default btn-sm disabled">Clear</div>
             <div id="delete-selected-groups" class="btn btn-danger btn-sm disabled">Delete</div>
-            <div id="add-selected-groups" class="disabled">Add Selected</div>
+            <div id="add-selected-groups" class="disabled">Add Selected To Entity</div>
             <div style="padding-top: 10px"></div>
             <div id="groups">
                 <%= render partial: 'groups/groups', locals: { show_created: false, show_remove: false } %>
@@ -86,23 +54,7 @@
     <aside class="col-xs-4 v-divider">
         <a style="color: #494A4A" href="<%= properties_path %>">Properties</a>
         <section>
-            <div class="panel-group" id="accordion-new-property">
-                <div class="panel panel-default">
-                    <div class="panel-heading" id="new-property-collapse-heading" data-target="#collapse-new-property" data-toggle="collapse" data-parent="#accordion-new-property">
-                        <h4 class="panel-title">
-                            <a class="accordion-toggle collapsed" href="#collapse-new-property"> 
-                                Create New Property
-                                <i class="collapse-indicator glyphicon glyphicon-chevron-right pull-right"></i>
-                            </a>
-                        </h4>
-                    </div>
-                    <div id="collapse-new-property" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            <%= render 'new_property' %>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <%= render 'new_property' %>
         </section>
         <section>
             <h6>

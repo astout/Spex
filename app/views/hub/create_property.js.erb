@@ -3,21 +3,21 @@ $('input[id=property_search_field]').val('');
 
 var alert_html = "";
 
-<% unless @result.nil? %>
-    <% if @result[:r] == 1 %>
+<% unless @property.nil? %>
+    <% if @property[:status] == 1 %>
         alert_html += "    <div class='alert alert-success small-font center'>";
-        alert_html += "    <%= @result[:msg] %>";
+        alert_html += "    <%= @property[:msg] %>";
         alert_html += "    </div>";
         //clear the property form fields
         $('input[id^=property]').val('');
     <% else %>
         alert_html += "    <div class='alert alert-danger small-font center'>";
-        alert_html += "        <%= @result[:msg] %>";
+        alert_html += "        <%= @property[:msg] %>";
         alert_html += "    </div>";
     <% end %>
 <% else %>
     alert_html += "    <div class='alert alert-danger small-font center'>";
-    alert_html += "        There was an error saving #{@property.name}";
+    alert_html += "        There was an error saving #{@property[:data].name}";
     alert_html += "    </div>";
 <% end %>
 

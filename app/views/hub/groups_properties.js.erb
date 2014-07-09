@@ -2,30 +2,10 @@ var alert_html = "";
 
 alert_html = "";
 
-<% unless @result.nil? %>
-    <% if @result[:r] == 0 %>
-        alert_html += "    <div class='alert alert-danger small-font center'>";
-        alert_html += "        <p><%= @result[:msg] %></p>";
-        alert_html += "    </div>";
-    <% elsif @result[:r] == 2 %>
-        alert_html += "    <div class='alert alert-info small-font center'>";
-        alert_html += "        <i><%= @result[:msg] %></i>";
-        alert_html += "    </div>";
-    <% end %>
-<% else %>
-    alert_html += "    <div class='alert alert-danger small-font center'>";
-    alert_html += "        <p>There was an error</p>";
-    alert_html += "    </div>";
-<% end %>
-
-if( selected_groups.length > 0 )
+if( selected_groups.length > 0 || selected_entity_group_relations.length > 0 )
 {
     hubAlert("#groups-properties-alert", alert_html);
 }
-
-$('#properties').html("<%= j render partial: 'properties/properties', locals: { show_units: false, show_created: false, show_remove: false } %>");
-
-persistStyling();
 
 <% if @selected_groups.blank? %>
     window.selected_groups_max_property_order = -1;
@@ -33,4 +13,8 @@ persistStyling();
     window.selected_groups_max_property_order = <%= @selected_groups.first.properties.count %>;
 <% end %>
 
-$('#groups_properties').html("  <%= j render partial: 'groups/properties', locals: { show_units: false, show_created: false, show_remove: false } %>");
+$('#properties').html("<%= j render partial: 'properties/properties', locals: { show_units: false, show_created: false, show_remove: false } %>");
+
+$('#groups_properties').html("<%= j render partial: 'groups/properties', locals: { show_units: false, show_created: false, show_remove: false } %>");
+
+persistStyling();

@@ -1,15 +1,14 @@
 var alert_html = "";
 
-alert_html = "" 
-<% unless @results.nil? %>
+<% unless @moved_egrs.nil? %>
     alert_html += "<div class='alert alert-success small-font'>";
     alert_html += "<p><strong>Groups Reordered for '<%= @selected_entity.name %>':</strong></p>";
-    <% @results.reverse.each do |result| %>
-        <% unless result[:relation].nil? %>
+    <% @moved_egrs.reverse.each do |result| %>
+        <% unless result[:data].nil? %>
             <% unless result[:msg] == "not moved" %>
-                alert_html += "<p style='padding-left: 10px'>- <%= result[:idx] %>.  <%= result[:relation].group.name %> </p>";
+                alert_html += "<p style='padding-left: 10px'>- <%= result[:idx] %>.  <%= result[:data].group.name %> </p>";
             <% end %>
-            toggleEntitysGroupSelect(<%= result[:relation].id %>, <%= result[:relation].order %> + 1); 
+            toggleEntitysGroupSelect(<%= result[:data].id %>, <%= result[:data].order %> + 1); 
         <% end %>
     <% end %>
 <% else %>

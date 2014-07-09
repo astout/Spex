@@ -1,15 +1,13 @@
 var alert_html = "";
 
-alert_html = "";
-
-<% unless @result.nil? %>
-    <% if @result[:r] == 0 %>
+<% unless @entitys_group_relations.nil? %>
+    <% if @entitys_group_relations[:status] == 0 %>
         alert_html += "    <div class='alert alert-danger small-font center'>";
-        alert_html += "        <p><%= @result[:msg] %></p>";
+        alert_html += "        <p><%= @entitys_group_relations[:msg] %></p>";
         alert_html += "    </div>";
-    <% elsif @result[:r] == 2 %>
+    <% elsif @entitys_group_relations[:status] == 2 %>
         alert_html += "    <div class='alert alert-info small-font center'>";
-        alert_html += "        <i><%= @result[:msg] %></i>";
+        alert_html += "        <i><%= @entitys_group_relations[:msg] %></i>";
         alert_html += "    </div>";
     <% end %>
 <% else %>

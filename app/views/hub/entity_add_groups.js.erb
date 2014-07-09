@@ -3,10 +3,10 @@ $('#entitys_groups').html("  <%= j render partial: 'entities/groups', locals: { 
 clearSelectedGroups();
 
 alert_html = "" 
-<% unless @results.nil? || @results.empty? %>
+<% unless @created_relations.nil? || @created_relations.empty? %>
     alert_html += "<div class='alert alert-success small-font'>";
     alert_html += "<p><strong>Groups Added to '<%= @selected_entity.name %>':</strong></p>";
-    <% @results.each do |result| %>
+    <% @created_relations.each do |result| %>
         <% unless result[:group].nil? %>
             alert_html += "<p style='padding-left: 10px'>- <%=result[:group].name %> </p>"; 
             group_id = "<%= result[:group].id %>";

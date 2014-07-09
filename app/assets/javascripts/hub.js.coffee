@@ -2,14 +2,20 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
+#= require hub_helpers
+
 #globalize the selected items
 window.selected_entity = -1 #only one selected entity at a time
 window.selected_groups = [] #list of selected groups
 window.selected_properties = [] #list of selected groups
 window.selected_entity_group_relations = [] #list of selected entity's groups
+window.selected_entity_property_relations = [] #list of selected group's properties
+window.selected_group_property_relations = [] #list of selected group's properties
 window.selected_entity_group_orders = [] #list of selected entity's groups order
-window.selected_entitys_max_group_order = -1
+window.selected_group_property_orders = [] #list of selected entity's groups order
+window.selected_entitys_max_group_order = -1 
 window.selected_entitys_group_max_property_order = -1
+window.selected_groups_max_property_order = -1
 window.group_sort = "created_at"
 window.property_sort = "created_at"
 window.entity_sort = "created_at"
@@ -22,6 +28,12 @@ window.properties_page = "1"
 
 $ ->
 
+    $("#group-multi-select").on "click", (e) ->
+        if window.selected_groups.length > 1 && !$("#group-multi-select").is(":checked")
+            group = window.selected_groups[0]
+            clearSelectedGroups()
+            toggleGroupSelect group
+
     #Actions/Settings for collapsing the 'Create New' windows
     $("#new-entity-collapse-heading").on "click", (e) ->
         e.preventDefault()
@@ -31,6 +43,10 @@ $ ->
         e.preventDefault()
     $("div[id^=accordion]").on('hidden.bs.collapse', toggleChevron)
     $("div[id^=accordion]").on('shown.bs.collapse', toggleChevron)
+
+    $("td[id^=edit-entity-property-relation]").on "click", "a", (e) ->
+        alert("hello?")
+        e.preventDefault()
 
     #Clear all alerts
     $("body").on "click", "#clear-alerts", (e) ->
@@ -95,6 +111,19 @@ $ ->
         #get the group id
         toggleEntitysGroupSelect this.id, $(this).data().order
 
+    #On EntityGroupRelationship element click
+    $("body").on "click", '.table tr.group_property_relationship', (e) ->
+       
+        #get the group id
+        toggleGroupPropertySelect this.id, $(this).data().order
+
+    #On EntityGroupRelationship element click
+    $("body").on "click", '.table tr.entity_property_relationship', (e) ->
+       
+        #get the group id
+        toggleEntityPropertySelect this.id, $(this).data().order
+        
+
 
     #on group list element click
     $("body").on "click", '.table tr.group', (e) ->
@@ -148,6 +177,13 @@ $ ->
         #if it's enabled
         unless $(this).hasClass "disabled"
             clearSelectedEntitysGroups()
+
+    #When the clear groups button is clicked
+    $("body").on "click", "#clear-selected-groups-properties", (e) ->
+
+        #if it's enabled
+        unless $(this).hasClass "disabled"
+            clearSelectedGroupsProperties()
 
     #When the delete entity button is clicked
     $("body").on "click", "#delete-selected-entity", (e) ->
@@ -210,11 +246,7 @@ $ ->
             
             bottomEntityGroupRelations window.selected_entity_group_relations
 
-toggleChevron = (e) ->
-    $(e.target)
-        .prev '.panel-heading'
-        .find 'i.collapse-indicator'
-        .toggleClass 'glyphicon-chevron-down glyphicon-chevron-right'
+
 
 $getAllParams = () ->
     params = $.param( { 
@@ -418,14 +450,19 @@ downEntityGroupRelations = (relationship_ids) ->
 window.downEntityGroupRelations = downEntityGroupRelations
 
 toggleGroupSelect = (id) ->
+
     index = $.inArray(id, window.selected_groups)
     if index > -1
         $("tr#"+id+".group").removeClass "selected-group"
         window.selected_groups.splice(index, 1)
-    else
+    else if $("#group-multi-select").is(':checked')
         $("tr#"+id+".group").addClass "selected-group"
         window.selected_groups.push(id)
-        getGroupsProperties window.selected_groups
+    else
+        clearSelectedGroups()
+        $("tr#"+id+".group").addClass "selected-group"
+        window.selected_groups.push(id)
+    getGroupsProperties window.selected_groups
     validateGroupSelection()
 window.toggleGroupSelect = toggleGroupSelect
 
@@ -435,8 +472,10 @@ validateGroupSelection = () ->
         $("#delete-selected-groups").removeClass("disabled")
         clearSelectedEntitysGroups()
     else
-        _html = "<div class='alert alert-info small-font center'>"
-        _html += "<i>No Group selected.</i></div>"
+        _html = ""
+        if window.selected_entity_group_relations.length < 1
+            _html = "<div class='alert alert-info small-font center'>"
+            _html += "<i>No Group selected.</i></div>"
         $("#groups_properties").html ""
         $("#groups-properties-alert").html _html
         $("#clear-selected-groups").addClass("disabled")
@@ -468,8 +507,15 @@ window.deleteGroups = deleteGroups
 clearSelectedGroups = () ->
     window.selected_groups = []
     $("tr.selected-group").removeClass "selected-group"
+    clearSelectedGroupsProperties()
     validateGroupSelection()
 window.clearSelectedGroups = clearSelectedGroups
+
+clearSelectedGroupsProperties = () ->
+    window.selected_group_property_relations = []
+    $("tr.selected-groups-property").removeClass "selected-groups-property"
+    validateGroupsPropertySelection()
+window.clearSelectedGroupsProperties = clearSelectedGroupsProperties
 
 togglePropertySelect = (id) ->
     index = $.inArray(id, window.selected_properties)
@@ -565,8 +611,24 @@ toggleEntitysGroupSelect = (id, order) ->
     else
         window.selected_entity_group_orders.push order
 
+    getEntitysProperties window.selected_entity_group_relations
     validateEntitysGroupSelection()
 window.toggleEntitysGroupSelect = toggleEntitysGroupSelect
+
+getEntitysProperties = (relationship_ids) ->
+    params = $.param( { 
+        selected_entity_group_relations: relationship_ids
+        selected_properties: window.selected_properties, 
+        property_search: $("input#property_search_field").val(), 
+        property_direction: window.property_direction, 
+        property_sort: window.property_sort 
+        } )
+    $
+    #send the request to add the selected groups to the selected entity
+    $.ajax 
+        url: "/hub/groups_properties?" + params
+        type: 'POST'
+window.getEntitysProperties = getEntitysProperties
 
 validateEntitysGroupSelection = () ->
     if window.selected_entity_group_relations.length > 0
@@ -574,6 +636,12 @@ validateEntitysGroupSelection = () ->
         $("#delete-selected-entitys-groups").removeClass("disabled")
         clearSelectedGroups()
     else
+        _html = ""
+        if window.selected_groups.length < 1
+            _html = "<div class='alert alert-info small-font center'>"
+            _html += "<i>No Group selected.</i></div>"
+        $("#groups_properties").html ""
+        $("#groups-properties-alert").html _html
         $("#clear-selected-entitys-groups").addClass("disabled")
         $("#delete-selected-entitys-groups").addClass("disabled")
 
@@ -677,6 +745,27 @@ getEntitysGroups = (id) ->
         type: 'POST'
 window.getEntitysGroups = getEntitysGroups
 
+toggleGroupPropertySelect = (id, order) ->
+    #if the clicked property is already selected
+    id += "" #stringify
+    index = $.inArray id, window.selected_group_property_relations
+    if index > -1
+        window.selected_group_property_relations.splice(index, 1)
+        $("tr#"+id+".group_property_relationship").removeClass "selected-groups-property"
+    else
+        $("tr#"+id+".group_property_relationship").addClass "selected-groups-property"
+        window.selected_group_property_relations.push(id)
+
+    order += "" #stringify
+    index = $.inArray order, window.selected_group_property_orders
+    if index > -1
+        window.selected_group_property_orders.splice(index, 1)
+    else
+        window.selected_group_property_orders.push order
+
+    validateGroupsPropertySelection()
+window.toggleGroupPropertySelect = toggleGroupPropertySelect
+
 getGroupsProperties = (ids) ->
     params = $.param( { 
         selected_groups: ids, 
@@ -685,12 +774,18 @@ getGroupsProperties = (ids) ->
         property_direction: window.property_direction, 
         property_sort: window.property_sort 
         } )
-    $
     #send the request to add the selected groups to the selected entity
     $.ajax 
         url: "/hub/groups_properties?" + params
         type: 'POST'
 window.getGroupsProperties = getGroupsProperties
+
+clearSelectedGroupsProperties = () ->
+    window.selected_group_property_relations = []
+    window.selected_group_property_orders = []
+    $("tr.selected-groups-property").removeClass "selected-groups-property"
+    validateGroupsPropertySelection()
+window.clearSelectedGroupsProperties = clearSelectedGroupsProperties
 
 validateGroupsPropertySelection = () ->
     if window.selected_group_property_relations.length > 0
@@ -804,13 +899,15 @@ window.persistStyling = persistStyling
 
 #Ensure ajaxified pagination buttons on any additions to lists
 ajaxPagination = () ->
+    console.log "called ajax pagination"
     #Ajaxify All List Page changes
     $("body").on "click", '.pagination a', (e) ->
         window.entities_page = getParameterByName "entities_page", this.href || "1"
         window.properties_page = getParameterByName "properties_page", this.href || "1"
         window.groups_page = getParameterByName "groups_page", this.href || "1"
-        e.preventDefault()
-        $.getScript(this.href)
+        params = $getAllParams()
+        #send the request
+        $.get "/hub?" + params
         false
 window.ajaxPagination = ajaxPagination
 

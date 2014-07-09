@@ -422,6 +422,14 @@ tr.selected-group {
   }
 }
 
+tr.selected-groups-property {
+  background-color: #AADFFF; //soft-blue
+  &:hover {
+    background-color: #AFDFE8; //other blue
+    text-decoration: none;
+  }
+}
+
 tr.selected-property {
   background-color: #AADFFF; //soft-blue
   &:hover {
@@ -614,4 +622,58 @@ div.alert {
 div.mid {
   float: none;
   margin: 0 auto;
+}
+
+a.accordion-toggle {
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+div#new-group-collapse-heading {
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+div#new-entity-collapse-heading {
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+div#new-property-collapse-heading {
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+input[type="checkbox"].checkbox {
+    display: none;
+}
+input[type="checkbox"].checkbox + label {
+    display: inline;
+    position: relative;
+    background-color: #c9302c;
+    
+    /*label styling*/
+    padding: 7px 8px;
+    font-size: 11.844px;
+    font-weight: normal;
+    line-height: 14px;
+    color: #ffffff;
+    vertical-align: baseline;
+    white-space: nowrap;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+input[type="checkbox"].checkbox:checked + label {
+    background-color: #21B82F;
+}
+
+input[type="checkbox"].checkbox:disabled + label {
+    opacity: 0.5;
 }

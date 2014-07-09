@@ -3,21 +3,21 @@ $('input[id=entity_search_field]').val('');
 
 var alert_html = "";
 
-<% unless @result.nil? %>
-    <% if @result[:r] == 1 %>
+<% unless @entity.nil? %>
+    <% if @entity[:status] == 1 %>
         alert_html += "    <div class='alert alert-success small-font center'>";
-        alert_html += "    <%= @result[:msg] %>";
+        alert_html += "    <%= @entity[:msg] %>";
         alert_html += "    </div>";
         //clear the entity form fields
         $('input[id^=entity]').val('');
     <% else %>
         alert_html += "    <div class='alert alert-danger small-font center'>";
-        alert_html += "        <%= @result[:msg] %>";
+        alert_html += "        <%= @entity[:msg] %>";
         alert_html += "    </div>";
     <% end %>
 <% else %>
     alert_html += "    <div class='alert alert-danger small-font center'>";
-    alert_html += "        There was an error saving #{@entity.name}";
+    alert_html += "        There was an error saving #{@entity[:data].name}";
     alert_html += "    </div>";
 <% end %>
 

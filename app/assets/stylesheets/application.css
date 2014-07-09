@@ -12,3 +12,11 @@
  *= require_tree .
  *= require rails_bootstrap_forms
  */
+
+.input-xs {
+    height: 22px;
+    padding: 5px 5px;
+    font-size: 12px;
+    line-height: 1.5;
+    border-radius: 3px;
+}

@@ -13,14 +13,8 @@ class EntityGroupRelationship < ActiveRecord::Base
 
   before_destroy { |r| EntityPropertyRelationship.destroy_all group_id: "#{r.group_id}", entity_id: "#{r.entity_id}" }
 
-  ######################################
-  # # # ENTITY GROUP RELATIONSHIP SEARCH
-  ######################################
-
-  #instance function
-  #returns entities that match the given search string
-  #It searches the name, label, created, and updated fields for partial matches
-  # def self.search(search)
-  #   self.group.search(search)
-  # end
+  def entity_property_relations
+    relations = EntityPropertyRelationship.where(entity_id: self.entity.id, group_id: self.group.id)
+    relations.sort_by { |r| r[:order] }
+  end
 end

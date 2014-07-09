@@ -1,7 +1,42 @@
 <% if defined? @groups_property_relations %>
-    <% unless @groups_property_relations.empty? %>
+    <% unless @groups_property_relations[:data].blank? %>
         <%= render partial: 'groups/property_relation_actions' %>
-        <table class="table groups_properties">
+        <table class="table table-condensed groups_properties">
+            <th>
+                Name
+            </th>
+            <% if show_units %>
+                <th>
+                    Units
+                </th>
+            <% end %>
+            <th>
+                Short Units
+            </th>
+            <% if show_created %>
+                <th>
+                    Created
+                </th>
+            <% end %>
+            <% if @show_order %>
+                <th>
+                    Order
+                </th>
+            <% end %>
+            <% if show_remove %>
+                <th>
+                    Remove
+                </th>
+            <% end %>
+            <%= render partial: 'groups/property_relationship', collection: @groups_property_relations[:data], locals: { show_units: show_units, show_created: show_created, show_remove: show_remove, show_order: @show_order }  %>
+        </table>
+        <%= will_paginate @groups_property_relations[:data], inner_window: 0, outer_window: 0, param_name: 'groups_properties_page', params: { groups_property_event: true } %>
+    <% end %>
+<% end %>
+<% if defined? @entity_property_relations %>
+    <% unless @entity_property_relations[:data].blank? %>
+        <%= render partial: 'entities/property_relation_actions' %>
+        <table class="table table-condensed entitys_properties">
             <th>
                 Name
             </th>
@@ -19,19 +54,27 @@
                 </th>
             <% end %>
             <th>
-                Order
+                Value
             </th>
+            <% if @show_order %>
+                <th>
+                    Order
+                </th>
+            <% end %>
             <% if show_remove %>
                 <th>
                     Remove
                 </th>
             <% end %>
-            <%= render partial: 'groups/property_relationship', collection: @groups_property_relations, locals: { show_units: show_units, show_created: show_created, show_remove: show_remove }  %>
+            <%= render partial: 'entities/property_relationship', collection: @entity_property_relations[:data], locals: { show_units: show_units, show_created: show_created, show_remove: show_remove, show_order: @show_order }  %>
         </table>
-        <%= will_paginate @groups_property_relations, inner_window: 0, outer_window: 0, param_name: 'groups_properties_page', params: { groups_property_event: true } %>
+        <%= will_paginate @entity_property_relations[:data], inner_window: 0, outer_window: 0, param_name: 'groups_properties_page', params: { groups_property_event: true } %>
     <% end %>
-<% else %>
-    <div class='alert alert-info small-font center'>
-        <i>No Group selected.</i>
-    </div>
+<% end %>
+<% unless defined? @entity_property_relations %>
+    <% unless defined? @groups_property_relations %>
+        <div class='alert alert-info small-font center'>
+            <i>No groups selected.</i>
+        </div>
+    <% end %>
 <% end %>

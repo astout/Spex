@@ -1,13 +1,13 @@
 var alert_html = "";
 
 alert_html = "" 
-<% unless @results.nil? %>
+<% unless @deleted_entity_group_relations.nil? %>
     alert_html += "<div class='alert alert-success small-font'>";
     alert_html += "<p><strong>Groups Removed from '<%= @selected_entity.name %>':</strong></p>";
-    <% @results.each do |result| %>
-        <% unless result[:relation].nil? %>
-            alert_html += "<p style='padding-left: 10px'>- <%=result[:relation].group.name %> </p>";
-            toggleEntitysGroupSelect(<%= result[:relation].id %>, <%= result[:relation].order %> + 1); 
+    <% @deleted_entity_group_relations.each do |deleted_entity_group_relation| %>
+        <% unless deleted_entity_group_relation[:data].nil? %>
+            alert_html += "<p style='padding-left: 10px'>- <%=deleted_entity_group_relation[:data].group.name %> </p>";
+            toggleEntitysGroupSelect(<%= deleted_entity_group_relation[:data].id %>, <%= deleted_entity_group_relation[:data].order %> + 1); 
         <% end %>
     <% end %>
 <% else %>

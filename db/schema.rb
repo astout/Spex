@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140529203746) do
+ActiveRecord::Schema.define(version: 20140707202737) do
 
   create_table "entities", force: true do |t|
     t.string   "name"
@@ -32,6 +32,8 @@ ActiveRecord::Schema.define(version: 20140529203746) do
     t.datetime "updated_at"
   end
 
+  add_index "entity_group_relationships", ["entity_id", "group_id"], name: "index_entity_group_relationships_on_entity_id_and_group_id", unique: true
+
   create_table "entity_property_relationships", force: true do |t|
     t.integer  "entity_id"
     t.integer  "property_id"
@@ -51,6 +53,10 @@ ActiveRecord::Schema.define(version: 20140529203746) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "group_property_relationships", ["group_id", "property_id"], name: "index_group_property_relationships_on_group_id_and_property_id", unique: true
+  add_index "group_property_relationships", ["group_id"], name: "index_group_property_relationships_on_group_id"
+  add_index "group_property_relationships", ["property_id"], name: "index_group_property_relationships_on_property_id"
 
   create_table "groups", force: true do |t|
     t.string   "name"

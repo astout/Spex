@@ -14,6 +14,7 @@ Spex::Application.routes.draw do
   post "hub/bottom_entity_group_relations"
   post "hub/up_entity_group_relations"
   post "hub/down_entity_group_relations"
+  post "hub/update_entity_property_relationship"
   get "groups/new"
   get "entities/new"
   get "properties/new"

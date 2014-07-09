@@ -3,10 +3,10 @@ $('#groups_properties').html("  <%= j render partial: 'groups/properties', local
 clearSelectedProperties();
 
 alert_html = "" 
-<% unless @results.nil? || @results.empty? %>
+<% unless @added_properties.blank? %>
     alert_html += "<div class='alert alert-success small-font'>";
     alert_html += "<p><strong>Properties Added to '<%= @selected_groups.first.name %>':</strong></p>";
-    <% @results.each do |result| %>
+    <% @added_properties.each do |result| %>
         <% unless result[:property].nil? %>
             alert_html += "<p style='padding-left: 10px'>- <%=result[:property].name %> </p>"; 
             group_id = "<%= result[:property].id %>";
@@ -14,7 +14,7 @@ alert_html = ""
     <% end %>
 <% else %>
     alert_html += "<div class='alert alert-danger small-font'>";
-    alert_html += "<p><strong>Nothing Deleted:</strong></p>";
+    alert_html += "<p><strong>Nothing Added:</strong></p>";
     alert_html += "<p style='padding-left: 10px'><i>The server returned no results.</i></p>";
 <% end %>
 alert_html += "</div>"

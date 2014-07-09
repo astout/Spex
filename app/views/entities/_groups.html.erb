@@ -1,5 +1,5 @@
 <% if defined? @entitys_group_relations %>
-    <% unless @entitys_group_relations.empty? %>
+    <% unless @entitys_group_relations[:data].empty? %>
         <%= render partial: 'entities/group_relation_actions' %>
         <table class="table entitys_groups">
             <th>
@@ -19,12 +19,12 @@
                     Remove
                 </th>
             <% end %>
-            <%= render partial: 'entities/group_relationship', collection: @entitys_group_relations, locals: { show_created: show_created, show_remove: show_remove }  %>
+            <%= render partial: 'entities/group_relationship', collection: @entitys_group_relations[:data], locals: { show_created: show_created, show_remove: show_remove }  %>
         </table>
-        <%= will_paginate @entitys_group_relations, inner_window: 0, outer_window: 0, param_name: 'entitys_groups_page', params: { entitys_group_event: true } %>
+        <%= will_paginate @entitys_group_relations[:data], inner_window: 0, outer_window: 0, param_name: 'entitys_groups_page', params: { entitys_group_event: true } %>
     <% end %>
 <% else %>
     <div class='alert alert-info small-font center'>
-        <i>No Entity selected.</i>
+        <i>No entity selected.</i>
     </div>
 <% end %>
