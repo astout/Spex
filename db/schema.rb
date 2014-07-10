@@ -13,6 +13,9 @@
 
 ActiveRecord::Schema.define(version: 20140707202737) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "entities", force: true do |t|
     t.string   "name"
     t.string   "label"
@@ -21,7 +24,7 @@ ActiveRecord::Schema.define(version: 20140707202737) do
     t.datetime "updated_at"
   end
 
-  add_index "entities", ["name"], name: "index_entities_on_name", unique: true
+  add_index "entities", ["name"], name: "index_entities_on_name", unique: true, using: :btree
 
   create_table "entity_group_relationships", force: true do |t|
     t.integer  "entity_id"
@@ -32,7 +35,7 @@ ActiveRecord::Schema.define(version: 20140707202737) do
     t.datetime "updated_at"
   end
 
-  add_index "entity_group_relationships", ["entity_id", "group_id"], name: "index_entity_group_relationships_on_entity_id_and_group_id", unique: true
+  add_index "entity_group_relationships", ["entity_id", "group_id"], name: "index_entity_group_relationships_on_entity_id_and_group_id", unique: true, using: :btree
 
   create_table "entity_property_relationships", force: true do |t|
     t.integer  "entity_id"
@@ -54,9 +57,9 @@ ActiveRecord::Schema.define(version: 20140707202737) do
     t.datetime "updated_at"
   end
 
-  add_index "group_property_relationships", ["group_id", "property_id"], name: "index_group_property_relationships_on_group_id_and_property_id", unique: true
-  add_index "group_property_relationships", ["group_id"], name: "index_group_property_relationships_on_group_id"
-  add_index "group_property_relationships", ["property_id"], name: "index_group_property_relationships_on_property_id"
+  add_index "group_property_relationships", ["group_id", "property_id"], name: "index_group_property_relationships_on_group_id_and_property_id", unique: true, using: :btree
+  add_index "group_property_relationships", ["group_id"], name: "index_group_property_relationships_on_group_id", using: :btree
+  add_index "group_property_relationships", ["property_id"], name: "index_group_property_relationships_on_property_id", using: :btree
 
   create_table "groups", force: true do |t|
     t.string   "name"
@@ -65,7 +68,7 @@ ActiveRecord::Schema.define(version: 20140707202737) do
     t.datetime "updated_at"
   end
 
-  add_index "groups", ["name"], name: "index_groups_on_name", unique: true
+  add_index "groups", ["name"], name: "index_groups_on_name", unique: true, using: :btree
 
   create_table "properties", force: true do |t|
     t.string   "name"
@@ -78,7 +81,7 @@ ActiveRecord::Schema.define(version: 20140707202737) do
     t.datetime "updated_at"
   end
 
-  add_index "properties", ["name"], name: "index_properties_on_name", unique: true
+  add_index "properties", ["name"], name: "index_properties_on_name", unique: true, using: :btree
 
   create_table "users", force: true do |t|
     t.string   "first"
@@ -93,8 +96,8 @@ ActiveRecord::Schema.define(version: 20140707202737) do
     t.string   "remember_token"
   end
 
-  add_index "users", ["email"], name: "index_users_on_email", unique: true
-  add_index "users", ["login"], name: "index_users_on_login", unique: true
-  add_index "users", ["remember_token"], name: "index_users_on_remember_token"
+  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
+  add_index "users", ["login"], name: "index_users_on_login", unique: true, using: :btree
+  add_index "users", ["remember_token"], name: "index_users_on_remember_token", using: :btree
 
 end

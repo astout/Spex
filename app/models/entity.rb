@@ -423,7 +423,7 @@ class Entity < ActiveRecord::Base
       #for each word from the search string
       _elements.each do |element|
         #append to the clause the full query
-        clause += '(name LIKE ? OR label LIKE ? OR created_at LIKE ? OR updated_at LIKE ?) AND '
+        clause += '(name LIKE ? OR label LIKE ? OR created_at::text LIKE ? OR updated_at::text LIKE ?) AND '
       end
       #remove the trailing 'AND' from the clause
       clause = clause.gsub(/(.*)( AND )(.*)/, '\1')
