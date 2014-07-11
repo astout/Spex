@@ -1,6 +1,7 @@
 <%= form_tag path, method: 'get', url: { controller: "hub", action: "main" }, remote: true do %>
     <%= hidden_field_tag :entity_direction, params[:entity_direction] %>
     <%= hidden_field_tag :entity_sort, params[:entity_sort] %>
+    <%= hidden_field_tag :entities_page, "1" %>
     <%= hidden_field_tag :event, 'entity' %>
     <%= hidden_field_tag :search, "entity" %>
     <div class="input-group input-group-sm" style="margin-bottom: 15px">

@@ -1,6 +1,7 @@
 $('#groups').html("<%= j render partial: 'groups/groups', locals: { show_created: false, show_remove: false } %>");
 
 clearSelectedGroups();
+validateGroupSelection();
 
 alert_html = "" 
 <% unless @deleted_groups.nil? || @deleted_groups.empty? %>

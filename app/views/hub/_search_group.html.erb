@@ -1,6 +1,7 @@
 <%= form_tag path, method: 'get', url: { controller: "hub", action: "main" }, remote: true do %>
     <%= hidden_field_tag :group_direction, params[:group_direction] %>
     <%= hidden_field_tag :group_sort, params[:group_sort] %>
+    <%= hidden_field_tag :groups_page, "1" %>
     <%= hidden_field_tag :event, 'group' %>
     <%= hidden_field_tag :selected_entity, "" %>
     <%= hidden_field_tag :search, "group" %>

@@ -1,6 +1,7 @@
 <%= form_tag path, method: 'get', url: { controller: "hub", action: "main" }, remote: true do %>
     <%= hidden_field_tag :property_direction, params[:property_direction] %>
     <%= hidden_field_tag :property_sort, params[:property_sort] %>
+    <%= hidden_field_tag :properties_page, "1" %>
     <%= hidden_field_tag :event, "property" %>
     <%= hidden_field_tag :selected_entity, "" %>
     <%= hidden_field_tag :selected_group, "" %>

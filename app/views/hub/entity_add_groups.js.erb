@@ -1,6 +1,7 @@
 $('#entitys_groups').html("  <%= j render partial: 'entities/groups', locals: { show_created: false, show_remove: false } %>");
 
 clearSelectedGroups();
+validateGroupSelection();
 
 alert_html = "" 
 <% unless @created_relations.nil? || @created_relations.empty? %>

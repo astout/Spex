@@ -22,8 +22,6 @@ hubAlert("#entitys-groups-alert", alert_html);
 
 $('#entitys_groups').html("  <%= j render partial: 'entities/groups', locals: { show_created: false, show_remove: false } %>");
 
-$('#groups').html("<%= j render partial: 'groups/groups', locals: { show_created: false, show_remove: false } %>");
-
 persistStyling();
 
 validateEntitysGroupSelection();
