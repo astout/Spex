@@ -1,0 +1,29 @@
+var alert_html = "";
+
+<% unless @moved_eprs.blank? %>
+    alert_html += "<div class='alert alert-success small-font'>";
+    alert_html += "<p><strong>Properties Reordered for '<%= @selected_egrs.first.group.name %>':</strong></p>";
+    <% @moved_eprs.reverse.each do |result| %>
+        <% unless result[:data].blank? %>
+            <% unless result[:msg] == "not moved" %>
+                alert_html += "<p style='padding-left: 10px'>- <%= result[:idx] %>.  <%= result[:data].property.name %> </p>";
+            <% end %>
+            toggleEPRselect(<%= result[:data].id %>, <%= result[:data].order %> + 1); 
+        <% end %>
+    <% end %>
+<% else %>
+    alert_html += "<div class='alert alert-danger small-font'>";
+    alert_html += "<p><strong>Groups not reordered.</strong></p>";
+    alert_html += "<p style='padding-left: 10px'><i>The server returned no results.</i></p>";
+<% end %>
+alert_html += "</div>"
+
+console.log("test01");
+
+hubAlert("#groups-properties-alert", alert_html);
+
+$('#groups_properties').html("  <%= j render partial: 'groups/properties', locals: { show_units: false, show_created: false, show_remove: false } %>");
+
+persistStyling();
+
+validateGroupsPropertySelection();

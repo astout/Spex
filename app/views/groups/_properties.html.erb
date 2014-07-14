@@ -33,8 +33,8 @@
         <%= will_paginate @groups_property_relations[:data], inner_window: 0, outer_window: 0, param_name: 'groups_properties_page', params: { groups_property_event: true } %>
     <% end %>
 <% end %>
-<% if defined? @entity_property_relations %>
-    <% unless @entity_property_relations[:data].blank? %>
+<% if defined? @eprs %>
+    <% unless @eprs[:data].blank? %>
         <%= render partial: 'entities/property_relation_actions' %>
         <table class="table table-condensed entitys_properties">
             <th>
@@ -66,12 +66,12 @@
                     Remove
                 </th>
             <% end %>
-            <%= render partial: 'entities/property_relationship', collection: @entity_property_relations[:data], locals: { show_units: show_units, show_created: show_created, show_remove: show_remove, show_order: @show_order }  %>
+            <%= render partial: 'entities/property_relationship', collection: @eprs[:data], locals: { show_units: show_units, show_created: show_created, show_remove: show_remove, show_order: @show_order }  %>
         </table>
-        <%= will_paginate @entity_property_relations[:data], inner_window: 0, outer_window: 0, param_name: 'groups_properties_page', params: { groups_property_event: true } %>
+        <%= will_paginate @eprs[:data], inner_window: 0, outer_window: 0, param_name: 'groups_properties_page', params: { groups_property_event: true } %>
     <% end %>
 <% end %>
-<% unless defined? @entity_property_relations %>
+<% unless defined? @eprs %>
     <% unless defined? @groups_property_relations %>
         <div class='alert alert-info small-font center'>
             <i>No groups selected.</i>

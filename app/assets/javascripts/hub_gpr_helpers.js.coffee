@@ -1,7 +1,7 @@
 #group property relationship functions
 
 window.selected_group_property_orders = [] #list of selected entity's groups order
-window.selected_group_property_relations = [] #list of selected group's properties
+window.selected_gprs = [] #list of selected group's properties
 window.selected_groups_max_property_order = -1
 
 $ ->
@@ -23,10 +23,36 @@ $ ->
         if $(this).hasClass "enabled"
             addPropertiesToGroup window.selected_properties, window.selected_groups
 
+    #When the delete egr button is clicked
+    $("body").on "click", "#delete-selected-groups-properties", (e) ->
+        #if it's enabled
+        unless $(this).hasClass "disabled"
+            deleteGroupPropertyRelations window.selected_gprs
+
+    $("body").on "click", "#top-selected-groups-properties", (e) ->
+        #if it's enabled
+        unless $(this).hasClass "disabled"
+            topGroupPropertyRelations window.selected_gprs
+
+    $("body").on "click", "#up-selected-groups-properties", (e) ->
+        #if it's enabled
+        unless $(this).hasClass "disabled"
+            upGroupPropertyRelations window.selected_gprs
+
+    $("body").on "click", "#down-selected-groups-properties", (e) ->
+        #if it's enabled
+        unless $(this).hasClass "disabled"
+            downGroupPropertyRelations window.selected_gprs
+
+    $("body").on "click", "#bottom-selected-groups-properties", (e) ->
+        #if it's enabled
+        unless $(this).hasClass "disabled"
+            bottomGroupPropertyRelations window.selected_gprs
+
 #end onLoad function
 
 clearSelectedGroupsProperties = () ->
-    window.selected_group_property_relations = []
+    window.selected_gprs = []
     $("tr.selected-groups-property").removeClass "selected-groups-property"
     validateGroupsPropertySelection()
 window.clearSelectedGroupsProperties = clearSelectedGroupsProperties
@@ -60,13 +86,13 @@ window.addPropertiesToGroup = addPropertiesToGroup
 toggleGroupPropertySelect = (id, order) ->
     #if the clicked property is already selected
     id += "" #stringify
-    index = $.inArray id, window.selected_group_property_relations
+    index = $.inArray id, window.selected_gprs
     if index > -1
-        window.selected_group_property_relations.splice(index, 1)
+        window.selected_gprs.splice(index, 1)
         $("tr#"+id+".group_property_relationship").removeClass "selected-groups-property"
     else
         $("tr#"+id+".group_property_relationship").addClass "selected-groups-property"
-        window.selected_group_property_relations.push(id)
+        window.selected_gprs.push(id)
 
     order += "" #stringify
     index = $.inArray order, window.selected_group_property_orders
@@ -93,14 +119,77 @@ getGroupsProperties = (ids) ->
 window.getGroupsProperties = getGroupsProperties
 
 clearSelectedGroupsProperties = () ->
-    window.selected_group_property_relations = []
+    window.selected_gprs = []
     window.selected_group_property_orders = []
     $("tr.selected-groups-property").removeClass "selected-groups-property"
     validateGroupsPropertySelection()
 window.clearSelectedGroupsProperties = clearSelectedGroupsProperties
 
+deleteGroupPropertyRelations = (relationship_ids) ->
+    params = $.param( { 
+        selected_gprs: relationship_ids, 
+        selected_groups: window.selected_groups,
+        property_search: $("input#property_search_field").val(), 
+        property_direction: window.property_direction, 
+        property_sort: window.property_sort 
+        } )
+
+    #send the request to add the selected groups to the selected entity
+    $.ajax 
+        url: "/hub/delete_gprs?" + params
+        type: 'POST'
+window.deleteGroupPropertyRelations = deleteGroupPropertyRelations
+
+topGroupPropertyRelations = (relationship_ids) ->
+    params = $.param( { 
+            selected_gprs: relationship_ids, 
+            selected_groups: window.selected_groups 
+        } )
+
+    #send the request to add the selected groups to the selected entity
+    $.ajax 
+        url: "/hub/top_gprs?" + params
+        type: 'POST'
+window.topGroupPropertyRelations = topGroupPropertyRelations
+
+bottomGroupPropertyRelations = (relationship_ids) ->
+    params = $.param( { 
+            selected_gprs: relationship_ids, 
+            selected_groups: window.selected_groups 
+        } )
+
+    #send the request to add the selected groups to the selected entity
+    $.ajax 
+        url: "/hub/bottom_gprs?" + params
+        type: 'POST'
+window.bottomGroupPropertyRelations = bottomGroupPropertyRelations
+
+upGroupPropertyRelations = (relationship_ids) ->
+    params = $.param( { 
+            selected_gprs: relationship_ids, 
+            selected_groups: window.selected_groups 
+        } )
+
+    #send the request to add the selected groups to the selected entity
+    $.ajax 
+        url: "/hub/up_gprs?" + params
+        type: 'POST'
+window.upGroupPropertyRelations = upGroupPropertyRelations
+
+downGroupPropertyRelations = (relationship_ids) ->
+    params = $.param( { 
+            selected_gprs: relationship_ids, 
+            selected_groups: window.selected_groups 
+        } )
+
+    #send the request to add the selected groups to the selected entity
+    $.ajax 
+        url: "/hub/down_gprs?" + params
+        type: 'POST'
+window.downGroupPropertyRelations = downGroupPropertyRelations
+
 validateGroupsPropertySelection = () ->
-    if window.selected_group_property_relations.length > 0
+    if window.selected_gprs.length > 0
         $("#clear-selected-groups-properties").removeClass("disabled")
         $("#delete-selected-groups-properties").removeClass("disabled")
     else

@@ -1,5 +1,7 @@
 class HubController < ApplicationController
   include EntityGroupRelationsHelper
+  include EntityPropertyRelationsHelper
+  include GroupPropertyRelationsHelper
   include HubHelper
   include EntitiesHelper
   include GroupsHelper
@@ -174,7 +176,8 @@ class HubController < ApplicationController
   #Gets the group_property_relationships for the selected groups
   def groups_properties
     #get the group property relationships list
-    groups_property_relations
+    # groups_property_relations
+    @groups_property_relations = get_gprs(selected_groups)
 
     #update the properties list
     @properties = properties_list(selected_egrs, selected_groups)
@@ -185,12 +188,162 @@ class HubController < ApplicationController
     end
   end
 
+  #deletes the groups passed as :selected_groups param
+  #:selected_groups is expeced to be an array
+  def delete_gprs
+
+    @deleted_gprs = gpr_delete(selected_gprs)
+
+    @groups_property_relations = get_gprs(selected_groups)
+
+    @properties = properties_list(selected_egrs, selected_groups)
+
+    respond_to do |format|
+      format.js
+      format.html { redirect_to hub_path }
+    end
+  end
+
+  #request to move selected entity group relationships to top
+  def top_gprs
+    @moved_gprs = gpr_top(selected_gprs)
+
+    #response for entity group relations
+    @groups_property_relations = { status: 1, msg: "", data: gpr_list(selected_groups) }
+
+    # @properties = properties_list(selected_egrs, selected_groups)
+
+    respond_to do |format|
+      format.js { render 'move_gprs' }
+      format.html { redirect_to hub_path }
+    end
+  end
+
+  #request to move selected entity group relations to bottom
+  def bottom_gprs
+    @moved_gprs = gpr_bottom(selected_groups, selected_gprs)
+
+    #response for entity group relations
+    @groups_property_relations = { status: 1, msg: "", data: gpr_list(selected_groups) }
+
+    # @properties = properties_list(selected_egrs, selected_groups)
+
+    respond_to do |format|
+      format.js { render 'move_gprs' }
+      format.html { redirect_to hub_path }
+    end
+  end
+
+  #request to move selected entity group relations up one
+  def up_gprs
+    @moved_gprs = gpr_up(selected_gprs)
+
+    #response for entity group relations
+    @groups_property_relations = { status: 1, msg: "", data: gpr_list(selected_groups) }
+
+    # @properties = properties_list(selected_egrs, selected_groups)
+
+    respond_to do |format|
+      format.js { render 'move_gprs' }
+      format.html { redirect_to hub_path }
+    end
+  end
+
+  #request to move selected entity group relations down one
+  def down_gprs
+    @moved_gprs = gpr_down(selected_gprs)
+
+    #response for entity group relations
+    @groups_property_relations = { status: 1, msg: "", data: gpr_list(selected_groups) }
+
+    # @properties = properties_list(selected_egrs, selected_groups)
+
+    respond_to do |format|
+      format.js { render 'move_gprs' }
+      format.html { redirect_to hub_path }
+    end
+  end
+
+  #request to move selected entity group relationships to top
+  def top_eprs
+    @moved_eprs = epr_top(selected_eprs)
+
+    #response for entity group relations
+    @eprs = { status: 1, msg: "", data: epr_list(selected_egrs) }
+
+    # @properties = properties_list(selected_egrs, selected_groups)
+
+    respond_to do |format|
+      format.js { render 'move_eprs' }
+      format.html { redirect_to hub_path }
+    end
+  end
+
+  #request to move selected entity group relations to bottom
+  def bottom_eprs
+    @moved_eprs = epr_bottom(selected_groups, selected_eprs)
+
+    #response for entity group relations
+    @eprs = { status: 1, msg: "", data: epr_list(selected_egrs) }
+
+    # @properties = properties_list(selected_egrs, selected_groups)
+
+    respond_to do |format|
+      format.js { render 'move_eprs' }
+      format.html { redirect_to hub_path }
+    end
+  end
+
+  #request to move selected entity group relations up one
+  def up_eprs
+    @moved_eprs = epr_up(selected_eprs)
+
+    #response for entity group relations
+    @eprs = { status: 1, msg: "", data: epr_list(selected_egrs) }
+
+    # @properties = properties_list(selected_egrs, selected_groups)
+
+    respond_to do |format|
+      format.js { render 'move_eprs' }
+      format.html { redirect_to hub_path }
+    end
+  end
+
+  #request to move selected entity group relations down one
+  def down_eprs
+    @moved_eprs = gpr_down(selected_eprs)
+
+    #response for entity group relations
+    @eprs = { status: 1, msg: "", data: epr_list(selected_egrs) }
+
+    # @properties = properties_list(selected_egrs, selected_groups)
+
+    respond_to do |format|
+      format.js { render 'move_eprs' }
+      format.html { redirect_to hub_path }
+    end
+  end
+
   #update entity property relationship with submitted params
-  def update_entity_property_relationship
+  def update_epr
     puts "got here"
 
     respond_to do |format|
       format.js { render 'main' }
+      format.html { redirect_to hub_path }
+    end
+  end
+
+  #request list of entity group relationships
+  def eprs
+    @eprs = get_eprs(selected_egrs)
+
+    #update appropriate lists
+    selected_properties
+    @properties = properties_list(@selected_egrs, selected_groups)
+
+    respond_to do |format|
+      format.js { render 'groups_properties' }
       format.html { redirect_to hub_path }
     end
   end
@@ -211,7 +364,7 @@ class HubController < ApplicationController
 
   #request to add selected groups to selected entity
   def entity_add_groups
-    @created_relations = add_groups_to_entity(selected_entity, selected_groups)
+    @created_relations = create_egrs(selected_entity, selected_groups)
 
     #response structure
     @entitys_group_relations = { status: 1, msg: "", data: egr_list(selected_entity) }
@@ -226,13 +379,14 @@ class HubController < ApplicationController
 
   #request to add selected properties to selected group
   def group_add_properties
-    @added_properties = add_properties_to_group(selected_groups, selected_properties)
+    @added_properties = create_gprs(selected_groups, selected_properties)
+
+    #update list of group property relations
+    @groups_property_relations = { status: 1, msg: "", data: gpr_list(selected_groups) }
+    # groups_property_relations #HubHelper
 
     #update list of properties
     @properties = properties_list(selected_egrs, selected_groups)
-
-    #update list of group property relations
-    groups_property_relations #HubHelper
 
     respond_to do |format|
       format.js

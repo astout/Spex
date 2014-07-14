@@ -284,7 +284,7 @@ input[name='commit'] {
 
 /* microposts */
 
-.entity_property_relationships {
+.eprs {
   list-style: none;
   margin: 10px 0 0 0;
 
@@ -375,7 +375,7 @@ a.btn-full-width {
 }
 
 div#add-properties {
-  a.link_to_add_entity_property_relationship {
+  a.link_to_add_epr {
     color: #75A329;
     margin-left: 5px;
   }
@@ -398,39 +398,8 @@ tr.list-item {
   }
 }
 
-tr.selected-entity {
-  background-color: #AADFFF; //soft-blue
-  &:hover {
-    background-color: #AFDFE8; //other blue
-    text-decoration: none;
-  }
-}
-
-tr.selected-entitys-group {
-  background-color: #AADFFF; //soft-blue
-  &:hover {
-    background-color: #AFDFE8; //other blue
-    text-decoration: none;
-  }
-}
-
-tr.selected-group {
-  background-color: #AADFFF; //soft-blue
-  &:hover {
-    background-color: #AFDFE8; //other blue
-    text-decoration: none;
-  }
-}
-
-tr.selected-groups-property {
-  background-color: #AADFFF; //soft-blue
-  &:hover {
-    background-color: #AFDFE8; //other blue
-    text-decoration: none;
-  }
-}
-
-tr.selected-property {
+tr.selected-entity, tr.selected-entitys-group, tr.selected-group, 
+tr.selected-groups-property, tr.selected-property, tr.selected-epr {
   background-color: #AADFFF; //soft-blue
   &:hover {
     background-color: #AFDFE8; //other blue

@@ -3,7 +3,7 @@ module EntityGroupRelationsHelper
   #retrieve the DB instances of the selected entity group relations
   def selected_egrs
     @selected_egrs = []
-    selected_relation_ids = params[:selected_entity_group_relations]
+    selected_relation_ids = params[:selected_egrs]
     unless selected_relation_ids.nil?
       selected_relation_ids.each do |id|
         relation = EntityGroupRelationship.find_by id: id
@@ -13,6 +13,25 @@ module EntityGroupRelationsHelper
       end
     end
     @selected_egrs
+  end
+
+  def create_egrs(selected_entity, selected_groups)
+    created_relations = []
+
+    #unless there's no selected entity
+    unless selected_entity.nil?
+
+      #for each selected group
+      selected_groups.each do |group|
+
+        #create the relationship and push the data
+        created_relations.push group ? { relation: selected_entity.own!(group), group: group, msg: "added to #{selected_entity.name}" } : { relation: "", group: "", msg: "group not found" }
+
+      end
+    else #there's no entity
+      created_relations.push({ relation: "", group: "", msg: "entity not found" })
+    end
+    return created_relations
   end
 
   def get_egrs(selected_entity)

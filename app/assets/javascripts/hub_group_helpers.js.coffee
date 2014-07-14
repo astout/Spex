@@ -97,7 +97,7 @@ validateGroupSelection = () ->
         validateEntitysGroupSelection()
     else
         _html = ""
-        if window.selected_entity_group_relations.length < 1
+        if window.selected_egrs.length < 1
             _html = "<div class='alert alert-info small-font center'>"
             _html += "<i>No Group selected.</i></div>"
         $("#groups_properties").html ""

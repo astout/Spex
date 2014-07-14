@@ -1,5 +1,5 @@
 window.selected_properties = [] #list of selected groups
-window.selected_entity_group_relations = [] #list of selected entity's groupswindow.property_sort = "created_at"
+window.selected_egrs = [] #list of selected entity's groupswindow.property_sort = "created_at"
 window.property_sort = "created_at"
 window.property_direction = "desc"
 window.properties_page = "1"

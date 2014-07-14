@@ -33,7 +33,7 @@ $ ->
 getAllParams = () ->
     params = $.param( { 
             selected_entity: window.selected_entity,
-            selected_entity_group_relations: window.selected_entity_group_relations, 
+            selected_egrs: window.selected_egrs, 
             selected_groups: window.selected_groups,
             selected_properties: window.selected_properties,
             group_search: $("input#group_search_field").val(), 
@@ -71,17 +71,25 @@ persistStyling = () ->
     else
         $("tr.selected-group").removeClass "selected-group"
 
-    if window.selected_entity_group_relations.length > 0
-        for relationship_id in window.selected_entity_group_relations
+    if window.selected_egrs.length > 0
+        for relationship_id in window.selected_egrs
             $("tr#"+relationship_id+".entity_group_relationship").addClass "selected-entitys-group"
     else
         $("tr.selected-entitys-group").removeClass "selected-entitys-group"
+
 
     if window.selected_properties.length > 0
         for property in window.selected_properties
             $("tr#"+property+".property").addClass "selected-property"
     else
         $("tr.selected-properties").removeClass "selected-properties"
+
+    if window.selected_gprs.length > 0
+        for relationship_id in window.selected_gprs
+            $("tr#"+relationship_id+".group_property_relationship").addClass "selected-groups-property"
+    else
+        $("tr.selected-groups-property").removeClass "selected-groups-property"
+
 #globalize persistStyling        
 window.persistStyling = persistStyling
 

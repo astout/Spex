@@ -57,24 +57,4 @@ module GroupsHelper
     return deleted_groups
   end
 
-  def add_properties_to_group(selected_groups, selected_properties)
-    added_properties = []
-    #there should only be one group selected, this is enforced client-side
-    unless selected_groups.blank?
-      group = selected_groups.first #get the first group of the selected groups (should be only one)
-      unless group.nil?
-        #for each selected property
-        selected_properties.each do |property|
-
-          #create the relatioships between the group and the current property
-          added_properties.push property ? { relation: group.own!(property), property: property, msg: "added to #{group.name}" } : { relation: "", property: "", msg: "property was nil" }
-        end
-      end
-    else
-      added_properties.push({ relation: "", group: "", msg: "group was nil" })
-    end
-    return added_properties
-  end
-
-
 end

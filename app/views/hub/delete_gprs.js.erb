@@ -1,0 +1,29 @@
+var alert_html = "";
+
+<% unless @deleted_gprs.nil? %>
+    alert_html += "<div class='alert alert-success small-font'>";
+    alert_html += "<p><strong>Properties Removed from '<%= @selected_groups.first.name %>':</strong></p>";
+    <% @deleted_gprs.each do |deleted_gpr| %>
+        <% unless deleted_gpr[:data].nil? %>
+            alert_html += "<p style='padding-left: 10px'>- <%=deleted_gpr[:data].property.name %> </p>";
+            toggleGroupPropertySelect(<%= deleted_gpr[:data].id %>, <%= deleted_gpr[:data].order %> + 1); 
+        <% end %>
+    <% end %>
+<% else %>
+    alert_html += "<div class='alert alert-danger small-font'>";
+    alert_html += "<p><strong>Nothing Deleted:</strong></p>";
+    alert_html += "<p style='padding-left: 10px'><i>The server returned no results.</i></p>";
+<% end %>
+alert_html += "</div>"
+
+hubAlert("#groups-properties-alert", alert_html);
+
+$('#groups_properties').html("  <%= j render partial: 'groups/properties', locals: { show_units: false, show_created: false, show_remove: false } %>");
+
+$('#properties').html("<%= j render partial: 'properties/properties', locals: { show_units: false, show_created: false, show_remove: false } %>");
+
+persistStyling();
+
+window.selected_groups_max_property_order = <%= @selected_groups.first.properties.count %>;
+
+validateGroupsPropertySelection();

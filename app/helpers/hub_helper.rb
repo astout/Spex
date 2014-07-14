@@ -16,7 +16,7 @@ module HubHelper
     @groups_property_relations = { status: -1, msg: "", data: [] }
 
     #start a response hash for entity property relationships
-    @entity_property_relations = { status: -1, msg: "", data: [] }
+    @eprs = { status: -1, msg: "", data: [] }
     
     #if there aren't any selected groups
     if @selected_groups.blank?
@@ -32,7 +32,7 @@ module HubHelper
           unless used_properties.include? entity_property_relation.property
             
             #add the entity property relation to the list
-            @entity_property_relations[:data] |= [entity_property_relation]
+            @eprs[:data] |= [entity_property_relation]
 
             #
             used_properties |= [entity_property_relation.property]
@@ -86,20 +86,20 @@ module HubHelper
     end
 
     #now if the entity property relations data is blank
-    if @entity_property_relations[:data].blank?
+    if @eprs[:data].blank?
       #update the status and message
-      @entity_property_relations[:status] = 2
-      @entity_property_relations[:msg] = "No properties for the selected groups."
+      @eprs[:status] = 2
+      @eprs[:msg] = "No properties for the selected groups."
     else
       #if there's data, sort it by group id
-      @entity_property_relations[:data].sort_by { |r| r[:group_id] }
+      @eprs[:data].sort_by { |r| r[:group_id] }
 
       #prepare the data for pagination
-      @entity_property_relations[:data] = @entity_property_relations[:data].paginate(page: params[:groups_properties_page].blank? ? 1 : params[:groups_properties_page], per_page: 10, order: 'order ASC')
+      @eprs[:data] = @eprs[:data].paginate(page: params[:groups_properties_page].blank? ? 1 : params[:groups_properties_page], per_page: 10, order: 'order ASC')
 
       #success status and no message
-      @entity_property_relations[:status] = 1
-      @entity_property_relations[:msg] = ""
+      @eprs[:status] = 1
+      @eprs[:msg] = ""
     end
   end #end groups_property_relations
 

@@ -1,5 +1,6 @@
 #entity group relationship functions
 
+window.selected_egrs = []
 window.selected_entity_group_orders = [] #list of selected entity's groups order
 window.selected_entitys_max_group_order = -1 
 
@@ -21,45 +22,46 @@ $ ->
         #if it's enabled
         unless $(this).hasClass "disabled"
             clearSelectedEntitysGroups()
+            validateEntitysGroupSelection()
 
     #When the delete egr button is clicked
     $("body").on "click", "#delete-selected-entitys-groups", (e) ->
         #if it's enabled
         unless $(this).hasClass "disabled"
-            deleteEntityGroupRelations window.selected_entity_group_relations
+            deleteEntityGroupRelations window.selected_egrs
 
     $("body").on "click", "#top-selected-entitys-groups", (e) ->
         #if it's enabled
         unless $(this).hasClass "disabled"
-            topEntityGroupRelations window.selected_entity_group_relations
+            topEntityGroupRelations window.selected_egrs
 
     $("body").on "click", "#up-selected-entitys-groups", (e) ->
         #if it's enabled
         unless $(this).hasClass "disabled"
-            upEntityGroupRelations window.selected_entity_group_relations
+            upEntityGroupRelations window.selected_egrs
 
     $("body").on "click", "#down-selected-entitys-groups", (e) ->
         #if it's enabled
         unless $(this).hasClass "disabled"
-            downEntityGroupRelations window.selected_entity_group_relations
+            downEntityGroupRelations window.selected_egrs
 
     $("body").on "click", "#bottom-selected-entitys-groups", (e) ->
         #if it's enabled
         unless $(this).hasClass "disabled"
-            bottomEntityGroupRelations window.selected_entity_group_relations
+            bottomEntityGroupRelations window.selected_egrs
 
 #end onLoad function
 
 toggleEntitysGroupSelect = (id, order) ->
     #if the clicked group is already selected
     id += "" #stringify
-    index = $.inArray id, window.selected_entity_group_relations
+    index = $.inArray id, window.selected_egrs
     if index > -1
-        window.selected_entity_group_relations.splice(index, 1)
+        window.selected_egrs.splice(index, 1)
         $("tr#"+id+".entity_group_relationship").removeClass "selected-entitys-group"
     else
         $("tr#"+id+".entity_group_relationship").addClass "selected-entitys-group"
-        window.selected_entity_group_relations.push(id)
+        window.selected_egrs.push(id)
 
     order += "" #stringify
     index = $.inArray order, window.selected_entity_group_orders
@@ -68,7 +70,7 @@ toggleEntitysGroupSelect = (id, order) ->
     else
         window.selected_entity_group_orders.push order
 
-    getEntitysProperties window.selected_entity_group_relations
+    getEntitysProperties window.selected_egrs
     validateEntitysGroupSelection()
 window.toggleEntitysGroupSelect = toggleEntitysGroupSelect
 
@@ -101,7 +103,7 @@ window.addGroupsToEntity = addGroupsToEntity
 deleteEntityGroupRelations = (relationship_ids) ->
     params = $.param( { 
         selected_entity: window.selected_entity,
-        selected_entity_group_relations: relationship_ids, 
+        selected_egrs: relationship_ids, 
         selected_groups: window.selected_groups,
         group_search: $("input#group_search_field").val(), 
         entity_search: $("input#entity_search_field").val(), 
@@ -118,7 +120,7 @@ deleteEntityGroupRelations = (relationship_ids) ->
 window.deleteEntityGroupRelations = deleteEntityGroupRelations
 
 validateEntitysGroupSelection = () ->
-    if window.selected_entity_group_relations.length > 0
+    if window.selected_egrs.length > 0
         $("#clear-selected-entitys-groups").removeClass("disabled")
         $("#delete-selected-entitys-groups").removeClass("disabled")
         clearSelectedGroups()
@@ -209,7 +211,7 @@ validateEntitysGroupSelection = () ->
 window.validateEntitysGroupSelection = validateEntitysGroupSelection
 
 clearSelectedEntitysGroups = () ->
-    window.selected_entity_group_relations = []
+    window.selected_egrs = []
     window.selected_entity_group_orders = []
     # window.selected_entitys_max_group_order = -1
     $("tr.selected-entitys-group").removeClass "selected-entitys-group"
@@ -235,7 +237,7 @@ window.getEntitysGroups = getEntitysGroups
 topEntityGroupRelations = (relationship_ids) ->
     params = $.param( { 
         selected_entity: window.selected_entity,
-        selected_entity_group_relations: relationship_ids.sort(), 
+        selected_egrs: relationship_ids.sort(), 
         selected_groups: window.selected_groups,
         group_search: $("input#group_search_field").val(), 
         entity_search: $("input#entity_search_field").val(), 
@@ -254,7 +256,7 @@ window.topEntityGroupRelations = topEntityGroupRelations
 bottomEntityGroupRelations = (relationship_ids) ->
     params = $.param( { 
         selected_entity: window.selected_entity,
-        selected_entity_group_relations: relationship_ids.sort(), 
+        selected_egrs: relationship_ids.sort(), 
         selected_groups: window.selected_groups,
         group_search: $("input#group_search_field").val(), 
         entity_search: $("input#entity_search_field").val(), 
@@ -273,7 +275,7 @@ window.bottomEntityGroupRelations = bottomEntityGroupRelations
 upEntityGroupRelations = (relationship_ids) ->
     params = $.param( { 
         selected_entity: window.selected_entity,
-        selected_entity_group_relations: relationship_ids.sort(), 
+        selected_egrs: relationship_ids.sort(), 
         selected_groups: window.selected_groups,
         group_search: $("input#group_search_field").val(), 
         entity_search: $("input#entity_search_field").val(), 
@@ -292,7 +294,7 @@ window.upEntityGroupRelations = upEntityGroupRelations
 downEntityGroupRelations = (relationship_ids) ->
     params = $.param( { 
         selected_entity: window.selected_entity,
-        selected_entity_group_relations: relationship_ids.sort(), 
+        selected_egrs: relationship_ids.sort(), 
         selected_groups: window.selected_groups,
         group_search: $("input#group_search_field").val(), 
         entity_search: $("input#entity_search_field").val(), 

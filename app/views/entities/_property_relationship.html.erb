@@ -1,4 +1,4 @@
-<tr id=<%= "#{property_relationship.id}" %> class="list-item entity_property_relationship" data-order=<%= property_relationship.order+1 %> >
+<tr id=<%= "#{property_relationship.id}" %> class="list-item epr" data-order=<%= property_relationship.order+1 %> >
     <td>
       <%= link_to property_relationship.property.name, property_relationship %>
     </td>
@@ -34,7 +34,7 @@
 <tr>
   <td colspan="100%" class="hidden-edit-entity-property-relation-form" style="padding: 0 !important">
     <div id=<%= "edit-#{property_relationship.id}" %> class="collapse accordion-body">
-      <%= render partial: 'entities/edit_entity_property_relationship', locals: { relation: property_relationship } %>
+      <%= render partial: 'entities/edit_epr', locals: { relation: property_relationship } %>
     </div>
   </td>
 </tr>

@@ -62,25 +62,6 @@ module EntitiesHelper
     entity
   end
 
-  def add_groups_to_entity(selected_entity, selected_groups)
-    created_relations = []
-
-    #unless there's no selected entity
-    unless selected_entity.nil?
-
-      #for each selected group
-      selected_groups.each do |group|
-
-        #create the relationship and push the data
-        created_relations.push group ? { relation: selected_entity.own!(group), group: group, msg: "added to #{selected_entity.name}" } : { relation: "", group: "", msg: "group not found" }
-
-      end
-    else #there's no entity
-      created_relations.push({ relation: "", group: "", msg: "entity not found" })
-    end
-    return created_relations
-  end
-
   # def link_to_add_property(entity, property)
   #   link_to "Add Property", controller: :entity_property_relationships, 
   #     action: :create,  method: :post, entity_id: entity.id, property_id: property.id

@@ -4,7 +4,6 @@ class EntityPropertyRelationship < ActiveRecord::Base
   validates :entity_id, presence: true
   validates :property_id, presence: true
 
-
   def group
     group = Group.find_by id: self.group_id
   end
