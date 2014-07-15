@@ -43,7 +43,7 @@
             <%= render partial: 'search_group', locals: { path: hub_path } %>
             <div id="clear-selected-groups" class="btn btn-default btn-sm disabled">Clear</div>
             <div id="delete-selected-groups" class="btn btn-danger btn-sm disabled">Delete</div>
-            <div id="add-selected-groups" class="disabled">Add Selected To Entity</div>
+            <div id="add-selected-groups" class="disabled">Add To Entity</div>
             <div style="padding-top: 10px"></div>
             <div id="groups">
                 <%= render partial: 'groups/groups', locals: { show_created: false, show_remove: false } %>
@@ -74,7 +74,7 @@
             <%= render partial: 'search_property', locals: { path: hub_path } %>
             <div id="clear-selected-properties" class="btn btn-default btn-sm disabled">Clear</div>
             <div id="delete-selected-properties" class="btn btn-danger btn-sm disabled">Delete</div>
-            <div id="add-selected-properties" class="disabled">Add Selected</div>
+            <div id="add-selected-properties" class="disabled">Add To Group</div>
             <div style="padding-top: 10px"></div>
             <div id="properties">
                 <%= render partial: 'properties/properties', locals: { show_units: false, show_created: false, show_remove: false } %>

@@ -9,7 +9,7 @@ $ ->
     #On EntityGroupRelationship element click
     $("body").on "click", '.table tr.entity_group_relationship', (e) ->
         #get the group id
-        toggleEntitysGroupSelect this.id, $(this).data().order
+        toggleEntitysGroupSelect this.id, $(this).data().order, e.ctrlKey || e.metaKey
 
     #When the add groups button is clicked
     $("body").on "click", "#add-selected-groups", (e) ->
@@ -21,7 +21,7 @@ $ ->
     $("body").on "click", "#clear-selected-entitys-groups", (e) ->
         #if it's enabled
         unless $(this).hasClass "disabled"
-            clearSelectedEntitysGroups()
+            clearSelectedEGRs()
             validateEntitysGroupSelection()
 
     #When the delete egr button is clicked
@@ -52,14 +52,24 @@ $ ->
 
 #end onLoad function
 
-toggleEntitysGroupSelect = (id, order) ->
+toggleEntitysGroupSelect = (id, order, multiSelect) ->
     #if the clicked group is already selected
     id += "" #stringify
     index = $.inArray id, window.selected_egrs
     if index > -1
-        window.selected_egrs.splice(index, 1)
-        $("tr#"+id+".entity_group_relationship").removeClass "selected-entitys-group"
+        if window.selected_egrs.length > 1 && !multiSelect
+            clearSelectedEGRs()
+            $("tr#"+id+".entity_group_relationship").addClass "selected-entitys-group"
+            window.selected_egrs.push(id)
+        else
+            clearSelectedEPRs()
+            window.selected_egrs.splice(index, 1)
+            $("tr#"+id+".entity_group_relationship").removeClass "selected-entitys-group"
+    else if multiSelect
+        $("tr#"+id+".entity_group_relationship").addClass "selected-entitys-group"
+        window.selected_egrs.push(id)
     else
+        clearSelectedEGRs()
         $("tr#"+id+".entity_group_relationship").addClass "selected-entitys-group"
         window.selected_egrs.push(id)
 
@@ -210,12 +220,13 @@ validateEntitysGroupSelection = () ->
 
 window.validateEntitysGroupSelection = validateEntitysGroupSelection
 
-clearSelectedEntitysGroups = () ->
+clearSelectedEGRs = () ->
     window.selected_egrs = []
     window.selected_entity_group_orders = []
     # window.selected_entitys_max_group_order = -1
     $("tr.selected-entitys-group").removeClass "selected-entitys-group"
-window.clearSelectedEntitysGroups = clearSelectedEntitysGroups
+    clearSelectedEPRs()
+window.clearSelectedEGRs = clearSelectedEGRs
 
 getEntitysGroups = (id) ->
     params = $.param( { 

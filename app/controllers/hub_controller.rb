@@ -281,7 +281,7 @@ class HubController < ApplicationController
 
   #request to move selected entity group relations to bottom
   def bottom_eprs
-    @moved_eprs = epr_bottom(selected_groups, selected_eprs)
+    @moved_eprs = epr_bottom(selected_egrs, selected_eprs)
 
     #response for entity group relations
     @eprs = { status: 1, msg: "", data: epr_list(selected_egrs) }
@@ -311,7 +311,7 @@ class HubController < ApplicationController
 
   #request to move selected entity group relations down one
   def down_eprs
-    @moved_eprs = gpr_down(selected_eprs)
+    @moved_eprs = epr_down(selected_eprs)
 
     #response for entity group relations
     @eprs = { status: 1, msg: "", data: epr_list(selected_egrs) }

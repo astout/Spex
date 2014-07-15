@@ -1,14 +1,48 @@
 var alert_html = "";
 
-if( selected_groups.length > 0 || selected_egrs.length > 0 )
-{
-    hubAlert("#groups-properties-alert", alert_html);
-}
-
 <% if @selected_groups.blank? %>
-    window.selected_groups_max_property_order = -1;
+    window.selected_gpr_max_order = -1;
 <% else %>
-    window.selected_groups_max_property_order = <%= @selected_groups.first.properties.count %>;
+    hubAlert("#groups-properties-alert", "");
+    window.selected_gpr_max_order = <%= @selected_groups.first.properties.count %>;
+    <% if @groups_property_relations.blank? %>
+        alert_html += "<div class='alert alert-info small-font'>";
+        alert_html += "<p><strong>No properties for <%= @selected_groups.first.name %>.</strong></p>";
+        alert_html += "<p style='padding-left: 10px'><i>Try adding properties to the group.</i></p>";
+    <% elsif @groups_property_relations[:data].blank? %>
+        alert_html += "<div class='alert alert-info small-font'>";
+        alert_html += "<p><strong>No properties for <%= @selected_groups.first.name %>.</strong></p>";
+        alert_html += "<p style='padding-left: 10px'><i>Try adding properties to the group.</i></p>";
+    <% end %>
+    alert_html += "</div>";
+    hubAlert("#groups-properties-alert", alert_html);
+    alert_html = "";
+<% end %>
+
+<% if @selected_egrs.blank? %>
+    window.selected_epr_max_order = -1;
+<% else %>
+    window.selected_epr_max_order = <%= @selected_egrs.first.group.properties.count %>;
+    console.log("epr max order: " + window.selected_epr_max_order);
+    hubAlert("#groups-properties-alert", "");
+    <% if @eprs.blank? %>
+        alert_html += "<div class='alert alert-info small-font'>";
+        alert_html += "<p><strong>No properties for <%= @selected_egrs.first.group.name %>.</strong></p>";
+        alert_html += "<p style='padding-left: 10px'><i>Try adding properties to the group.</i></p>";
+    <% elsif @eprs[:data].blank? %>
+        alert_html += "<div class='alert alert-info small-font'>";
+        alert_html += "<p><strong>No properties for <%= @selected_egrs.first.group.name %>.</strong></p>";
+        alert_html += "<p style='padding-left: 10px'><i>Try adding properties to the group.</i></p>";
+    <% end %>
+    alert_html += "</div>";
+    hubAlert("#groups-properties-alert", alert_html);
+    alert_html = "";
+<% end %>
+<% if @selected_egrs.blank? && @selected_groups.blank? %>
+    alert_html = "<div class='alert alert-info small-font center'>";
+    alert_html += "<i>No Group selected.</i></div>";
+    hubAlert("#groups-properties-alert", alert_html);
+    alert_html = "";
 <% end %>
 
 $('#properties').html("<%= j render partial: 'properties/properties', locals: { show_units: false, show_created: false, show_remove: false } %>");
@@ -16,3 +50,6 @@ $('#properties').html("<%= j render partial: 'properties/properties', locals: { 
 $('#groups_properties').html("<%= j render partial: 'groups/properties', locals: { show_units: false, show_created: false, show_remove: false } %>");
 
 persistStyling();
+
+console.log("test00");
+

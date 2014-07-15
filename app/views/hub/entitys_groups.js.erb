@@ -31,7 +31,7 @@ if(selected_groups.length > 0 && selected_entity > -1)
             if ( index > -1 )
             {
                 console.log ("deselecting: <%= group.id %>")
-                toggleGroupSelect(<%= group.id %> + "");
+                toggleGroupSelect(<%= group.id %> + "", false);
             }
         <% end %>
     <% end %>

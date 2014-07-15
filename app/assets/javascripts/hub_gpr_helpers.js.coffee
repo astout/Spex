@@ -1,21 +1,22 @@
 #group property relationship functions
 
-window.selected_group_property_orders = [] #list of selected entity's groups order
+window.selected_gpr_orders = [] #list of selected entity's groups order
 window.selected_gprs = [] #list of selected group's properties
-window.selected_groups_max_property_order = -1
+window.selected_gpr_max_order = -1
 
 $ ->
 
     #On list element click
-    $("body").on "click", '.table tr.group_property_relationship', (e) ->
+    $("body").on "click", '.table tr.gpr', (e) ->
         #get the group id
-        toggleGroupPropertySelect this.id, $(this).data().order
+        console.log " test 00 "
+        toggleGPRselect this.id, $(this).data().order, e.metaKey || e.ctrlKey
 
     #When the clear groups button is clicked
-    $("body").on "click", "#clear-selected-groups-properties", (e) ->
+    $("body").on "click", "#clear-selected-gprs", (e) ->
         #if it's enabled
         unless $(this).hasClass "disabled"
-            clearSelectedGroupsProperties()
+            clearSelectedGPRs()
 
     #When the add properties button is clicked
     $("body").on "click", "#add-selected-properties", (e) ->
@@ -24,38 +25,32 @@ $ ->
             addPropertiesToGroup window.selected_properties, window.selected_groups
 
     #When the delete egr button is clicked
-    $("body").on "click", "#delete-selected-groups-properties", (e) ->
+    $("body").on "click", "#delete-selected-gprs", (e) ->
         #if it's enabled
         unless $(this).hasClass "disabled"
-            deleteGroupPropertyRelations window.selected_gprs
+            deleteGPRs window.selected_gprs
 
-    $("body").on "click", "#top-selected-groups-properties", (e) ->
+    $("body").on "click", "#top-selected-gprs", (e) ->
         #if it's enabled
         unless $(this).hasClass "disabled"
-            topGroupPropertyRelations window.selected_gprs
+            topGPRs window.selected_gprs
 
-    $("body").on "click", "#up-selected-groups-properties", (e) ->
+    $("body").on "click", "#up-selected-gprs", (e) ->
         #if it's enabled
         unless $(this).hasClass "disabled"
-            upGroupPropertyRelations window.selected_gprs
+            upGPRs window.selected_gprs
 
-    $("body").on "click", "#down-selected-groups-properties", (e) ->
+    $("body").on "click", "#down-selected-gprs", (e) ->
         #if it's enabled
         unless $(this).hasClass "disabled"
-            downGroupPropertyRelations window.selected_gprs
+            downGPRs window.selected_gprs
 
-    $("body").on "click", "#bottom-selected-groups-properties", (e) ->
+    $("body").on "click", "#bottom-selected-gprs", (e) ->
         #if it's enabled
         unless $(this).hasClass "disabled"
-            bottomGroupPropertyRelations window.selected_gprs
+            bottomGPRs window.selected_gprs
 
 #end onLoad function
-
-clearSelectedGroupsProperties = () ->
-    window.selected_gprs = []
-    $("tr.selected-groups-property").removeClass "selected-groups-property"
-    validateGroupsPropertySelection()
-window.clearSelectedGroupsProperties = clearSelectedGroupsProperties
 
 validateAddPropertiesToGroup = () ->
     #if there are selected groups && a selected entity,
@@ -83,26 +78,37 @@ addPropertiesToGroup = (properties, group) ->
         type: 'POST'
 window.addPropertiesToGroup = addPropertiesToGroup  
 
-toggleGroupPropertySelect = (id, order) ->
+toggleGPRselect = (id, order, multiSelect) ->
     #if the clicked property is already selected
+    console.log " Called toggleGPRselect "
+
     id += "" #stringify
     index = $.inArray id, window.selected_gprs
     if index > -1
-        window.selected_gprs.splice(index, 1)
-        $("tr#"+id+".group_property_relationship").removeClass "selected-groups-property"
+        if window.selected_gprs.length > 1 && !multiSelect
+            clearSelectedGPRs()
+            $("tr#"+id+".gpr").addClass "selected-gpr"
+            window.selected_gprs.push(id)
+        else
+            window.selected_gprs.splice(index, 1)
+            $("tr#"+id+".gpr").removeClass "selected-gpr"
+    else if multiSelect
+        $("tr#"+id+".gpr").addClass "selected-gpr"
+        window.selected_gprs.push(id)
     else
-        $("tr#"+id+".group_property_relationship").addClass "selected-groups-property"
+        clearSelectedGPRs()
+        $("tr#"+id+".gpr").addClass "selected-gpr"
         window.selected_gprs.push(id)
 
     order += "" #stringify
-    index = $.inArray order, window.selected_group_property_orders
+    index = $.inArray order, window.selected_gpr_orders
     if index > -1
-        window.selected_group_property_orders.splice(index, 1)
+        window.selected_gpr_orders.splice(index, 1)
     else
-        window.selected_group_property_orders.push order
+        window.selected_gpr_orders.push order
 
     validateGroupsPropertySelection()
-window.toggleGroupPropertySelect = toggleGroupPropertySelect
+window.toggleGPRselect = toggleGPRselect
 
 getGroupsProperties = (ids) ->
     params = $.param( { 
@@ -118,14 +124,14 @@ getGroupsProperties = (ids) ->
         type: 'POST'
 window.getGroupsProperties = getGroupsProperties
 
-clearSelectedGroupsProperties = () ->
+clearSelectedGPRs = () ->
     window.selected_gprs = []
-    window.selected_group_property_orders = []
-    $("tr.selected-groups-property").removeClass "selected-groups-property"
+    window.selected_gpr_orders = []
+    $("tr.selected-gpr").removeClass "selected-gpr"
     validateGroupsPropertySelection()
-window.clearSelectedGroupsProperties = clearSelectedGroupsProperties
+window.clearSelectedGPRs = clearSelectedGPRs
 
-deleteGroupPropertyRelations = (relationship_ids) ->
+deleteGPRs = (relationship_ids) ->
     params = $.param( { 
         selected_gprs: relationship_ids, 
         selected_groups: window.selected_groups,
@@ -138,9 +144,9 @@ deleteGroupPropertyRelations = (relationship_ids) ->
     $.ajax 
         url: "/hub/delete_gprs?" + params
         type: 'POST'
-window.deleteGroupPropertyRelations = deleteGroupPropertyRelations
+window.deleteGPRs = deleteGPRs
 
-topGroupPropertyRelations = (relationship_ids) ->
+topGPRs = (relationship_ids) ->
     params = $.param( { 
             selected_gprs: relationship_ids, 
             selected_groups: window.selected_groups 
@@ -150,9 +156,9 @@ topGroupPropertyRelations = (relationship_ids) ->
     $.ajax 
         url: "/hub/top_gprs?" + params
         type: 'POST'
-window.topGroupPropertyRelations = topGroupPropertyRelations
+window.topGPRs = topGPRs
 
-bottomGroupPropertyRelations = (relationship_ids) ->
+bottomGPRs = (relationship_ids) ->
     params = $.param( { 
             selected_gprs: relationship_ids, 
             selected_groups: window.selected_groups 
@@ -162,9 +168,9 @@ bottomGroupPropertyRelations = (relationship_ids) ->
     $.ajax 
         url: "/hub/bottom_gprs?" + params
         type: 'POST'
-window.bottomGroupPropertyRelations = bottomGroupPropertyRelations
+window.bottomGPRs = bottomGPRs
 
-upGroupPropertyRelations = (relationship_ids) ->
+upGPRs = (relationship_ids) ->
     params = $.param( { 
             selected_gprs: relationship_ids, 
             selected_groups: window.selected_groups 
@@ -174,9 +180,9 @@ upGroupPropertyRelations = (relationship_ids) ->
     $.ajax 
         url: "/hub/up_gprs?" + params
         type: 'POST'
-window.upGroupPropertyRelations = upGroupPropertyRelations
+window.upGPRs = upGPRs
 
-downGroupPropertyRelations = (relationship_ids) ->
+downGPRs = (relationship_ids) ->
     params = $.param( { 
             selected_gprs: relationship_ids, 
             selected_groups: window.selected_groups 
@@ -186,20 +192,19 @@ downGroupPropertyRelations = (relationship_ids) ->
     $.ajax 
         url: "/hub/down_gprs?" + params
         type: 'POST'
-window.downGroupPropertyRelations = downGroupPropertyRelations
+window.downGPRs = downGPRs
 
 validateGroupsPropertySelection = () ->
-    if window.selected_gprs.length > 0
-        $("#clear-selected-groups-properties").removeClass("disabled")
-        $("#delete-selected-groups-properties").removeClass("disabled")
+    if window.selected_gprs.length > 0 && window.selected_groups.length == 1
+        $("#clear-selected-gprs").removeClass("disabled")
+        $("#delete-selected-gprs").removeClass("disabled")
     else
-        $("#clear-selected-groups-properties").addClass("disabled")
-        $("#delete-selected-groups-properties").addClass("disabled")
+        $("#clear-selected-gprs").addClass("disabled")
+        $("#delete-selected-gprs").addClass("disabled")
 
-    orders = window.selected_group_property_orders
-    maxOrder = window.selected_groups_max_property_order + ""
+    orders = window.selected_gpr_orders
 
-    if orders.length < 1
+    if orders.length < 1 || window.selected_groups.length > 1
         $("div.property-order-action").removeClass "enabled"
         $("div.property-order-action").addClass "disabled"
     else
@@ -210,26 +215,25 @@ validateGroupsPropertySelection = () ->
         catch e
             console.log e
         finally
-            $("div#up-selected-groups-properties").removeClass "enabled"
-            $("div#up-selected-groups-properties").addClass "disabled"
-            $("div#top-selected-groups-properties").removeClass "enabled"
-            $("div#top-selected-groups-properties").addClass "disabled"
+            $("div#up-selected-gprs").removeClass "enabled"
+            $("div#up-selected-gprs").addClass "disabled"
+            $("div#top-selected-gprs").removeClass "enabled"
+            $("div#top-selected-gprs").addClass "disabled"
         # index_first = $.inArray "1", orders
         # if index_first > -1 && orders.length == 1
         if sum <= valid
-            $("div#up-selected-groups-properties").removeClass "enabled"
-            $("div#up-selected-groups-properties").addClass "disabled"
-            $("div#top-selected-groups-properties").removeClass "enabled"
-            $("div#top-selected-groups-properties").addClass "disabled"
+            $("div#up-selected-gprs").removeClass "enabled"
+            $("div#up-selected-gprs").addClass "disabled"
+            $("div#top-selected-gprs").removeClass "enabled"
+            $("div#top-selected-gprs").addClass "disabled"
         else
-            $("div#up-selected-groups-properties").removeClass "disabled"
-            $("div#up-selected-groups-properties").addClass "enabled"
-            $("div#top-selected-groups-properties").removeClass "disabled"
-            $("div#top-selected-groups-properties").addClass "enabled"
+            $("div#up-selected-gprs").removeClass "disabled"
+            $("div#up-selected-gprs").addClass "enabled"
+            $("div#top-selected-gprs").removeClass "disabled"
+            $("div#top-selected-gprs").addClass "enabled"
         # index_last = $.inArray maxOrder, orders
-        sum = 0
         valid = false
-        index = $.inArray window.selected_groups_max_property_order + "", orders
+        index = $.inArray window.selected_gpr_max_order + "", orders
         if index < 0
             valid = true
         else
@@ -254,20 +258,20 @@ validateGroupsPropertySelection = () ->
             catch e
                 console.log e
             finally
-                $("div#down-selected-groups-properties").removeClass "enabled"
-                $("div#down-selected-groups-properties").addClass "disabled"
-                $("div#bottom-selected-groups-properties").removeClass "enabled"
-                $("div#bottom-selected-groups-properties").addClass "disabled"
+                $("div#down-selected-gprs").removeClass "enabled"
+                $("div#down-selected-gprs").addClass "disabled"
+                $("div#bottom-selected-gprs").removeClass "enabled"
+                $("div#bottom-selected-gprs").addClass "disabled"
         unless valid
-            $("div#down-selected-groups-properties").removeClass "enabled"
-            $("div#down-selected-groups-properties").addClass "disabled"
-            $("div#bottom-selected-groups-properties").removeClass "enabled"
-            $("div#bottom-selected-groups-properties").addClass "disabled"
+            $("div#down-selected-gprs").removeClass "enabled"
+            $("div#down-selected-gprs").addClass "disabled"
+            $("div#bottom-selected-gprs").removeClass "enabled"
+            $("div#bottom-selected-gprs").addClass "disabled"
         else
-            $("div#down-selected-groups-properties").removeClass "disabled"
-            $("div#down-selected-groups-properties").addClass "enabled"
-            $("div#bottom-selected-groups-properties").removeClass "disabled"
-            $("div#bottom-selected-groups-properties").addClass "enabled"
+            $("div#down-selected-gprs").removeClass "disabled"
+            $("div#down-selected-gprs").addClass "enabled"
+            $("div#bottom-selected-gprs").removeClass "disabled"
+            $("div#bottom-selected-gprs").addClass "enabled"
 
 
 window.validateGroupsPropertySelection = validateGroupsPropertySelection

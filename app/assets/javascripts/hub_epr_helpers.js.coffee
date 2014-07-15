@@ -10,7 +10,7 @@ $ ->
     #On list element click
     $("body").on "click", '.table tr.epr', (e) ->
         #toggle the selection
-        toggleEPRselect this.id, $(this).data().order
+        toggleEPRselect this.id, $(this).data().order, e.metaKey || e.ctrlKey
 
     $("td[id^=edit-epr]").on "click", "a", (e) ->
         alert("hello?")
@@ -38,14 +38,23 @@ $ ->
 
 #end onLoad function
 
-toggleEPRselect = (id, order) ->
+toggleEPRselect = (id, order, multiSelect) ->
     #if the clicked property is already selected
     id += "" #stringify
     index = $.inArray id, window.selected_eprs
     if index > -1
-        window.selected_eprs.splice(index, 1)
-        $("tr#"+id+".epr").removeClass "selected-epr"
+        if window.selected_eprs.length > 1 && !multiSelect
+            clearSelectedEPRs()
+            $("tr#"+id+".epr").addClass "selected-epr"
+            window.selected_eprs.push(id)
+        else
+            window.selected_eprs.splice(index, 1)
+            $("tr#"+id+".epr").removeClass "selected-epr"
+    else if multiSelect
+        $("tr#"+id+".epr").addClass "selected-epr"
+        window.selected_eprs.push(id)
     else
+        clearSelectedEPRs()
         $("tr#"+id+".epr").addClass "selected-epr"
         window.selected_eprs.push(id)
 
@@ -58,6 +67,13 @@ toggleEPRselect = (id, order) ->
 
     validateEPRselection()
 window.toggleEPRselect = toggleEPRselect
+
+clearSelectedEPRs = () ->
+    window.selected_eprs = []
+    window.selected_epr_orders = []
+    $("tr.selected-epr").removeClass "selected-epr"
+    validateEPRselection()
+window.clearSelectedEPRs = clearSelectedEPRs
 
 getEntitysProperties = (relationship_ids) ->
     params = $.param( { 
@@ -124,7 +140,7 @@ downEPRs = (relationship_ids) ->
 window.downEPRs = downEPRs
 
 validateEPRselection = () ->
-    if window.selected_eprs.length > 0
+    if window.selected_eprs.length > 0 && window.selected_egrs.length == 1
         $("#clear-selected-eprs").removeClass("disabled")
         $("#delete-selected-eprs").removeClass("disabled")
     else
@@ -132,9 +148,8 @@ validateEPRselection = () ->
         $("#delete-selected-eprs").addClass("disabled")
 
     orders = window.selected_epr_orders
-    maxOrder = window.selected_epr_max_order + ""
 
-    if orders.length < 1
+    if orders.length < 1 || window.selected_egrs.length > 1
         $("div.property-order-action").removeClass "enabled"
         $("div.property-order-action").addClass "disabled"
     else
@@ -162,7 +177,6 @@ validateEPRselection = () ->
             $("div#top-selected-eprs").removeClass "disabled"
             $("div#top-selected-eprs").addClass "enabled"
         # index_last = $.inArray maxOrder, orders
-        sum = 0
         valid = false
         index = $.inArray window.selected_epr_max_order + "", orders
         if index < 0

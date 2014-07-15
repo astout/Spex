@@ -58,7 +58,7 @@ module EntityPropertyRelationsHelper
       #if the data is empty
       if eprs[:data].empty?
         eprs[:status] = 2
-        eprs[:msg] = "No groups for '#{selected_egrs.first.name}'"
+        eprs[:msg] = "No properties for '#{selected_egrs.first.group.name}'"
       else #otherwise success
         eprs[:status] = 1
         eprs[:msg] = ""
@@ -84,9 +84,9 @@ module EntityPropertyRelationsHelper
   def epr_bottom(selected_egrs, selected_eprs)
     #index is the total entity property relationships for the selected group minus what is selected
 
-    return if selected_egrs.count > 1
+    return if selected_egrs.count != 1
 
-    selected_egr = selected_egr.first
+    selected_egr = selected_egrs.first
 
     _index = selected_egr.group.properties.count - selected_eprs.count
 

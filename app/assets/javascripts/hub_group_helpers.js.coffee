@@ -11,7 +11,7 @@ $ ->
 
     #on group list element click
     $("body").on "click", '.table tr.group', (e) ->
-        toggleGroupSelect this.id
+        toggleGroupSelect this.id, e.ctrlKey || e.metaKey
 
     #Ajaxify Group List Sorting
     $('#groups').on 'click', "th a", (e) ->
@@ -72,13 +72,17 @@ groupPagination = () ->
 window.groupPagination = groupPagination
 
 #hub group functions
-toggleGroupSelect = (id) ->
-
+toggleGroupSelect = (id, multiSelect) ->
     index = $.inArray(id, window.selected_groups)
     if index > -1
-        $("tr#"+id+".group").removeClass "selected-group"
-        window.selected_groups.splice(index, 1)
-    else if $("#group-multi-select").is(':checked')
+        if window.selected_groups.length > 1 && !multiSelect
+            clearSelectedGroups()
+            $("tr#"+id+".group").addClass "selected-group"
+            window.selected_groups.push(id)
+        else
+            $("tr#"+id+".group").removeClass "selected-group"
+            window.selected_groups.splice(index, 1)
+    else if multiSelect
         $("tr#"+id+".group").addClass "selected-group"
         window.selected_groups.push(id)
     else
@@ -93,7 +97,7 @@ validateGroupSelection = () ->
     if window.selected_groups.length > 0
         $("#clear-selected-groups").removeClass("disabled")
         $("#delete-selected-groups").removeClass("disabled")
-        clearSelectedEntitysGroups()
+        clearSelectedEGRs()
         validateEntitysGroupSelection()
     else
         _html = ""
@@ -104,6 +108,7 @@ validateGroupSelection = () ->
         $("#groups-properties-alert").html _html
         $("#clear-selected-groups").addClass("disabled")
         $("#delete-selected-groups").addClass("disabled")
+    clearSelectedGPRs()
     validateAddGroupsToEntity()
     validateAddPropertiesToGroup()
 window.validateGroupSelection = validateGroupSelection
@@ -130,7 +135,7 @@ window.deleteGroups = deleteGroups
 clearSelectedGroups = () ->
     window.selected_groups = []
     $("tr.selected-group").removeClass "selected-group"
-    clearSelectedGroupsProperties()
+    clearSelectedGPRs()
 window.clearSelectedGroups = clearSelectedGroups
 
 clearGroupAttributes = () ->

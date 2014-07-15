@@ -399,7 +399,7 @@ tr.list-item {
 }
 
 tr.selected-entity, tr.selected-entitys-group, tr.selected-group, 
-tr.selected-groups-property, tr.selected-property, tr.selected-epr {
+tr.selected-gpr, tr.selected-property, tr.selected-epr {
   background-color: #AADFFF; //soft-blue
   &:hover {
     background-color: #AFDFE8; //other blue
@@ -575,7 +575,7 @@ span#selected-entitys-group-order-actions {
   float: right;
 }
 
-span#selected-groups-property-order-actions {
+span#selected-gpr-order-actions {
   background-repeat: no-repeat;  
   background-position: right center;
   float: right;

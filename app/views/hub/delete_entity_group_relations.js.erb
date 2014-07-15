@@ -7,7 +7,7 @@ alert_html = ""
     <% @deleted_entity_group_relations.each do |deleted_entity_group_relation| %>
         <% unless deleted_entity_group_relation[:data].nil? %>
             alert_html += "<p style='padding-left: 10px'>- <%=deleted_entity_group_relation[:data].group.name %> </p>";
-            toggleEntitysGroupSelect(<%= deleted_entity_group_relation[:data].id %>, <%= deleted_entity_group_relation[:data].order %> + 1); 
+            toggleEntitysGroupSelect(<%= deleted_entity_group_relation[:data].id %>, <%= deleted_entity_group_relation[:data].order %> + 1, false); 
         <% end %>
     <% end %>
 <% else %>

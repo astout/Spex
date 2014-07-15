@@ -8,7 +8,7 @@ var alert_html = "";
             <% unless result[:msg] == "not moved" %>
                 alert_html += "<p style='padding-left: 10px'>- <%= result[:idx] %>.  <%= result[:data].property.name %> </p>";
             <% end %>
-            toggleEPRselect(<%= result[:data].id %>, <%= result[:data].order %> + 1); 
+            clearSelectedEPRs();
         <% end %>
     <% end %>
 <% else %>
@@ -17,8 +17,6 @@ var alert_html = "";
     alert_html += "<p style='padding-left: 10px'><i>The server returned no results.</i></p>";
 <% end %>
 alert_html += "</div>"
-
-console.log("test01");
 
 hubAlert("#groups-properties-alert", alert_html);
 

@@ -8,7 +8,7 @@ var alert_html = "";
             <% unless result[:msg] == "not moved" %>
                 alert_html += "<p style='padding-left: 10px'>- <%= result[:idx] %>.  <%= result[:data].group.name %> </p>";
             <% end %>
-            toggleEntitysGroupSelect(<%= result[:data].id %>, <%= result[:data].order %> + 1); 
+            clearSelectedEGRs();
         <% end %>
     <% end %>
 <% else %>

@@ -8,7 +8,8 @@ var alert_html = "";
             <% unless result[:msg] == "not moved" %>
                 alert_html += "<p style='padding-left: 10px'>- <%= result[:idx] %>.  <%= result[:data].property.name %> </p>";
             <% end %>
-            toggleGroupPropertySelect(<%= result[:data].id %>, <%= result[:data].order %> + 1); 
+            console.log("toggle select::  id: " + <%= result[:data].id %> + " order: " + <%= result[:data].order %> );
+            clearSelectedGPRs();
         <% end %>
     <% end %>
 <% else %>

@@ -14,12 +14,6 @@ $ ->
 
     #disable autocomplete across all forms
     $("input[type='text']").prop("autocomplete", "off")
-
-    $("#group-multi-select").on "click", (e) ->
-        if window.selected_groups.length > 1 && !$("#group-multi-select").is(":checked")
-            group = window.selected_groups[0]
-            clearSelectedGroups()
-            toggleGroupSelect group
     
     $("div[id^=accordion]").on('hidden.bs.collapse', toggleChevron)
     $("div[id^=accordion]").on('shown.bs.collapse', toggleChevron)
@@ -77,7 +71,6 @@ persistStyling = () ->
     else
         $("tr.selected-entitys-group").removeClass "selected-entitys-group"
 
-
     if window.selected_properties.length > 0
         for property in window.selected_properties
             $("tr#"+property+".property").addClass "selected-property"
@@ -86,9 +79,15 @@ persistStyling = () ->
 
     if window.selected_gprs.length > 0
         for relationship_id in window.selected_gprs
-            $("tr#"+relationship_id+".group_property_relationship").addClass "selected-groups-property"
+            $("tr#"+relationship_id+".gpr").addClass "selected-gpr"
     else
-        $("tr.selected-groups-property").removeClass "selected-groups-property"
+        $("tr.selected-gpr").removeClass "selected-gpr"
+
+    if window.selected_eprs.length > 0
+        for epr in window.selected_eprs
+            $("tr#"+epr+".epr").addClass "selected-epr"
+    else
+        $("tr.selected-epr").removeClass "selected-epr"
 
 #globalize persistStyling        
 window.persistStyling = persistStyling
@@ -123,6 +122,7 @@ hubAlert = (documentId, html) ->
     if documentId.length < 1
         $("#entitys-groups-alert").html ""
     else
+        $(documentId).html ""
         $(documentId).html html
 
 window.hubAlert = hubAlert

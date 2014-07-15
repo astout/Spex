@@ -745,7 +745,10 @@ describe Entity do
           @entity.last_via(@group).should eq(@property2)
           @entity.down_via!(@property1, @group)
 
-          r = @entity.property_relations_via(@group)[0].property.should eq(@property2)
+          p = @entity.first_via(@group)
+          p.should eq @property2
+
+          @entity.property_relations_via(@group)[0].property.should eq(@property2)
         end
       end
 

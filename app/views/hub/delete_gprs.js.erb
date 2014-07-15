@@ -6,7 +6,7 @@ var alert_html = "";
     <% @deleted_gprs.each do |deleted_gpr| %>
         <% unless deleted_gpr[:data].nil? %>
             alert_html += "<p style='padding-left: 10px'>- <%=deleted_gpr[:data].property.name %> </p>";
-            toggleGroupPropertySelect(<%= deleted_gpr[:data].id %>, <%= deleted_gpr[:data].order %> + 1); 
+            toggleGPRselect(<%= deleted_gpr[:data].id %>, <%= deleted_gpr[:data].order %> + 1, false); 
         <% end %>
     <% end %>
 <% else %>
@@ -24,6 +24,6 @@ $('#properties').html("<%= j render partial: 'properties/properties', locals: { 
 
 persistStyling();
 
-window.selected_groups_max_property_order = <%= @selected_groups.first.properties.count %>;
+window.selected_gpr_max_order = <%= @selected_groups.first.properties.count %>;
 
 validateGroupsPropertySelection();

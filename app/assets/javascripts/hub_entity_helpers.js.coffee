@@ -71,7 +71,7 @@ window.entityPagination = entityPagination
 
 toggleEntitySelect = (id) ->
     $("tr.selected-entity").removeClass("selected-entity")
-    clearSelectedEntitysGroups()
+    clearSelectedEGRs()
     validateEntitysGroupSelection()
 
     if window.selected_entity == id

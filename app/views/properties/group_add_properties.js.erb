@@ -23,5 +23,5 @@ $('#groups').html("<%= j render partial: 'properties/properties', locals: { show
 
 hubAlert("#groups-properties-alert", alert_html);
 persistStyling();
-window.selected_groups_max_property_order = <%= @selected_groups.first.properties.count %>
+window.selected_gpr_max_order = <%= @selected_groups.first.properties.count %>
 validateGroupsPropertySelection();

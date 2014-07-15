@@ -12,7 +12,7 @@ $ ->
 
     #on list element click
     $("body").on "click", '.table tr.property', (e) ->
-        togglePropertySelect this.id
+        togglePropertySelect this.id, e.ctrlKey || e.metaKey
 
     #When the clear properties button is clicked
     $("body").on "click", "#clear-selected-properties", (e) ->
@@ -73,12 +73,21 @@ propertyPagination = () ->
 window.propertyPagination = propertyPagination
 
 #hub property functions
-togglePropertySelect = (id) ->
+togglePropertySelect = (id, multiSelect) ->
     index = $.inArray(id, window.selected_properties)
     if index > -1
-        $("tr#"+id+".property").removeClass "selected-property"
-        window.selected_properties.splice(index, 1)
+        if window.selected_properties.length > 1 && !multiSelect
+            clearSelectedProperties()
+            $("tr#"+id+".property").addClass "selected-property"
+            window.selected_properties.push(id)
+        else
+            window.selected_properties.splice(index, 1)
+            $("tr#"+id+".property").removeClass "selected-property"
+    else if multiSelect
+        $("tr#"+id+".property").addClass "selected-property"
+        window.selected_properties.push(id)
     else
+        clearSelectedProperties()
         $("tr#"+id+".property").addClass "selected-property"
         window.selected_properties.push(id)
     validatePropertySelection()
