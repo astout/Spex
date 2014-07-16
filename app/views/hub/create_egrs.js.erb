@@ -1,4 +1,5 @@
-$('#entitys_groups').html("  <%= j render partial: 'entities/groups', locals: { show_created: false, show_remove: false } %>");
+$("#debug").html('<%= params %>');
+$('#egrs').html("  <%= j render partial: 'entities/groups', locals: { show_created: false, show_remove: false } %>");
 
 clearSelectedGroups();
 validateGroupSelection();
@@ -24,5 +25,5 @@ $('#groups').html("<%= j render partial: 'groups/groups', locals: { show_created
 
 hubAlert("#entitys-groups-alert", alert_html);
 persistStyling();
-window.selected_entitys_max_group_order = <%= @selected_entity.groups.count %>
-validateEntitysGroupSelection();
+window.selected_egr_max_order = <%= @selected_entity.groups.count %>
+validateEGRselection();

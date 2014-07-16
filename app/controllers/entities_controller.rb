@@ -1,6 +1,6 @@
 class EntitiesController < ApplicationController
   # helper_method :entity_sort_column, :entity_sort_direction, :group_sort_column, :group_sort_direction
-  helper_method :entitys_group_sort_column, :entitys_group_sort_direction
+  helper_method :egr_sort_column, :egr_sort_direction
 
   before_action do
     unless current_user.nil?
@@ -116,7 +116,7 @@ class EntitiesController < ApplicationController
   def groups
     @fetched_entity = Entity.find(params[:id])
     @result = {msg: "", r: -1}
-    @entitys_group_relations = []
+    @egrs = []
 
     respond_to do |format|
       if @fetched_entity.nil?
@@ -125,7 +125,7 @@ class EntitiesController < ApplicationController
       else
         @result[:r] = 1
         @result[:msg] = ""
-        @entitys_group_relations = @fetched_entity.group_relations.paginate(page: params[:entitys_groups_page], per_page: 10, order: 'order ASC')
+        @egrs = @fetched_entity.group_relations.paginate(page: params[:egrs_page], per_page: 10, order: 'order ASC')
       end
       format.js
       format.html { redirect_to hub_path }
@@ -138,12 +138,12 @@ class EntitiesController < ApplicationController
       params.require(:entity).permit(:name, :label, :img)
     end
 
-    def entitys_group_sort_column
-      EntityGroupRelationship.column_names.include?(params[:entitys_group_sort]) || Group.column_names.include?(params[:entitys_group_sort]) ? params[:entitys_group_sort] : "order"
+    def egr_sort_column
+      EntityGroupRelationship.column_names.include?(params[:egr_sort]) || Group.column_names.include?(params[:egr_sort]) ? params[:egr_sort] : "order"
     end
 
-    def entitys_group_sort_direction
-      %w[asc desc].include?(params[:entitys_group_direction]) ? params[:entitys_group_direction] : "desc"
+    def egr_sort_direction
+      %w[asc desc].include?(params[:egr_direction]) ? params[:egr_direction] : "desc"
     end
 
 end

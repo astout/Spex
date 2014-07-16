@@ -15,6 +15,29 @@ module EntityPropertyRelationsHelper
     @selected_eprs
   end
 
+  def epr_update(epr_params)
+    puts " -- EPR PARAMS -- "
+    puts epr_params
+
+    epr = { status: -1, msg: "", data: nil }
+    epr[:data] = EntityPropertyRelationship.find_by id: epr_params[:id]
+    if epr[:data].blank?
+      puts " -- EPR NOT FOUND -- "
+      epr[:status] = 0
+      epr[:msg] = "EntityPropertyRelationship with id: #{epr_params[:id]} not found."
+    else
+      puts " -- SAVING EPR -- "
+      success = epr[:data].update(epr_params)
+      puts " -- SUCCESS -- "
+      puts success
+      epr[:status] = success ? 1 : 0
+      epr[:msg] = success ? "" : "the relation couldn't be updated"
+      puts " -- EPR --"
+      puts epr
+    end
+    return epr
+  end
+
   #get the entity property relations for the selected group
   def epr_list(selected_egrs)
     #start a list of properties that are being listed
@@ -43,7 +66,7 @@ module EntityPropertyRelationsHelper
     
     end #end each entity group relation
 
-    eprs = eprs.paginate(page: params[:groups_properties_page], per_page: 10, order: 'order ASC')
+    eprs = eprs.paginate(page: params[:gprs_page], per_page: 10, order: 'order ASC')
   end
 
   def get_eprs(selected_egrs)

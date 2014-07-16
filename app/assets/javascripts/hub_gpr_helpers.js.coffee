@@ -22,7 +22,7 @@ $ ->
     $("body").on "click", "#add-selected-properties", (e) ->
         #if it's enabled
         if $(this).hasClass "enabled"
-            addPropertiesToGroup window.selected_properties, window.selected_groups
+            createGPRs window.selected_properties, window.selected_groups
 
     #When the delete egr button is clicked
     $("body").on "click", "#delete-selected-gprs", (e) ->
@@ -52,7 +52,7 @@ $ ->
 
 #end onLoad function
 
-validateAddPropertiesToGroup = () ->
+validateCreateGPR = () ->
     #if there are selected groups && a selected entity,
     #enable the add-groups button
     if window.selected_properties.length > 0 && window.selected_groups.length == 1
@@ -61,9 +61,9 @@ validateAddPropertiesToGroup = () ->
     else
         $("#add-selected-properties").removeClass("enabled")
         $("#add-selected-properties").addClass("disabled")
-window.validateAddPropertiesToGroup = validateAddPropertiesToGroup
+window.validateCreateGPR = validateCreateGPR
 
-addPropertiesToGroup = (properties, group) ->
+createGPRs = (properties, group) ->
     #ajaxify the selected parameters
     params = $.param( { 
         selected_groups: window.selected_groups, 
@@ -74,9 +74,9 @@ addPropertiesToGroup = (properties, group) ->
         } )
     #send the request to add the selected groups to the selected entity
     $.ajax 
-        url: "/hub/group_add_properties?" + params
+        url: "/hub/create_gprs?" + params
         type: 'POST'
-window.addPropertiesToGroup = addPropertiesToGroup  
+window.createGPRs = createGPRs  
 
 toggleGPRselect = (id, order, multiSelect) ->
     #if the clicked property is already selected
@@ -110,7 +110,7 @@ toggleGPRselect = (id, order, multiSelect) ->
     validateGroupsPropertySelection()
 window.toggleGPRselect = toggleGPRselect
 
-getGroupsProperties = (ids) ->
+getGPRs = (ids) ->
     params = $.param( { 
         selected_groups: ids, 
         selected_properties: window.selected_properties, 
@@ -120,9 +120,9 @@ getGroupsProperties = (ids) ->
         } )
     #send the request to add the selected groups to the selected entity
     $.ajax 
-        url: "/hub/groups_properties?" + params
+        url: "/hub/gprs?" + params
         type: 'POST'
-window.getGroupsProperties = getGroupsProperties
+window.getGPRs = getGPRs
 
 clearSelectedGPRs = () ->
     window.selected_gprs = []

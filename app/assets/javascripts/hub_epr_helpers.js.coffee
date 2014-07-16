@@ -12,8 +12,9 @@ $ ->
         #toggle the selection
         toggleEPRselect this.id, $(this).data().order, e.metaKey || e.ctrlKey
 
-    $("td[id^=edit-epr]").on "click", "a", (e) ->
-        alert("hello?")
+    $("body").on "click", "td.edit-epr-trigger", (e) ->
+        # console.log this
+        toggleEPRform this
         e.preventDefault()
 
     $("body").on "click", "#top-selected-eprs", (e) ->
@@ -36,7 +37,36 @@ $ ->
         unless $(this).hasClass "disabled"
             bottomEPRs window.selected_eprs
 
+    $("body").on "click", "#clear-selected-eprs", (e) ->
+        unless $(this).hasClass "disabled"
+            closeAllEPRforms()
+            clearSelectedEPRs()
+
 #end onLoad function
+
+toggleEPRform = ( element ) ->
+    openForm = $(element).hasClass('openForm')
+    open = []
+    if( openForm )
+        id = element.id
+        $(element).removeClass('openForm')
+        $('#'+id+".edit-epr-form").slideUp()
+    else
+        open = $('td.edit-epr-trigger.openForm')
+        if( open.length == 1)
+            id = open[0].id
+            open.removeClass('openForm')
+            $('#'+id+'.edit-epr-form').slideUp()
+        $(element).addClass('openForm')
+        id = element.id
+        $('#'+id+'.edit-epr-form').slideDown()
+
+closeAllEPRforms = () ->
+    open = $('td.edit-epr-trigger.openForm')
+    for element in open 
+        $("#"+element.id+".edit-epr-form").slideUp()
+    open.removeClass('openForm')
+window.closeAllEPRforms = closeAllEPRforms
 
 toggleEPRselect = (id, order, multiSelect) ->
     #if the clicked property is already selected
@@ -139,14 +169,16 @@ downEPRs = (relationship_ids) ->
         type: 'POST'
 window.downEPRs = downEPRs
 
-validateEPRselection = () ->
-    if window.selected_eprs.length > 0 && window.selected_egrs.length == 1
+validateClearButton = () ->
+    open = $("td.edit-epr-trigger.openForm")
+    if window.selected_eprs.length > 0 && window.selected_egrs.length == 1 || open.length > 0
         $("#clear-selected-eprs").removeClass("disabled")
-        $("#delete-selected-eprs").removeClass("disabled")
     else
         $("#clear-selected-eprs").addClass("disabled")
-        $("#delete-selected-eprs").addClass("disabled")
 
+validateEPRselection = () ->
+    validateClearButton()
+    
     orders = window.selected_epr_orders
 
     if orders.length < 1 || window.selected_egrs.length > 1

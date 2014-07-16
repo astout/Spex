@@ -1,13 +1,13 @@
 module EntityGroupRelationsHelper
 
   #retrieve the DB instances of the selected entity group relations
-  def selected_egrs
+  def selected_egrs(ids = nil)
     @selected_egrs = []
-    selected_relation_ids = params[:selected_egrs]
-    unless selected_relation_ids.nil?
+    selected_relation_ids = ids || params[:selected_egrs]
+    unless selected_relation_ids.blank?
       selected_relation_ids.each do |id|
         relation = EntityGroupRelationship.find_by id: id
-        unless relation.nil?
+        unless relation.blank?
           @selected_egrs.push relation
         end
       end
@@ -57,7 +57,7 @@ module EntityGroupRelationsHelper
 
   #get the entity group relations for the selected entity
   def egr_list(selected_entity)
-    egrs = selected_entity.group_relations.paginate(page: params[:entitys_groups_page], per_page: 10, order: 'order ASC')
+    egrs = selected_entity.group_relations.paginate(page: params[:egrs_page], per_page: 10, order: 'order ASC')
   end
 
   def egr_delete(selected_egrs)

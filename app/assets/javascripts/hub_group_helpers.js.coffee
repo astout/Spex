@@ -89,7 +89,7 @@ toggleGroupSelect = (id, multiSelect) ->
         clearSelectedGroups()
         $("tr#"+id+".group").addClass "selected-group"
         window.selected_groups.push(id)
-    getGroupsProperties window.selected_groups
+    getGPRs window.selected_groups
     validateGroupSelection()
 window.toggleGroupSelect = toggleGroupSelect
 
@@ -98,19 +98,19 @@ validateGroupSelection = () ->
         $("#clear-selected-groups").removeClass("disabled")
         $("#delete-selected-groups").removeClass("disabled")
         clearSelectedEGRs()
-        validateEntitysGroupSelection()
+        validateEGRselection()
     else
         _html = ""
         if window.selected_egrs.length < 1
             _html = "<div class='alert alert-info small-font center'>"
             _html += "<i>No Group selected.</i></div>"
-        $("#groups_properties").html ""
+        $("#gprs").html ""
         $("#groups-properties-alert").html _html
         $("#clear-selected-groups").addClass("disabled")
         $("#delete-selected-groups").addClass("disabled")
     clearSelectedGPRs()
     validateAddGroupsToEntity()
-    validateAddPropertiesToGroup()
+    validateCreateGPR()
 window.validateGroupSelection = validateGroupSelection
 
 deleteGroups = (groups) ->

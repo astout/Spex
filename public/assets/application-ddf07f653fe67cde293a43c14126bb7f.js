@@ -13387,246 +13387,86 @@ Copyright (c) 2012-2013 Sasha Koss & Rico Sta. Cruz
 
 }).call(this);
 (function() {
-  var toggleChevron;
 
-  toggleChevron = function(e) {
-    return $(e.target).prev('.panel-heading').find('i.collapse-indicator').toggleClass('glyphicon-chevron-down glyphicon-chevron-right');
-  };
-
-  window.toggleChevron = toggleChevron;
 
 }).call(this);
 (function() {
-  var addGroupsToEntity, addPropertiesToGroup, ajaxPagination, bottomEntityGroupRelations, clearSelectedEntity, clearSelectedEntitysGroups, clearSelectedGroups, clearSelectedGroupsProperties, clearSelectedProperties, deleteEntity, deleteEntityGroupRelations, deleteGroups, deleteProperties, downEntityGroupRelations, getAllParams, getEntitysGroups, getEntitysProperties, getGroupsProperties, hubAlert, persistStyling, toggleEntitySelect, toggleEntitysGroupSelect, toggleGroupPropertySelect, toggleGroupSelect, togglePropertySelect, topEntityGroupRelations, upEntityGroupRelations, validateAddGroupsToEntity, validateAddPropertiesToGroup, validateEntitySelection, validateEntitysGroupSelection, validateGroupSelection, validateGroupsPropertySelection, validatePropertySelection;
+  var clearEntityAttributes, clearSelectedEntity, deleteEntity, entityPagination, getEntityParams, toggleEntitySelect, validateEntitySelection;
 
   window.selected_entity = -1;
 
-  window.selected_groups = [];
-
-  window.selected_properties = [];
-
-  window.selected_entity_group_relations = [];
-
-  window.selected_entity_property_relations = [];
-
-  window.selected_group_property_relations = [];
-
-  window.selected_entity_group_orders = [];
-
-  window.selected_group_property_orders = [];
-
-  window.selected_entitys_max_group_order = -1;
-
-  window.selected_entitys_group_max_property_order = -1;
-
-  window.selected_groups_max_property_order = -1;
-
-  window.group_sort = "created_at";
-
-  window.property_sort = "created_at";
-
   window.entity_sort = "created_at";
-
-  window.group_direction = "desc";
-
-  window.property_direction = "desc";
 
   window.entity_direction = "desc";
 
-  window.groups_page = "1";
-
   window.entities_page = "1";
 
-  window.properties_page = "1";
-
   $(function() {
-    $("#group-multi-select").on("click", function(e) {
-      var group;
-      if (window.selected_groups.length > 1 && !$("#group-multi-select").is(":checked")) {
-        group = window.selected_groups[0];
-        clearSelectedGroups();
-        return toggleGroupSelect(group);
-      }
-    });
-    $("#new-entity-collapse-heading").on("click", function(e) {
-      return e.preventDefault();
-    });
-    $("#new-group-collapse-heading").on("click", function(e) {
-      return e.preventDefault();
-    });
-    $("#new-property-collapse-heading").on("click", function(e) {
-      return e.preventDefault();
-    });
-    $("div[id^=accordion]").on('hidden.bs.collapse', toggleChevron);
-    $("div[id^=accordion]").on('shown.bs.collapse', toggleChevron);
-    $("td[id^=edit-entity-property-relation]").on("click", "a", function(e) {
-      alert("hello?");
-      return e.preventDefault();
-    });
-    $("body").on("click", "#clear-alerts", function(e) {
-      return hubAlert("", "");
-    });
     $('#entities').on('click', "th a", function(e) {
       var params;
       window.entity_sort = getParameterByName("entity_sort", this.href);
       window.entity_direction = getParameterByName("entity_direction", this.href);
-      params = getAllParams();
+      params = getEntityParams();
       $.get("/hub?" + params);
       return false;
     });
-    $('#groups').on('click', "th a", function(e) {
-      var params;
-      window.group_sort = getParameterByName("group_sort", this.href);
-      window.group_direction = getParameterByName("group_direction", this.href);
-      params = getAllParams();
-      $.get("/hub?" + params);
-      return false;
-    });
-    $('#properties').on('click', "th a", function(e) {
-      var params;
-      window.property_sort = getParameterByName("property_sort", this.href);
-      window.property_direction = getParameterByName("property_direction", this.href);
-      params = getAllParams();
-      $.get("/hub?" + params);
-      return false;
-    });
-    ajaxPagination();
-    $("input#group_search_field").on('input', function() {
-      var params;
-      params = getAllParams();
-      $.get("/hub?" + params);
-      return false;
+    $("#new-entity-collapse-heading").on("click", function(e) {
+      return e.preventDefault();
     });
     $("input#entity_search_field").on('input', function() {
-      return $("#search_entity").submit();
-    });
-    $("input#property_search_field").on('input', function() {
-      $("input#selected_group").val(window.selected_group);
-      return $("#search_property").submit();
+      var params;
+      window.entities_page = "1";
+      params = getEntityParams();
+      $.get("/hub?" + params);
+      return false;
     });
     $("body").on("click", '.table tr.entity', function(e) {
       return toggleEntitySelect(this.id);
-    });
-    $("body").on("click", '.table tr.entity_group_relationship', function(e) {
-      return toggleEntitysGroupSelect(this.id, $(this).data().order);
-    });
-    $("body").on("click", '.table tr.group_property_relationship', function(e) {
-      return toggleGroupPropertySelect(this.id, $(this).data().order);
-    });
-    $("body").on("click", '.table tr.entity_property_relationship', function(e) {
-      return toggleEntityPropertySelect(this.id, $(this).data().order);
-    });
-    $("body").on("click", '.table tr.group', function(e) {
-      return toggleGroupSelect(this.id);
-    });
-    $("body").on("click", "#add-selected-groups", function(e) {
-      if ($(this).hasClass("enabled")) {
-        return addGroupsToEntity(window.selected_groups, window.selected_entity);
-      }
-    });
-    $("body").on("click", "#add-selected-properties", function(e) {
-      if ($(this).hasClass("enabled")) {
-        return addPropertiesToGroup(window.selected_properties, window.selected_groups);
-      }
-    });
-    $("body").on("click", "#clear-selected-groups", function(e) {
-      if (!$(this).hasClass("disabled")) {
-        return clearSelectedGroups();
-      }
-    });
-    $("body").on("click", '.table tr.property', function(e) {
-      return togglePropertySelect(this.id);
-    });
-    $("body").on("click", "#clear-selected-properties", function(e) {
-      if (!$(this).hasClass("disabled")) {
-        return clearSelectedProperties();
-      }
     });
     $("body").on("click", "#clear-selected-entity", function(e) {
       if (!$(this).hasClass("disabled")) {
         return clearSelectedEntity();
       }
     });
-    $("body").on("click", "#clear-selected-entitys-groups", function(e) {
-      if (!$(this).hasClass("disabled")) {
-        return clearSelectedEntitysGroups();
-      }
-    });
-    $("body").on("click", "#clear-selected-groups-properties", function(e) {
-      if (!$(this).hasClass("disabled")) {
-        return clearSelectedGroupsProperties();
-      }
-    });
-    $("body").on("click", "#delete-selected-entity", function(e) {
+    return $("body").on("click", "#delete-selected-entity", function(e) {
       if (!$(this).hasClass("disabled")) {
         return deleteEntity(window.selected_entity);
       }
     });
-    $("body").on("click", "#delete-selected-groups", function(e) {
-      if (!$(this).hasClass("disabled")) {
-        return deleteGroups(window.selected_groups);
-      }
-    });
-    $("body").on("click", "#delete-selected-properties", function(e) {
-      if (!$(this).hasClass("disabled")) {
-        return deleteProperties(window.selected_properties);
-      }
-    });
-    $("body").on("click", "#delete-selected-entitys-groups", function(e) {
-      if (!$(this).hasClass("disabled")) {
-        return deleteEntityGroupRelations(window.selected_entity_group_relations);
-      }
-    });
-    $("body").on("click", "#top-selected-entitys-groups", function(e) {
-      if (!$(this).hasClass("disabled")) {
-        return topEntityGroupRelations(window.selected_entity_group_relations);
-      }
-    });
-    $("body").on("click", "#up-selected-entitys-groups", function(e) {
-      if (!$(this).hasClass("disabled")) {
-        return upEntityGroupRelations(window.selected_entity_group_relations);
-      }
-    });
-    $("body").on("click", "#down-selected-entitys-groups", function(e) {
-      if (!$(this).hasClass("disabled")) {
-        return downEntityGroupRelations(window.selected_entity_group_relations);
-      }
-    });
-    return $("body").on("click", "#bottom-selected-entitys-groups", function(e) {
-      if (!$(this).hasClass("disabled")) {
-        return bottomEntityGroupRelations(window.selected_entity_group_relations);
-      }
-    });
   });
 
-  getAllParams = function() {
+  getEntityParams = function() {
     var params;
     params = $.param({
       selected_entity: window.selected_entity,
-      selected_entity_group_relations: window.selected_entity_group_relations,
-      selected_groups: window.selected_groups,
-      selected_properties: window.selected_properties,
-      group_search: $("input#group_search_field").val(),
       entity_search: $("input#entity_search_field").val(),
-      property_search: $("input#property_search_field").val(),
-      group_direction: window.group_direction,
       entity_direction: window.entity_direction,
-      property_direction: window.property_direction,
-      group_sort: window.group_sort,
       entity_sort: window.entity_sort,
-      property_sort: window.property_sort,
-      groups_page: window.groups_page,
       entities_page: window.entities_page,
-      properties_page: window.properties_page
+      event: "entity"
     });
     return params;
   };
 
-  window.getAllParams = getAllParams;
+  window.getEntityParams = getEntityParams;
+
+  entityPagination = function() {
+    console.log("called entity pagination");
+    return $("div#entities").on("click", '.pagination a', function(e) {
+      var params;
+      window.entities_page = getParameterByName("entities_page", this.href) || "1";
+      params = getEntityParams();
+      $.get("/hub?" + params);
+      return false;
+    });
+  };
+
+  window.entityPagination = entityPagination;
 
   toggleEntitySelect = function(id) {
     $("tr.selected-entity").removeClass("selected-entity");
-    clearSelectedEntitysGroups();
+    clearSelectedEGRs();
+    validateEntitysGroupSelection();
     if (window.selected_entity === id) {
       return clearSelectedEntity();
     } else {
@@ -13688,227 +13528,107 @@ Copyright (c) 2012-2013 Sasha Koss & Rico Sta. Cruz
 
   window.deleteEntity = deleteEntity;
 
-  validateAddGroupsToEntity = function() {
-    if (window.selected_groups.length > 0 && window.selected_entity > -1) {
-      $("#add-selected-groups").removeClass("disabled");
-      return $("#add-selected-groups").addClass("enabled");
-    } else {
-      $("#add-selected-groups").removeClass("enabled");
-      return $("#add-selected-groups").addClass("disabled");
-    }
+  clearEntityAttributes = function() {
+    window.entity_sort = "created_at";
+    window.entity_direction = "desc";
+    return window.entities_page = "1";
   };
 
-  window.validateAddGroupsToEntity = validateAddGroupsToEntity;
+  window.clearEntityAttributes = clearEntityAttributes;
 
-  addGroupsToEntity = function(groups, entity) {
-    var params;
-    params = $.param({
-      selected_entity: window.selected_entity,
-      selected_groups: window.selected_groups,
-      group_direction: window.group_direction,
-      group_sort: window.group_sort
+}).call(this);
+(function() {
+  var clearPropertyAttributes, clearSelectedProperties, deleteProperties, getPropertyParams, propertyPagination, togglePropertySelect, validatePropertySelection;
+
+  window.selected_properties = [];
+
+  window.selected_egrs = [];
+
+  window.property_sort = "created_at";
+
+  window.property_direction = "desc";
+
+  window.properties_page = "1";
+
+  $(function() {
+    $("#new-property-collapse-heading").on("click", function(e) {
+      return e.preventDefault();
     });
-    return $.ajax({
-      url: "/hub/entity_add_groups?" + params,
-      type: 'POST'
+    $("body").on("click", '.table tr.property', function(e) {
+      return togglePropertySelect(this.id, e.ctrlKey || e.metaKey);
     });
-  };
-
-  window.addGroupsToEntity = addGroupsToEntity;
-
-  deleteEntityGroupRelations = function(relationship_ids) {
-    var params;
-    params = $.param({
-      selected_entity: window.selected_entity,
-      selected_entity_group_relations: relationship_ids,
-      selected_groups: window.selected_groups,
-      group_search: $("input#group_search_field").val(),
-      entity_search: $("input#entity_search_field").val(),
-      group_direction: window.group_direction,
-      entity_direction: window.entity_direction,
-      group_sort: window.group_sort,
-      entity_sort: window.entity_sort
-    });
-    return $.ajax({
-      url: "/hub/delete_entity_group_relations?" + params,
-      type: 'POST'
-    });
-  };
-
-  window.deleteEntityGroupRelations = deleteEntityGroupRelations;
-
-  topEntityGroupRelations = function(relationship_ids) {
-    var params;
-    params = $.param({
-      selected_entity: window.selected_entity,
-      selected_entity_group_relations: relationship_ids.sort(),
-      selected_groups: window.selected_groups,
-      group_search: $("input#group_search_field").val(),
-      entity_search: $("input#entity_search_field").val(),
-      group_direction: window.group_direction,
-      entity_direction: window.entity_direction,
-      group_sort: window.group_sort,
-      entity_sort: window.entity_sort
-    });
-    return $.ajax({
-      url: "/hub/top_entity_group_relations?" + params,
-      type: 'POST'
-    });
-  };
-
-  window.topEntityGroupRelations = topEntityGroupRelations;
-
-  bottomEntityGroupRelations = function(relationship_ids) {
-    var params;
-    params = $.param({
-      selected_entity: window.selected_entity,
-      selected_entity_group_relations: relationship_ids.sort(),
-      selected_groups: window.selected_groups,
-      group_search: $("input#group_search_field").val(),
-      entity_search: $("input#entity_search_field").val(),
-      group_direction: window.group_direction,
-      entity_direction: window.entity_direction,
-      group_sort: window.group_sort,
-      entity_sort: window.entity_sort
-    });
-    return $.ajax({
-      url: "/hub/bottom_entity_group_relations?" + params,
-      type: 'POST'
-    });
-  };
-
-  window.bottomEntityGroupRelations = bottomEntityGroupRelations;
-
-  upEntityGroupRelations = function(relationship_ids) {
-    var params;
-    params = $.param({
-      selected_entity: window.selected_entity,
-      selected_entity_group_relations: relationship_ids.sort(),
-      selected_groups: window.selected_groups,
-      group_search: $("input#group_search_field").val(),
-      entity_search: $("input#entity_search_field").val(),
-      group_direction: window.group_direction,
-      entity_direction: window.entity_direction,
-      group_sort: window.group_sort,
-      entity_sort: window.entity_sort
-    });
-    return $.ajax({
-      url: "/hub/up_entity_group_relations?" + params,
-      type: 'POST'
-    });
-  };
-
-  window.upEntityGroupRelations = upEntityGroupRelations;
-
-  downEntityGroupRelations = function(relationship_ids) {
-    var params;
-    params = $.param({
-      selected_entity: window.selected_entity,
-      selected_entity_group_relations: relationship_ids.sort(),
-      selected_groups: window.selected_groups,
-      group_search: $("input#group_search_field").val(),
-      entity_search: $("input#entity_search_field").val(),
-      group_direction: window.group_direction,
-      entity_direction: window.entity_direction,
-      group_sort: window.group_sort,
-      entity_sort: window.entity_sort
-    });
-    return $.ajax({
-      url: "/hub/down_entity_group_relations?" + params,
-      type: 'POST'
-    });
-  };
-
-  window.downEntityGroupRelations = downEntityGroupRelations;
-
-  toggleGroupSelect = function(id) {
-    var index;
-    index = $.inArray(id, window.selected_groups);
-    if (index > -1) {
-      $("tr#" + id + ".group").removeClass("selected-group");
-      window.selected_groups.splice(index, 1);
-    } else if ($("#group-multi-select").is(':checked')) {
-      $("tr#" + id + ".group").addClass("selected-group");
-      window.selected_groups.push(id);
-    } else {
-      clearSelectedGroups();
-      $("tr#" + id + ".group").addClass("selected-group");
-      window.selected_groups.push(id);
-    }
-    getGroupsProperties(window.selected_groups);
-    return validateGroupSelection();
-  };
-
-  window.toggleGroupSelect = toggleGroupSelect;
-
-  validateGroupSelection = function() {
-    var _html;
-    if (window.selected_groups.length > 0) {
-      $("#clear-selected-groups").removeClass("disabled");
-      $("#delete-selected-groups").removeClass("disabled");
-      clearSelectedEntitysGroups();
-    } else {
-      _html = "";
-      if (window.selected_entity_group_relations.length < 1) {
-        _html = "<div class='alert alert-info small-font center'>";
-        _html += "<i>No Group selected.</i></div>";
+    $("body").on("click", "#clear-selected-properties", function(e) {
+      if (!$(this).hasClass("disabled")) {
+        return clearSelectedProperties();
       }
-      $("#groups_properties").html("");
-      $("#groups-properties-alert").html(_html);
-      $("#clear-selected-groups").addClass("disabled");
-      $("#delete-selected-groups").addClass("disabled");
-    }
-    validateAddGroupsToEntity();
-    return validateAddPropertiesToGroup();
-  };
+    });
+    $("body").on("click", "#delete-selected-properties", function(e) {
+      if (!$(this).hasClass("disabled")) {
+        return deleteProperties(window.selected_properties);
+      }
+    });
+    $('#properties').on('click', "th a", function(e) {
+      var params;
+      window.property_sort = getParameterByName("property_sort", this.href);
+      window.property_direction = getParameterByName("property_direction", this.href);
+      params = getPropertyParams();
+      $.get("/hub?" + params);
+      return false;
+    });
+    return $("input#property_search_field").on('input', function() {
+      var params;
+      window.properties_page = "1";
+      params = getPropertyParams();
+      $.get("/hub?" + params);
+      return false;
+    });
+  });
 
-  window.validateGroupSelection = validateGroupSelection;
-
-  deleteGroups = function(groups) {
+  getPropertyParams = function() {
     var params;
     params = $.param({
-      selected_entity: window.selected_entity,
-      selected_groups: groups,
-      group_search: $("input#group_search_field").val(),
-      entity_search: $("input#entity_search_field").val(),
-      group_direction: window.group_direction,
-      entity_direction: window.entity_direction,
-      group_sort: window.group_sort,
-      entity_sort: window.entity_sort
+      selected_properties: window.selected_properties,
+      property_search: $("input#property_search_field").val(),
+      property_direction: window.property_direction,
+      property_sort: window.property_sort,
+      properties_page: window.properties_page,
+      event: "property"
     });
-    $.ajax({
-      url: "/hub/delete_groups?" + params,
-      type: 'POST'
+    return params;
+  };
+
+  window.getPropertyParams = getPropertyParams;
+
+  propertyPagination = function() {
+    console.log("called property pagination");
+    return $("div#properties").on("click", '.pagination a', function(e) {
+      var params;
+      window.properties_page = getParameterByName("properties_page", this.href) || "1";
+      params = getPropertyParams();
+      $.get("/hub?" + params);
+      return false;
     });
-    return validateGroupSelection();
   };
 
-  window.deleteGroups = deleteGroups;
+  window.propertyPagination = propertyPagination;
 
-  clearSelectedGroups = function() {
-    window.selected_groups = [];
-    $("tr.selected-group").removeClass("selected-group");
-    clearSelectedGroupsProperties();
-    return validateGroupSelection();
-  };
-
-  window.clearSelectedGroups = clearSelectedGroups;
-
-  clearSelectedGroupsProperties = function() {
-    window.selected_group_property_relations = [];
-    $("tr.selected-groups-property").removeClass("selected-groups-property");
-    return validateGroupsPropertySelection();
-  };
-
-  window.clearSelectedGroupsProperties = clearSelectedGroupsProperties;
-
-  togglePropertySelect = function(id) {
+  togglePropertySelect = function(id, multiSelect) {
     var index;
     index = $.inArray(id, window.selected_properties);
     if (index > -1) {
-      $("tr#" + id + ".property").removeClass("selected-property");
-      window.selected_properties.splice(index, 1);
+      if (window.selected_properties.length > 1 && !multiSelect) {
+        clearSelectedProperties();
+        $("tr#" + id + ".property").addClass("selected-property");
+        window.selected_properties.push(id);
+      } else {
+        window.selected_properties.splice(index, 1);
+        $("tr#" + id + ".property").removeClass("selected-property");
+      }
+    } else if (multiSelect) {
+      $("tr#" + id + ".property").addClass("selected-property");
+      window.selected_properties.push(id);
     } else {
+      clearSelectedProperties();
       $("tr#" + id + ".property").addClass("selected-property");
       window.selected_properties.push(id);
     }
@@ -13929,34 +13649,6 @@ Copyright (c) 2012-2013 Sasha Koss & Rico Sta. Cruz
   };
 
   window.validatePropertySelection = validatePropertySelection;
-
-  validateAddPropertiesToGroup = function() {
-    if (window.selected_properties.length > 0 && window.selected_groups.length === 1) {
-      $("#add-selected-properties").removeClass("disabled");
-      return $("#add-selected-properties").addClass("enabled");
-    } else {
-      $("#add-selected-properties").removeClass("enabled");
-      return $("#add-selected-properties").addClass("disabled");
-    }
-  };
-
-  window.validateAddPropertiesToGroup = validateAddPropertiesToGroup;
-
-  addPropertiesToGroup = function(properties, group) {
-    var params;
-    params = $.param({
-      selected_groups: window.selected_groups,
-      selected_properties: window.selected_properties,
-      property_direction: window.property_direction,
-      property_sort: window.property_sort
-    });
-    return $.ajax({
-      url: "/hub/group_add_properties?" + params,
-      type: 'POST'
-    });
-  };
-
-  window.addPropertiesToGroup = addPropertiesToGroup;
 
   deleteProperties = function(properties) {
     var params;
@@ -13991,16 +13683,248 @@ Copyright (c) 2012-2013 Sasha Koss & Rico Sta. Cruz
 
   window.clearSelectedProperties = clearSelectedProperties;
 
-  toggleEntitysGroupSelect = function(id, order) {
+  clearPropertyAttributes = function() {
+    window.property_sort = "created_at";
+    window.property_direction = "desc";
+    return window.properties_page = "1";
+  };
+
+  window.clearPropertyAttributes = clearPropertyAttributes;
+
+}).call(this);
+(function() {
+  var clearGroupAttributes, clearSelectedGroups, deleteGroups, getGroupParams, groupPagination, toggleGroupSelect, validateGroupSelection;
+
+  window.selected_groups = [];
+
+  window.group_sort = "created_at";
+
+  window.group_direction = "desc";
+
+  window.groups_page = "1";
+
+  $(function() {
+    $("#new-group-collapse-heading").on("click", function(e) {
+      return e.preventDefault();
+    });
+    $("body").on("click", '.table tr.group', function(e) {
+      return toggleGroupSelect(this.id, e.ctrlKey || e.metaKey);
+    });
+    $('#groups').on('click', "th a", function(e) {
+      var params;
+      window.group_sort = getParameterByName("group_sort", this.href);
+      window.group_direction = getParameterByName("group_direction", this.href);
+      params = getGroupParams();
+      $.get("/hub?" + params);
+      return false;
+    });
+    $("input#group_search_field").on('input', function() {
+      var params;
+      window.groups_page = "1";
+      params = getGroupParams();
+      $.get("/hub?" + params);
+      return false;
+    });
+    $("body").on("click", "#clear-selected-groups", function(e) {
+      if (!$(this).hasClass("disabled")) {
+        return clearSelectedGroups();
+      }
+    });
+    return $("body").on("click", "#delete-selected-groups", function(e) {
+      if (!$(this).hasClass("disabled")) {
+        return deleteGroups(window.selected_groups);
+      }
+    });
+  });
+
+  getGroupParams = function() {
+    var params;
+    params = $.param({
+      selected_groups: window.selected_groups,
+      group_search: $("input#group_search_field").val(),
+      group_direction: window.group_direction,
+      group_sort: window.group_sort,
+      groups_page: window.groups_page,
+      event: "group"
+    });
+    return params;
+  };
+
+  window.getGroupParams = getGroupParams;
+
+  groupPagination = function() {
+    console.log("called group pagination");
+    return $("div#groups").on("click", '.pagination a', function(e) {
+      var params;
+      window.groups_page = getParameterByName("groups_page", this.href) || "1";
+      params = getGroupParams();
+      $.get("/hub?" + params);
+      return false;
+    });
+  };
+
+  window.groupPagination = groupPagination;
+
+  toggleGroupSelect = function(id, multiSelect) {
+    var index;
+    index = $.inArray(id, window.selected_groups);
+    if (index > -1) {
+      if (window.selected_groups.length > 1 && !multiSelect) {
+        clearSelectedGroups();
+        $("tr#" + id + ".group").addClass("selected-group");
+        window.selected_groups.push(id);
+      } else {
+        $("tr#" + id + ".group").removeClass("selected-group");
+        window.selected_groups.splice(index, 1);
+      }
+    } else if (multiSelect) {
+      $("tr#" + id + ".group").addClass("selected-group");
+      window.selected_groups.push(id);
+    } else {
+      clearSelectedGroups();
+      $("tr#" + id + ".group").addClass("selected-group");
+      window.selected_groups.push(id);
+    }
+    getGroupsProperties(window.selected_groups);
+    return validateGroupSelection();
+  };
+
+  window.toggleGroupSelect = toggleGroupSelect;
+
+  validateGroupSelection = function() {
+    var _html;
+    if (window.selected_groups.length > 0) {
+      $("#clear-selected-groups").removeClass("disabled");
+      $("#delete-selected-groups").removeClass("disabled");
+      clearSelectedEGRs();
+      validateEntitysGroupSelection();
+    } else {
+      _html = "";
+      if (window.selected_egrs.length < 1) {
+        _html = "<div class='alert alert-info small-font center'>";
+        _html += "<i>No Group selected.</i></div>";
+      }
+      $("#groups_properties").html("");
+      $("#groups-properties-alert").html(_html);
+      $("#clear-selected-groups").addClass("disabled");
+      $("#delete-selected-groups").addClass("disabled");
+    }
+    clearSelectedGPRs();
+    validateAddGroupsToEntity();
+    return validateAddPropertiesToGroup();
+  };
+
+  window.validateGroupSelection = validateGroupSelection;
+
+  deleteGroups = function(groups) {
+    var params;
+    params = $.param({
+      selected_entity: window.selected_entity,
+      selected_groups: groups,
+      group_search: $("input#group_search_field").val(),
+      entity_search: $("input#entity_search_field").val(),
+      group_direction: window.group_direction,
+      entity_direction: window.entity_direction,
+      group_sort: window.group_sort,
+      entity_sort: window.entity_sort
+    });
+    return $.ajax({
+      url: "/hub/delete_groups?" + params,
+      type: 'POST'
+    });
+  };
+
+  window.deleteGroups = deleteGroups;
+
+  clearSelectedGroups = function() {
+    window.selected_groups = [];
+    $("tr.selected-group").removeClass("selected-group");
+    return clearSelectedGPRs();
+  };
+
+  window.clearSelectedGroups = clearSelectedGroups;
+
+  clearGroupAttributes = function() {
+    window.group_sort = "created_at";
+    window.group_direction = "desc";
+    return window.groups_page = "1";
+  };
+
+  window.clearGroupAttributes = clearGroupAttributes;
+
+}).call(this);
+(function() {
+  var addGroupsToEntity, bottomEntityGroupRelations, clearSelectedEGRs, deleteEntityGroupRelations, downEntityGroupRelations, getEntitysGroups, toggleEntitysGroupSelect, topEntityGroupRelations, upEntityGroupRelations, validateAddGroupsToEntity, validateEntitysGroupSelection;
+
+  window.selected_egrs = [];
+
+  window.selected_entity_group_orders = [];
+
+  window.selected_entitys_max_group_order = -1;
+
+  $(function() {
+    $("body").on("click", '.table tr.entity_group_relationship', function(e) {
+      return toggleEntitysGroupSelect(this.id, $(this).data().order, e.ctrlKey || e.metaKey);
+    });
+    $("body").on("click", "#add-selected-groups", function(e) {
+      if ($(this).hasClass("enabled")) {
+        return addGroupsToEntity(window.selected_groups, window.selected_entity);
+      }
+    });
+    $("body").on("click", "#clear-selected-entitys-groups", function(e) {
+      if (!$(this).hasClass("disabled")) {
+        clearSelectedEGRs();
+        return validateEntitysGroupSelection();
+      }
+    });
+    $("body").on("click", "#delete-selected-entitys-groups", function(e) {
+      if (!$(this).hasClass("disabled")) {
+        return deleteEntityGroupRelations(window.selected_egrs);
+      }
+    });
+    $("body").on("click", "#top-selected-entitys-groups", function(e) {
+      if (!$(this).hasClass("disabled")) {
+        return topEntityGroupRelations(window.selected_egrs);
+      }
+    });
+    $("body").on("click", "#up-selected-entitys-groups", function(e) {
+      if (!$(this).hasClass("disabled")) {
+        return upEntityGroupRelations(window.selected_egrs);
+      }
+    });
+    $("body").on("click", "#down-selected-entitys-groups", function(e) {
+      if (!$(this).hasClass("disabled")) {
+        return downEntityGroupRelations(window.selected_egrs);
+      }
+    });
+    return $("body").on("click", "#bottom-selected-entitys-groups", function(e) {
+      if (!$(this).hasClass("disabled")) {
+        return bottomEntityGroupRelations(window.selected_egrs);
+      }
+    });
+  });
+
+  toggleEntitysGroupSelect = function(id, order, multiSelect) {
     var index;
     id += "";
-    index = $.inArray(id, window.selected_entity_group_relations);
+    index = $.inArray(id, window.selected_egrs);
     if (index > -1) {
-      window.selected_entity_group_relations.splice(index, 1);
-      $("tr#" + id + ".entity_group_relationship").removeClass("selected-entitys-group");
-    } else {
+      if (window.selected_egrs.length > 1 && !multiSelect) {
+        clearSelectedEGRs();
+        $("tr#" + id + ".entity_group_relationship").addClass("selected-entitys-group");
+        window.selected_egrs.push(id);
+      } else {
+        clearSelectedEPRs();
+        window.selected_egrs.splice(index, 1);
+        $("tr#" + id + ".entity_group_relationship").removeClass("selected-entitys-group");
+      }
+    } else if (multiSelect) {
       $("tr#" + id + ".entity_group_relationship").addClass("selected-entitys-group");
-      window.selected_entity_group_relations.push(id);
+      window.selected_egrs.push(id);
+    } else {
+      clearSelectedEGRs();
+      $("tr#" + id + ".entity_group_relationship").addClass("selected-entitys-group");
+      window.selected_egrs.push(id);
     }
     order += "";
     index = $.inArray(order, window.selected_entity_group_orders);
@@ -14009,33 +13933,65 @@ Copyright (c) 2012-2013 Sasha Koss & Rico Sta. Cruz
     } else {
       window.selected_entity_group_orders.push(order);
     }
-    getEntitysProperties(window.selected_entity_group_relations);
+    getEntitysProperties(window.selected_egrs);
     return validateEntitysGroupSelection();
   };
 
   window.toggleEntitysGroupSelect = toggleEntitysGroupSelect;
 
-  getEntitysProperties = function(relationship_ids) {
+  validateAddGroupsToEntity = function() {
+    if (window.selected_groups.length > 0 && window.selected_entity > -1) {
+      $("#add-selected-groups").removeClass("disabled");
+      return $("#add-selected-groups").addClass("enabled");
+    } else {
+      $("#add-selected-groups").removeClass("enabled");
+      return $("#add-selected-groups").addClass("disabled");
+    }
+  };
+
+  window.validateAddGroupsToEntity = validateAddGroupsToEntity;
+
+  addGroupsToEntity = function(groups, entity) {
     var params;
     params = $.param({
-      selected_entity_group_relations: relationship_ids,
-      selected_properties: window.selected_properties,
-      property_search: $("input#property_search_field").val(),
-      property_direction: window.property_direction,
-      property_sort: window.property_sort
+      selected_entity: window.selected_entity,
+      selected_groups: window.selected_groups,
+      group_direction: window.group_direction,
+      group_sort: window.group_sort,
+      group_search: $("input#group_search_field").val()
     });
-    $;
     return $.ajax({
-      url: "/hub/groups_properties?" + params,
+      url: "/hub/entity_add_groups?" + params,
       type: 'POST'
     });
   };
 
-  window.getEntitysProperties = getEntitysProperties;
+  window.addGroupsToEntity = addGroupsToEntity;
+
+  deleteEntityGroupRelations = function(relationship_ids) {
+    var params;
+    params = $.param({
+      selected_entity: window.selected_entity,
+      selected_egrs: relationship_ids,
+      selected_groups: window.selected_groups,
+      group_search: $("input#group_search_field").val(),
+      entity_search: $("input#entity_search_field").val(),
+      group_direction: window.group_direction,
+      entity_direction: window.entity_direction,
+      group_sort: window.group_sort,
+      entity_sort: window.entity_sort
+    });
+    return $.ajax({
+      url: "/hub/delete_entity_group_relations?" + params,
+      type: 'POST'
+    });
+  };
+
+  window.deleteEntityGroupRelations = deleteEntityGroupRelations;
 
   validateEntitysGroupSelection = function() {
     var e, i, index, maxOrder, order, orders, sum, test, valid, _html, _i, _len;
-    if (window.selected_entity_group_relations.length > 0) {
+    if (window.selected_egrs.length > 0) {
       $("#clear-selected-entitys-groups").removeClass("disabled");
       $("#delete-selected-entitys-groups").removeClass("disabled");
       clearSelectedGroups();
@@ -14044,8 +14000,8 @@ Copyright (c) 2012-2013 Sasha Koss & Rico Sta. Cruz
       if (window.selected_groups.length < 1) {
         _html = "<div class='alert alert-info small-font center'>";
         _html += "<i>No Group selected.</i></div>";
+        $("#groups_properties").html("");
       }
-      $("#groups_properties").html("");
       $("#groups-properties-alert").html(_html);
       $("#clear-selected-entitys-groups").addClass("disabled");
       $("#delete-selected-entitys-groups").addClass("disabled");
@@ -14126,14 +14082,14 @@ Copyright (c) 2012-2013 Sasha Koss & Rico Sta. Cruz
 
   window.validateEntitysGroupSelection = validateEntitysGroupSelection;
 
-  clearSelectedEntitysGroups = function() {
-    window.selected_entity_group_relations = [];
+  clearSelectedEGRs = function() {
+    window.selected_egrs = [];
     window.selected_entity_group_orders = [];
     $("tr.selected-entitys-group").removeClass("selected-entitys-group");
-    return validateEntitysGroupSelection();
+    return clearSelectedEPRs();
   };
 
-  window.clearSelectedEntitysGroups = clearSelectedEntitysGroups;
+  window.clearSelectedEGRs = clearSelectedEGRs;
 
   getEntitysGroups = function(id) {
     var params;
@@ -14143,6 +14099,7 @@ Copyright (c) 2012-2013 Sasha Koss & Rico Sta. Cruz
       group_search: $("input#group_search_field").val(),
       group_direction: window.group_direction,
       group_sort: window.group_sort,
+      groups_page: window.groups_page,
       event: 'entitys_groups'
     });
     $;
@@ -14154,67 +14111,281 @@ Copyright (c) 2012-2013 Sasha Koss & Rico Sta. Cruz
 
   window.getEntitysGroups = getEntitysGroups;
 
-  toggleGroupPropertySelect = function(id, order) {
-    var index;
-    id += "";
-    index = $.inArray(id, window.selected_group_property_relations);
-    if (index > -1) {
-      window.selected_group_property_relations.splice(index, 1);
-      $("tr#" + id + ".group_property_relationship").removeClass("selected-groups-property");
-    } else {
-      $("tr#" + id + ".group_property_relationship").addClass("selected-groups-property");
-      window.selected_group_property_relations.push(id);
-    }
-    order += "";
-    index = $.inArray(order, window.selected_group_property_orders);
-    if (index > -1) {
-      window.selected_group_property_orders.splice(index, 1);
-    } else {
-      window.selected_group_property_orders.push(order);
-    }
-    return validateGroupsPropertySelection();
-  };
-
-  window.toggleGroupPropertySelect = toggleGroupPropertySelect;
-
-  getGroupsProperties = function(ids) {
+  topEntityGroupRelations = function(relationship_ids) {
     var params;
     params = $.param({
-      selected_groups: ids,
-      selected_properties: window.selected_properties,
-      property_search: $("input#property_search_field").val(),
-      property_direction: window.property_direction,
-      property_sort: window.property_sort
+      selected_entity: window.selected_entity,
+      selected_egrs: relationship_ids.sort(),
+      selected_groups: window.selected_groups,
+      group_search: $("input#group_search_field").val(),
+      entity_search: $("input#entity_search_field").val(),
+      group_direction: window.group_direction,
+      entity_direction: window.entity_direction,
+      group_sort: window.group_sort,
+      entity_sort: window.entity_sort
     });
     return $.ajax({
-      url: "/hub/groups_properties?" + params,
+      url: "/hub/top_entity_group_relations?" + params,
       type: 'POST'
     });
   };
 
-  window.getGroupsProperties = getGroupsProperties;
+  window.topEntityGroupRelations = topEntityGroupRelations;
 
-  clearSelectedGroupsProperties = function() {
-    window.selected_group_property_relations = [];
-    window.selected_group_property_orders = [];
-    $("tr.selected-groups-property").removeClass("selected-groups-property");
-    return validateGroupsPropertySelection();
+  bottomEntityGroupRelations = function(relationship_ids) {
+    var params;
+    params = $.param({
+      selected_entity: window.selected_entity,
+      selected_egrs: relationship_ids.sort(),
+      selected_groups: window.selected_groups,
+      group_search: $("input#group_search_field").val(),
+      entity_search: $("input#entity_search_field").val(),
+      group_direction: window.group_direction,
+      entity_direction: window.entity_direction,
+      group_sort: window.group_sort,
+      entity_sort: window.entity_sort
+    });
+    return $.ajax({
+      url: "/hub/bottom_entity_group_relations?" + params,
+      type: 'POST'
+    });
   };
 
-  window.clearSelectedGroupsProperties = clearSelectedGroupsProperties;
+  window.bottomEntityGroupRelations = bottomEntityGroupRelations;
 
-  validateGroupsPropertySelection = function() {
-    var e, i, index, maxOrder, order, orders, sum, test, valid, _i, _len;
-    if (window.selected_group_property_relations.length > 0) {
-      $("#clear-selected-groups-properties").removeClass("disabled");
-      $("#delete-selected-groups-properties").removeClass("disabled");
+  upEntityGroupRelations = function(relationship_ids) {
+    var params;
+    params = $.param({
+      selected_entity: window.selected_entity,
+      selected_egrs: relationship_ids.sort(),
+      selected_groups: window.selected_groups,
+      group_search: $("input#group_search_field").val(),
+      entity_search: $("input#entity_search_field").val(),
+      group_direction: window.group_direction,
+      entity_direction: window.entity_direction,
+      group_sort: window.group_sort,
+      entity_sort: window.entity_sort
+    });
+    return $.ajax({
+      url: "/hub/up_entity_group_relations?" + params,
+      type: 'POST'
+    });
+  };
+
+  window.upEntityGroupRelations = upEntityGroupRelations;
+
+  downEntityGroupRelations = function(relationship_ids) {
+    var params;
+    params = $.param({
+      selected_entity: window.selected_entity,
+      selected_egrs: relationship_ids.sort(),
+      selected_groups: window.selected_groups,
+      group_search: $("input#group_search_field").val(),
+      entity_search: $("input#entity_search_field").val(),
+      group_direction: window.group_direction,
+      entity_direction: window.entity_direction,
+      group_sort: window.group_sort,
+      entity_sort: window.entity_sort
+    });
+    return $.ajax({
+      url: "/hub/down_entity_group_relations?" + params,
+      type: 'POST'
+    });
+  };
+
+  window.downEntityGroupRelations = downEntityGroupRelations;
+
+}).call(this);
+(function() {
+  var bottomEPRs, clearSelectedEPRs, downEPRs, getEntitysProperties, toggleEPRform, toggleEPRselect, topEPRs, upEPRs, validateEPRselection;
+
+  window.selected_epr_orders = [];
+
+  window.selected_eprs = [];
+
+  window.selected_epr_max_order = -1;
+
+  $(function() {
+    alert("ass");
+    $("body").on("click", '.table tr.epr', function(e) {
+      return toggleEPRselect(this.id, $(this).data().order, e.metaKey || e.ctrlKey);
+    });
+    $("body").on("click", "a.edit-epr-trigger", function(e) {
+      console.log(this);
+      toggleEPRform(this);
+      return e.preventDefault();
+    });
+    $("body").on("click", "#top-selected-eprs", function(e) {
+      if (!$(this).hasClass("disabled")) {
+        return topEPRs(window.selected_eprs);
+      }
+    });
+    $("body").on("click", "#up-selected-eprs", function(e) {
+      if (!$(this).hasClass("disabled")) {
+        return upEPRs(window.selected_eprs);
+      }
+    });
+    $("body").on("click", "#down-selected-eprs", function(e) {
+      if (!$(this).hasClass("disabled")) {
+        return downEPRs(window.selected_eprs);
+      }
+    });
+    return $("body").on("click", "#bottom-selected-eprs", function(e) {
+      if (!$(this).hasClass("disabled")) {
+        return bottomEPRs(window.selected_eprs);
+      }
+    });
+  });
+
+  toggleEPRform = function(element) {
+    var id, open, openForm;
+    openForm = $(element).hasClass('openForm');
+    open = [];
+    if (openForm) {
+      id = element.id;
+      $(element).removeClass('openForm');
+      return $('#' + id + ".edit-epr-form").slideUp();
     } else {
-      $("#clear-selected-groups-properties").addClass("disabled");
-      $("#delete-selected-groups-properties").addClass("disabled");
+      open = $('a.edit-epr-trigger.openForm');
+      if (open.length === 1) {
+        open.removeClass('openForm');
+        id = open.id;
+        $('#' + id + '.edit-epr-form').slideUp();
+      }
+      $(element).addClass('openForm');
+      id = element.id;
+      return $('#' + id + '.edit-epr-form').slideDown();
     }
-    orders = window.selected_group_property_orders;
-    maxOrder = window.selected_groups_max_property_order + "";
-    if (orders.length < 1) {
+  };
+
+  toggleEPRselect = function(id, order, multiSelect) {
+    var index;
+    id += "";
+    index = $.inArray(id, window.selected_eprs);
+    if (index > -1) {
+      if (window.selected_eprs.length > 1 && !multiSelect) {
+        clearSelectedEPRs();
+        $("tr#" + id + ".epr").addClass("selected-epr");
+        window.selected_eprs.push(id);
+      } else {
+        window.selected_eprs.splice(index, 1);
+        $("tr#" + id + ".epr").removeClass("selected-epr");
+      }
+    } else if (multiSelect) {
+      $("tr#" + id + ".epr").addClass("selected-epr");
+      window.selected_eprs.push(id);
+    } else {
+      clearSelectedEPRs();
+      $("tr#" + id + ".epr").addClass("selected-epr");
+      window.selected_eprs.push(id);
+    }
+    order += "";
+    index = $.inArray(order, window.selected_epr_orders);
+    if (index > -1) {
+      window.selected_epr_orders.splice(index, 1);
+    } else {
+      window.selected_epr_orders.push(order);
+    }
+    return validateEPRselection();
+  };
+
+  window.toggleEPRselect = toggleEPRselect;
+
+  clearSelectedEPRs = function() {
+    window.selected_eprs = [];
+    window.selected_epr_orders = [];
+    $("tr.selected-epr").removeClass("selected-epr");
+    return validateEPRselection();
+  };
+
+  window.clearSelectedEPRs = clearSelectedEPRs;
+
+  getEntitysProperties = function(relationship_ids) {
+    var params;
+    params = $.param({
+      selected_egrs: relationship_ids,
+      selected_properties: window.selected_properties,
+      selected_groups: window.selected_groups,
+      property_search: $("input#property_search_field").val(),
+      property_direction: window.property_direction,
+      property_sort: window.property_sort
+    });
+    $;
+    return $.ajax({
+      url: "/hub/eprs?" + params,
+      type: 'POST'
+    });
+  };
+
+  window.getEntitysProperties = getEntitysProperties;
+
+  topEPRs = function(relationship_ids) {
+    var params;
+    params = $.param({
+      selected_eprs: relationship_ids,
+      selected_egrs: window.selected_egrs
+    });
+    return $.ajax({
+      url: "/hub/top_eprs?" + params,
+      type: 'POST'
+    });
+  };
+
+  window.topEPRs = topEPRs;
+
+  bottomEPRs = function(relationship_ids) {
+    var params;
+    params = $.param({
+      selected_eprs: relationship_ids,
+      selected_egrs: window.selected_egrs
+    });
+    return $.ajax({
+      url: "/hub/bottom_eprs?" + params,
+      type: 'POST'
+    });
+  };
+
+  window.bottomEPRs = bottomEPRs;
+
+  upEPRs = function(relationship_ids) {
+    var params;
+    params = $.param({
+      selected_eprs: relationship_ids,
+      selected_egrs: window.selected_egrs
+    });
+    return $.ajax({
+      url: "/hub/up_eprs?" + params,
+      type: 'POST'
+    });
+  };
+
+  window.upEPRs = upEPRs;
+
+  downEPRs = function(relationship_ids) {
+    var params;
+    params = $.param({
+      selected_eprs: relationship_ids,
+      selected_egrs: window.selected_egrs
+    });
+    return $.ajax({
+      url: "/hub/down_eprs?" + params,
+      type: 'POST'
+    });
+  };
+
+  window.downEPRs = downEPRs;
+
+  validateEPRselection = function() {
+    var e, i, index, order, orders, sum, test, valid, _i, _len;
+    if (window.selected_eprs.length > 0 && window.selected_egrs.length === 1) {
+      $("#clear-selected-eprs").removeClass("disabled");
+      $("#delete-selected-eprs").removeClass("disabled");
+    } else {
+      $("#clear-selected-eprs").addClass("disabled");
+      $("#delete-selected-eprs").addClass("disabled");
+    }
+    orders = window.selected_epr_orders;
+    if (orders.length < 1 || window.selected_egrs.length > 1) {
       $("div.property-order-action").removeClass("enabled");
       return $("div.property-order-action").addClass("disabled");
     } else {
@@ -14229,25 +14400,24 @@ Copyright (c) 2012-2013 Sasha Koss & Rico Sta. Cruz
         e = _error;
         console.log(e);
       } finally {
-        $("div#up-selected-groups-properties").removeClass("enabled");
-        $("div#up-selected-groups-properties").addClass("disabled");
-        $("div#top-selected-groups-properties").removeClass("enabled");
-        $("div#top-selected-groups-properties").addClass("disabled");
+        $("div#up-selected-eprs").removeClass("enabled");
+        $("div#up-selected-eprs").addClass("disabled");
+        $("div#top-selected-eprs").removeClass("enabled");
+        $("div#top-selected-eprs").addClass("disabled");
       }
       if (sum <= valid) {
-        $("div#up-selected-groups-properties").removeClass("enabled");
-        $("div#up-selected-groups-properties").addClass("disabled");
-        $("div#top-selected-groups-properties").removeClass("enabled");
-        $("div#top-selected-groups-properties").addClass("disabled");
+        $("div#up-selected-eprs").removeClass("enabled");
+        $("div#up-selected-eprs").addClass("disabled");
+        $("div#top-selected-eprs").removeClass("enabled");
+        $("div#top-selected-eprs").addClass("disabled");
       } else {
-        $("div#up-selected-groups-properties").removeClass("disabled");
-        $("div#up-selected-groups-properties").addClass("enabled");
-        $("div#top-selected-groups-properties").removeClass("disabled");
-        $("div#top-selected-groups-properties").addClass("enabled");
+        $("div#up-selected-eprs").removeClass("disabled");
+        $("div#up-selected-eprs").addClass("enabled");
+        $("div#top-selected-eprs").removeClass("disabled");
+        $("div#top-selected-eprs").addClass("enabled");
       }
-      sum = 0;
       valid = false;
-      index = $.inArray(window.selected_groups_max_property_order + "", orders);
+      index = $.inArray(window.selected_epr_max_order + "", orders);
       if (index < 0) {
         valid = true;
       } else {
@@ -14266,30 +14436,372 @@ Copyright (c) 2012-2013 Sasha Koss & Rico Sta. Cruz
           e = _error;
           console.log(e);
         } finally {
-          $("div#down-selected-groups-properties").removeClass("enabled");
-          $("div#down-selected-groups-properties").addClass("disabled");
-          $("div#bottom-selected-groups-properties").removeClass("enabled");
-          $("div#bottom-selected-groups-properties").addClass("disabled");
+          $("div#down-selected-eprs").removeClass("enabled");
+          $("div#down-selected-eprs").addClass("disabled");
+          $("div#bottom-selected-eprs").removeClass("enabled");
+          $("div#bottom-selected-eprs").addClass("disabled");
         }
       }
       if (!valid) {
-        $("div#down-selected-groups-properties").removeClass("enabled");
-        $("div#down-selected-groups-properties").addClass("disabled");
-        $("div#bottom-selected-groups-properties").removeClass("enabled");
-        return $("div#bottom-selected-groups-properties").addClass("disabled");
+        $("div#down-selected-eprs").removeClass("enabled");
+        $("div#down-selected-eprs").addClass("disabled");
+        $("div#bottom-selected-eprs").removeClass("enabled");
+        return $("div#bottom-selected-eprs").addClass("disabled");
       } else {
-        $("div#down-selected-groups-properties").removeClass("disabled");
-        $("div#down-selected-groups-properties").addClass("enabled");
-        $("div#bottom-selected-groups-properties").removeClass("disabled");
-        return $("div#bottom-selected-groups-properties").addClass("enabled");
+        $("div#down-selected-eprs").removeClass("disabled");
+        $("div#down-selected-eprs").addClass("enabled");
+        $("div#bottom-selected-eprs").removeClass("disabled");
+        return $("div#bottom-selected-eprs").addClass("enabled");
+      }
+    }
+  };
+
+  window.validateEPRselection = validateEPRselection;
+
+}).call(this);
+(function() {
+  var addPropertiesToGroup, bottomGPRs, clearSelectedGPRs, deleteGPRs, downGPRs, getGroupsProperties, toggleGPRselect, topGPRs, upGPRs, validateAddPropertiesToGroup, validateGroupsPropertySelection;
+
+  window.selected_gpr_orders = [];
+
+  window.selected_gprs = [];
+
+  window.selected_gpr_max_order = -1;
+
+  $(function() {
+    $("body").on("click", '.table tr.gpr', function(e) {
+      console.log(" test 00 ");
+      return toggleGPRselect(this.id, $(this).data().order, e.metaKey || e.ctrlKey);
+    });
+    $("body").on("click", "#clear-selected-gprs", function(e) {
+      if (!$(this).hasClass("disabled")) {
+        return clearSelectedGPRs();
+      }
+    });
+    $("body").on("click", "#add-selected-properties", function(e) {
+      if ($(this).hasClass("enabled")) {
+        return addPropertiesToGroup(window.selected_properties, window.selected_groups);
+      }
+    });
+    $("body").on("click", "#delete-selected-gprs", function(e) {
+      if (!$(this).hasClass("disabled")) {
+        return deleteGPRs(window.selected_gprs);
+      }
+    });
+    $("body").on("click", "#top-selected-gprs", function(e) {
+      if (!$(this).hasClass("disabled")) {
+        return topGPRs(window.selected_gprs);
+      }
+    });
+    $("body").on("click", "#up-selected-gprs", function(e) {
+      if (!$(this).hasClass("disabled")) {
+        return upGPRs(window.selected_gprs);
+      }
+    });
+    $("body").on("click", "#down-selected-gprs", function(e) {
+      if (!$(this).hasClass("disabled")) {
+        return downGPRs(window.selected_gprs);
+      }
+    });
+    return $("body").on("click", "#bottom-selected-gprs", function(e) {
+      if (!$(this).hasClass("disabled")) {
+        return bottomGPRs(window.selected_gprs);
+      }
+    });
+  });
+
+  validateAddPropertiesToGroup = function() {
+    if (window.selected_properties.length > 0 && window.selected_groups.length === 1) {
+      $("#add-selected-properties").removeClass("disabled");
+      return $("#add-selected-properties").addClass("enabled");
+    } else {
+      $("#add-selected-properties").removeClass("enabled");
+      return $("#add-selected-properties").addClass("disabled");
+    }
+  };
+
+  window.validateAddPropertiesToGroup = validateAddPropertiesToGroup;
+
+  addPropertiesToGroup = function(properties, group) {
+    var params;
+    params = $.param({
+      selected_groups: window.selected_groups,
+      selected_properties: window.selected_properties,
+      property_direction: window.property_direction,
+      property_sort: window.property_sort,
+      property_search: $("input#property_search_field").val()
+    });
+    return $.ajax({
+      url: "/hub/group_add_properties?" + params,
+      type: 'POST'
+    });
+  };
+
+  window.addPropertiesToGroup = addPropertiesToGroup;
+
+  toggleGPRselect = function(id, order, multiSelect) {
+    var index;
+    console.log(" Called toggleGPRselect ");
+    id += "";
+    index = $.inArray(id, window.selected_gprs);
+    if (index > -1) {
+      if (window.selected_gprs.length > 1 && !multiSelect) {
+        clearSelectedGPRs();
+        $("tr#" + id + ".gpr").addClass("selected-gpr");
+        window.selected_gprs.push(id);
+      } else {
+        window.selected_gprs.splice(index, 1);
+        $("tr#" + id + ".gpr").removeClass("selected-gpr");
+      }
+    } else if (multiSelect) {
+      $("tr#" + id + ".gpr").addClass("selected-gpr");
+      window.selected_gprs.push(id);
+    } else {
+      clearSelectedGPRs();
+      $("tr#" + id + ".gpr").addClass("selected-gpr");
+      window.selected_gprs.push(id);
+    }
+    order += "";
+    index = $.inArray(order, window.selected_gpr_orders);
+    if (index > -1) {
+      window.selected_gpr_orders.splice(index, 1);
+    } else {
+      window.selected_gpr_orders.push(order);
+    }
+    return validateGroupsPropertySelection();
+  };
+
+  window.toggleGPRselect = toggleGPRselect;
+
+  getGroupsProperties = function(ids) {
+    var params;
+    params = $.param({
+      selected_groups: ids,
+      selected_properties: window.selected_properties,
+      property_search: $("input#property_search_field").val(),
+      property_direction: window.property_direction,
+      property_sort: window.property_sort
+    });
+    return $.ajax({
+      url: "/hub/groups_properties?" + params,
+      type: 'POST'
+    });
+  };
+
+  window.getGroupsProperties = getGroupsProperties;
+
+  clearSelectedGPRs = function() {
+    window.selected_gprs = [];
+    window.selected_gpr_orders = [];
+    $("tr.selected-gpr").removeClass("selected-gpr");
+    return validateGroupsPropertySelection();
+  };
+
+  window.clearSelectedGPRs = clearSelectedGPRs;
+
+  deleteGPRs = function(relationship_ids) {
+    var params;
+    params = $.param({
+      selected_gprs: relationship_ids,
+      selected_groups: window.selected_groups,
+      property_search: $("input#property_search_field").val(),
+      property_direction: window.property_direction,
+      property_sort: window.property_sort
+    });
+    return $.ajax({
+      url: "/hub/delete_gprs?" + params,
+      type: 'POST'
+    });
+  };
+
+  window.deleteGPRs = deleteGPRs;
+
+  topGPRs = function(relationship_ids) {
+    var params;
+    params = $.param({
+      selected_gprs: relationship_ids,
+      selected_groups: window.selected_groups
+    });
+    return $.ajax({
+      url: "/hub/top_gprs?" + params,
+      type: 'POST'
+    });
+  };
+
+  window.topGPRs = topGPRs;
+
+  bottomGPRs = function(relationship_ids) {
+    var params;
+    params = $.param({
+      selected_gprs: relationship_ids,
+      selected_groups: window.selected_groups
+    });
+    return $.ajax({
+      url: "/hub/bottom_gprs?" + params,
+      type: 'POST'
+    });
+  };
+
+  window.bottomGPRs = bottomGPRs;
+
+  upGPRs = function(relationship_ids) {
+    var params;
+    params = $.param({
+      selected_gprs: relationship_ids,
+      selected_groups: window.selected_groups
+    });
+    return $.ajax({
+      url: "/hub/up_gprs?" + params,
+      type: 'POST'
+    });
+  };
+
+  window.upGPRs = upGPRs;
+
+  downGPRs = function(relationship_ids) {
+    var params;
+    params = $.param({
+      selected_gprs: relationship_ids,
+      selected_groups: window.selected_groups
+    });
+    return $.ajax({
+      url: "/hub/down_gprs?" + params,
+      type: 'POST'
+    });
+  };
+
+  window.downGPRs = downGPRs;
+
+  validateGroupsPropertySelection = function() {
+    var e, i, index, order, orders, sum, test, valid, _i, _len;
+    if (window.selected_gprs.length > 0 && window.selected_groups.length === 1) {
+      $("#clear-selected-gprs").removeClass("disabled");
+      $("#delete-selected-gprs").removeClass("disabled");
+    } else {
+      $("#clear-selected-gprs").addClass("disabled");
+      $("#delete-selected-gprs").addClass("disabled");
+    }
+    orders = window.selected_gpr_orders;
+    if (orders.length < 1 || window.selected_groups.length > 1) {
+      $("div.property-order-action").removeClass("enabled");
+      return $("div.property-order-action").addClass("disabled");
+    } else {
+      valid = orders.length * (orders.length + 1) / 2;
+      sum = 0;
+      try {
+        for (_i = 0, _len = orders.length; _i < _len; _i++) {
+          order = orders[_i];
+          sum += eval(order);
+        }
+      } catch (_error) {
+        e = _error;
+        console.log(e);
+      } finally {
+        $("div#up-selected-gprs").removeClass("enabled");
+        $("div#up-selected-gprs").addClass("disabled");
+        $("div#top-selected-gprs").removeClass("enabled");
+        $("div#top-selected-gprs").addClass("disabled");
+      }
+      if (sum <= valid) {
+        $("div#up-selected-gprs").removeClass("enabled");
+        $("div#up-selected-gprs").addClass("disabled");
+        $("div#top-selected-gprs").removeClass("enabled");
+        $("div#top-selected-gprs").addClass("disabled");
+      } else {
+        $("div#up-selected-gprs").removeClass("disabled");
+        $("div#up-selected-gprs").addClass("enabled");
+        $("div#top-selected-gprs").removeClass("disabled");
+        $("div#top-selected-gprs").addClass("enabled");
+      }
+      valid = false;
+      index = $.inArray(window.selected_gpr_max_order + "", orders);
+      if (index < 0) {
+        valid = true;
+      } else {
+        try {
+          orders.sort();
+          i = 0;
+          while (i < orders.length - 1) {
+            test = eval(orders[i + 1]) - eval(orders[i]);
+            if (test > 1) {
+              valid = true;
+              break;
+            }
+            i++;
+          }
+        } catch (_error) {
+          e = _error;
+          console.log(e);
+        } finally {
+          $("div#down-selected-gprs").removeClass("enabled");
+          $("div#down-selected-gprs").addClass("disabled");
+          $("div#bottom-selected-gprs").removeClass("enabled");
+          $("div#bottom-selected-gprs").addClass("disabled");
+        }
+      }
+      if (!valid) {
+        $("div#down-selected-gprs").removeClass("enabled");
+        $("div#down-selected-gprs").addClass("disabled");
+        $("div#bottom-selected-gprs").removeClass("enabled");
+        return $("div#bottom-selected-gprs").addClass("disabled");
+      } else {
+        $("div#down-selected-gprs").removeClass("disabled");
+        $("div#down-selected-gprs").addClass("enabled");
+        $("div#bottom-selected-gprs").removeClass("disabled");
+        return $("div#bottom-selected-gprs").addClass("enabled");
       }
     }
   };
 
   window.validateGroupsPropertySelection = validateGroupsPropertySelection;
 
+}).call(this);
+(function() {
+  var ajaxPagination, getAllParams, hubAlert, persistStyling, toggleChevron;
+
+  $(function() {
+    $("input[type='text']").prop("autocomplete", "off");
+    $("div[id^=accordion]").on('hidden.bs.collapse', toggleChevron);
+    $("div[id^=accordion]").on('shown.bs.collapse', toggleChevron);
+    $("body").on("click", "#clear-alerts", function(e) {
+      return hubAlert("", "");
+    });
+    return ajaxPagination();
+  });
+
+  getAllParams = function() {
+    var params;
+    params = $.param({
+      selected_entity: window.selected_entity,
+      selected_egrs: window.selected_egrs,
+      selected_groups: window.selected_groups,
+      selected_properties: window.selected_properties,
+      group_search: $("input#group_search_field").val(),
+      entity_search: $("input#entity_search_field").val(),
+      property_search: $("input#property_search_field").val(),
+      group_direction: window.group_direction,
+      entity_direction: window.entity_direction,
+      property_direction: window.property_direction,
+      group_sort: window.group_sort,
+      entity_sort: window.entity_sort,
+      property_sort: window.property_sort,
+      groups_page: window.groups_page,
+      entities_page: window.entities_page,
+      properties_page: window.properties_page
+    });
+    return params;
+  };
+
+  window.getAllParams = getAllParams;
+
+  toggleChevron = function(e) {
+    return $(e.target).prev('.panel-heading').find('i.collapse-indicator').toggleClass('glyphicon-chevron-down glyphicon-chevron-right');
+  };
+
+  window.toggleChevron = toggleChevron;
+
   persistStyling = function() {
-    var group, property, relationship_id, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2, _results;
+    var epr, group, property, relationship_id, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _m, _ref, _ref1, _ref2, _ref3, _ref4, _results;
     if (window.selected_entity > -1) {
       $("tr#" + window.selected_entity + ".entity").addClass("selected-entity");
     } else {
@@ -14304,8 +14816,8 @@ Copyright (c) 2012-2013 Sasha Koss & Rico Sta. Cruz
     } else {
       $("tr.selected-group").removeClass("selected-group");
     }
-    if (window.selected_entity_group_relations.length > 0) {
-      _ref1 = window.selected_entity_group_relations;
+    if (window.selected_egrs.length > 0) {
+      _ref1 = window.selected_egrs;
       for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
         relationship_id = _ref1[_j];
         $("tr#" + relationship_id + ".entity_group_relationship").addClass("selected-entitys-group");
@@ -14315,30 +14827,41 @@ Copyright (c) 2012-2013 Sasha Koss & Rico Sta. Cruz
     }
     if (window.selected_properties.length > 0) {
       _ref2 = window.selected_properties;
-      _results = [];
       for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
         property = _ref2[_k];
-        _results.push($("tr#" + property + ".property").addClass("selected-property"));
+        $("tr#" + property + ".property").addClass("selected-property");
+      }
+    } else {
+      $("tr.selected-properties").removeClass("selected-properties");
+    }
+    if (window.selected_gprs.length > 0) {
+      _ref3 = window.selected_gprs;
+      for (_l = 0, _len3 = _ref3.length; _l < _len3; _l++) {
+        relationship_id = _ref3[_l];
+        $("tr#" + relationship_id + ".gpr").addClass("selected-gpr");
+      }
+    } else {
+      $("tr.selected-gpr").removeClass("selected-gpr");
+    }
+    if (window.selected_eprs.length > 0) {
+      _ref4 = window.selected_eprs;
+      _results = [];
+      for (_m = 0, _len4 = _ref4.length; _m < _len4; _m++) {
+        epr = _ref4[_m];
+        _results.push($("tr#" + epr + ".epr").addClass("selected-epr"));
       }
       return _results;
     } else {
-      return $("tr.selected-properties").removeClass("selected-properties");
+      return $("tr.selected-epr").removeClass("selected-epr");
     }
   };
 
   window.persistStyling = persistStyling;
 
   ajaxPagination = function() {
-    console.log("called ajax pagination");
-    return $("body").on("click", '.pagination a', function(e) {
-      var params;
-      window.entities_page = getParameterByName("entities_page", this.href || "1");
-      window.properties_page = getParameterByName("properties_page", this.href || "1");
-      window.groups_page = getParameterByName("groups_page", this.href || "1");
-      params = getAllParams();
-      $.get("/hub?" + params);
-      return false;
-    });
+    entityPagination();
+    groupPagination();
+    return propertyPagination();
   };
 
   window.ajaxPagination = ajaxPagination;
@@ -14350,6 +14873,7 @@ Copyright (c) 2012-2013 Sasha Koss & Rico Sta. Cruz
     if (documentId.length < 1) {
       return $("#entitys-groups-alert").html("");
     } else {
+      $(documentId).html("");
       return $(documentId).html(html);
     }
   };

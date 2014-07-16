@@ -374,6 +374,16 @@ a.btn-full-width {
   }
 }
 
+td.edit-epr-trigger
+{
+  i.glyphicon-edit {
+    &:hover {
+      text-decoration: none;
+      cursor: pointer;
+    }
+  }
+}
+
 div#add-properties {
   a.link_to_add_epr {
     color: #75A329;
@@ -398,7 +408,7 @@ tr.list-item {
   }
 }
 
-tr.selected-entity, tr.selected-entitys-group, tr.selected-group, 
+tr.selected-entity, tr.selected-egr, tr.selected-group, 
 tr.selected-gpr, tr.selected-property, tr.selected-epr {
   background-color: #AADFFF; //soft-blue
   &:hover {
@@ -569,7 +579,7 @@ i#clear-alerts {
   cursor: pointer;
 }
 
-span#selected-entitys-group-order-actions {
+span#selected-egr-order-actions {
   background-repeat: no-repeat;  
   background-position: right center;
   float: right;

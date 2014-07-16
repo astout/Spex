@@ -1,20 +1,20 @@
 Spex::Application.routes.draw do
   post "hub/create_entity"
-  post "hub/entitys_groups"
-  post "hub/groups_properties"
+  post "hub/egrs"
+  post "hub/gprs"
   post "hub/delete_entity"
-  post "hub/entity_add_groups"
-  post "hub/group_add_properties"
+  post "hub/delete_egrs"
+  post "hub/create_gprs"
   post "hub/create_group"
   post "hub/delete_groups"
   post "hub/delete_properties"
   post "hub/create_property"
-  post "hub/delete_entity_group_relations"
+  post "hub/create_egrs"
   post "hub/delete_gprs"
-  post "hub/top_entity_group_relations"
-  post "hub/bottom_entity_group_relations"
-  post "hub/up_entity_group_relations"
-  post "hub/down_entity_group_relations"
+  post "hub/top_egrs"
+  post "hub/bottom_egrs"
+  post "hub/up_egrs"
+  post "hub/down_egrs"
   post "hub/update_epr"
   post "hub/top_eprs"
   post "hub/up_eprs"
@@ -57,12 +57,12 @@ Spex::Application.routes.draw do
   # match '/hub/create_group',  to: 'hub#main',    via: 'get'
   # match '/hub/delete_entity', to: 'hub#main',   via: 'get'
   # match '/hub/delete_groups',  to: 'hub#main',    via: 'get'
-  # match '/hub/entity_add_groups', to: 'hub#main',    via: 'get'
-  # match '/hub/delete_entity_group_relations', to: 'hub#main',    via: 'get'
-  # match '/hub/top_entity_group_relations', to: 'hub#main',    via: 'get'
-  # match '/hub/up_entity_group_relations', to: 'hub#main',    via: 'get'
-  # match '/hub/down_entity_group_relations', to: 'hub#main',    via: 'get'
-  # match '/hub/entitys_groups', to: 'hub#main',  via: 'get'
+  # match '/hub/delete_egrs', to: 'hub#main',    via: 'get'
+  # match '/hub/delete_egrs', to: 'hub#main',    via: 'get'
+  # match '/hub/top_egrs', to: 'hub#main',    via: 'get'
+  # match '/hub/up_egrs', to: 'hub#main',    via: 'get'
+  # match '/hub/down_egrs', to: 'hub#main',    via: 'get'
+  # match '/hub/egrs', to: 'hub#main',  via: 'get'
   match '/signup',  to: 'users#new',            via: 'get'
   match '/hub',     to: 'hub#main',             via: 'get'
   match '/signin',  to: 'sessions#new',         via: 'get'

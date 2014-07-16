@@ -1,3 +1,4 @@
+$("#debug").html('<%= params %>');
 $('#groups').html("<%= j render partial: 'groups/groups', locals: { show_created: false, show_remove: false } %>");
 $('input[id=group_search_field]').val('');
 

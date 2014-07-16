@@ -8,4 +8,8 @@ class EntityPropertyRelationship < ActiveRecord::Base
     group = Group.find_by id: self.group_id
   end
 
+  def egr
+    egr = EntityGroupRelationship.find_by entity_id: self.entity_id, group_id: self.group_id
+  end
+
 end

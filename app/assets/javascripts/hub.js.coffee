@@ -67,9 +67,9 @@ persistStyling = () ->
 
     if window.selected_egrs.length > 0
         for relationship_id in window.selected_egrs
-            $("tr#"+relationship_id+".entity_group_relationship").addClass "selected-entitys-group"
+            $("tr#"+relationship_id+".egr").addClass "selected-egr"
     else
-        $("tr.selected-entitys-group").removeClass "selected-entitys-group"
+        $("tr.selected-egr").removeClass "selected-egr"
 
     if window.selected_properties.length > 0
         for property in window.selected_properties

@@ -13,7 +13,7 @@ module HubHelper
     used_properties = []
 
     #start a response hash for group property relationships
-    @groups_property_relations = { status: -1, msg: "", data: [] }
+    @gprs = { status: -1, msg: "", data: [] }
 
     #start a response hash for entity property relationships
     @eprs = { status: -1, msg: "", data: [] }
@@ -55,7 +55,7 @@ module HubHelper
           unless used_properties.include? property_relation.property
 
             #add the group property relationship to the data list
-            @groups_property_relations[:data] |= [property_relation]
+            @gprs[:data] |= [property_relation]
 
             #add the property to the list of listed properties
             used_properties |= [property_relation.property]
@@ -69,20 +69,20 @@ module HubHelper
     end #end if selected groups
 
     #now if the group property relations data is blank
-    if @groups_property_relations[:data].blank?
+    if @gprs[:data].blank?
       #update the status and message
-      @groups_property_relations[:status] = 2
-      @groups_property_relations[:msg] = "No properties for the selected groups."
+      @gprs[:status] = 2
+      @gprs[:msg] = "No properties for the selected groups."
     else
       #if there's data, sort it by group id
-      @groups_property_relations[:data].sort_by { |r| r[:group_id] }
+      @gprs[:data].sort_by { |r| r[:group_id] }
 
       #prepare the data for pagination
-      @groups_property_relations[:data] = @groups_property_relations[:data].paginate(page: params[:groups_properties_page].blank? ? 1 : params[:groups_properties_page], per_page: 10, order: 'order ASC')
+      @gprs[:data] = @gprs[:data].paginate(page: params[:gprs_page].blank? ? 1 : params[:gprs_page], per_page: 10, order: 'order ASC')
 
       #success status and no message
-      @groups_property_relations[:status] = 1
-      @groups_property_relations[:msg] = ""
+      @gprs[:status] = 1
+      @gprs[:msg] = ""
     end
 
     #now if the entity property relations data is blank
@@ -95,7 +95,7 @@ module HubHelper
       @eprs[:data].sort_by { |r| r[:group_id] }
 
       #prepare the data for pagination
-      @eprs[:data] = @eprs[:data].paginate(page: params[:groups_properties_page].blank? ? 1 : params[:groups_properties_page], per_page: 10, order: 'order ASC')
+      @eprs[:data] = @eprs[:data].paginate(page: params[:gprs_page].blank? ? 1 : params[:gprs_page], per_page: 10, order: 'order ASC')
 
       #success status and no message
       @eprs[:status] = 1

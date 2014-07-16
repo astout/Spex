@@ -1,3 +1,4 @@
+$("#debug").html('<%= params %>');
 var alert_html = "";
 
 <% if @selected_groups.blank? %>
@@ -5,11 +6,11 @@ var alert_html = "";
 <% else %>
     hubAlert("#groups-properties-alert", "");
     window.selected_gpr_max_order = <%= @selected_groups.first.properties.count %>;
-    <% if @groups_property_relations.blank? %>
+    <% if @gprs.blank? %>
         alert_html += "<div class='alert alert-info small-font'>";
         alert_html += "<p><strong>No properties for <%= @selected_groups.first.name %>.</strong></p>";
         alert_html += "<p style='padding-left: 10px'><i>Try adding properties to the group.</i></p>";
-    <% elsif @groups_property_relations[:data].blank? %>
+    <% elsif @gprs[:data].blank? %>
         alert_html += "<div class='alert alert-info small-font'>";
         alert_html += "<p><strong>No properties for <%= @selected_groups.first.name %>.</strong></p>";
         alert_html += "<p style='padding-left: 10px'><i>Try adding properties to the group.</i></p>";
@@ -23,8 +24,10 @@ var alert_html = "";
     window.selected_epr_max_order = -1;
 <% else %>
     window.selected_epr_max_order = <%= @selected_egrs.first.group.properties.count %>;
-    console.log("epr max order: " + window.selected_epr_max_order);
-    hubAlert("#groups-properties-alert", "");
+    if(!window.epr_update)
+    {
+        hubAlert("#groups-properties-alert", "");
+    }
     <% if @eprs.blank? %>
         alert_html += "<div class='alert alert-info small-font'>";
         alert_html += "<p><strong>No properties for <%= @selected_egrs.first.group.name %>.</strong></p>";
@@ -35,8 +38,12 @@ var alert_html = "";
         alert_html += "<p style='padding-left: 10px'><i>Try adding properties to the group.</i></p>";
     <% end %>
     alert_html += "</div>";
-    hubAlert("#groups-properties-alert", alert_html);
+    if(!window.epr_update)
+    {
+        hubAlert("#groups-properties-alert", alert_html);
+    }
     alert_html = "";
+    window.epr_update = false;
 <% end %>
 <% if @selected_egrs.blank? && @selected_groups.blank? %>
     alert_html = "<div class='alert alert-info small-font center'>";
@@ -47,9 +54,10 @@ var alert_html = "";
 
 $('#properties').html("<%= j render partial: 'properties/properties', locals: { show_units: false, show_created: false, show_remove: false } %>");
 
-$('#groups_properties').html("<%= j render partial: 'groups/properties', locals: { show_units: false, show_created: false, show_remove: false } %>");
+$('#gprs').html("<%= j render partial: 'groups/properties', locals: { show_units: false, show_created: false, show_remove: false } %>");
 
 persistStyling();
 
-console.log("test00");
+
+$(".edit-epr-form").hide();
 

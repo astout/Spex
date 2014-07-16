@@ -43,7 +43,7 @@ module GroupPropertyRelationsHelper
 
     end #end each selected group
 
-    gprs = gprs.paginate(page: params[:groups_properties_page], per_page: 10, order: 'order ASC')
+    gprs = gprs.paginate(page: params[:gprs_page], per_page: 10, order: 'order ASC')
   end
 
   def get_gprs(selected_groups)
@@ -67,7 +67,7 @@ module GroupPropertyRelationsHelper
     return gprs
   end
 
-  def create_gprs(selected_groups, selected_properties)
+  def gprs_create(selected_groups, selected_properties)
     added_properties = []
     #there should only be one group selected, this is enforced client-side
     unless selected_groups.blank?

@@ -10735,12 +10735,12 @@ input[name='commit'] {
 
 /* microposts */
 /* line 287, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
-.entity_property_relationships {
+.eprs {
   list-style: none;
   margin: 10px 0 0 0;
 }
 /* line 291, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
-.entity_property_relationships li {
+.eprs li {
   padding: 10px 0;
   border-top: 1px solid #e8e8e8;
 }
@@ -10842,97 +10842,65 @@ a.btn-full-width {
   content: "\e080";
 }
 
-/* line 378, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
-div#add-properties a.link_to_add_entity_property_relationship {
+/* line 380, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
+td.edit-epr-trigger i.glyphicon-edit:hover {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* line 388, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
+div#add-properties a.link_to_add_epr {
   color: #75A329;
   margin-left: 5px;
 }
 
-/* line 384, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
+/* line 394, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
 ul.item-list {
   list-style: none;
   margin: 10px 0 0 0;
 }
-/* line 388, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
+/* line 398, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
 ul.item-list li {
   padding: 10px 0;
   border-top: 1px solid #e8e8e8;
 }
 
-/* line 395, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
+/* line 405, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
 tr.list-item:hover {
   background-color: #eeeeee;
   text-decoration: none;
 }
 
-/* line 401, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
-tr.selected-entity {
+/* line 412, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
+tr.selected-entity, tr.selected-egr, tr.selected-group,
+tr.selected-gpr, tr.selected-property, tr.selected-epr {
   background-color: #AADFFF;
 }
-/* line 403, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
-tr.selected-entity:hover {
+/* line 414, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
+tr.selected-entity:hover, tr.selected-egr:hover, tr.selected-group:hover,
+tr.selected-gpr:hover, tr.selected-property:hover, tr.selected-epr:hover {
   background-color: #AFDFE8;
   text-decoration: none;
 }
 
-/* line 409, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
-tr.selected-entitys-group {
-  background-color: #AADFFF;
-}
-/* line 411, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
-tr.selected-entitys-group:hover {
-  background-color: #AFDFE8;
-  text-decoration: none;
-}
-
-/* line 417, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
-tr.selected-group {
-  background-color: #AADFFF;
-}
-/* line 419, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
-tr.selected-group:hover {
-  background-color: #AFDFE8;
-  text-decoration: none;
-}
-
-/* line 425, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
-tr.selected-groups-property {
-  background-color: #AADFFF;
-}
-/* line 427, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
-tr.selected-groups-property:hover {
-  background-color: #AFDFE8;
-  text-decoration: none;
-}
-
-/* line 433, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
-tr.selected-property {
-  background-color: #AADFFF;
-}
-/* line 435, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
-tr.selected-property:hover {
-  background-color: #AFDFE8;
-  text-decoration: none;
-}
-
-/* line 441, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
+/* line 420, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
 aside.v-divider {
   border-right: 1px solid black;
 }
 
-/* line 446, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
+/* line 425, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
 .table th .current {
   background-repeat: no-repeat;
   background-position: right center;
 }
-/* line 449, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
+/* line 428, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
 .table th .current.asc:after {
   padding-left: 5px;
   font-family: 'Glyphicons Halflings';
   content: "\e113";
   color: grey;
 }
-/* line 455, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
+/* line 434, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
 .table th .current.desc:after {
   padding-left: 5px;
   font-family: 'Glyphicons Halflings';
@@ -10940,7 +10908,7 @@ aside.v-divider {
   color: grey;
 }
 
-/* line 463, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
+/* line 442, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
 div#add-selected-groups {
   background-repeat: no-repeat;
   background-position: right center;
@@ -10949,16 +10917,16 @@ div#add-selected-groups {
   font-size: 1em;
   line-height: 2em;
 }
-/* line 470, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
+/* line 449, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
 div#add-selected-groups.enabled {
   color: #21B82F;
 }
-/* line 472, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
+/* line 451, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
 div#add-selected-groups.enabled:hover {
   cursor: pointer;
   color: #198C24;
 }
-/* line 477, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
+/* line 456, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
 div#add-selected-groups.enabled:after {
   float: right;
   padding-left: 5px;
@@ -10966,11 +10934,11 @@ div#add-selected-groups.enabled:after {
   content: "\f0fe";
   font-size: 2em;
 }
-/* line 484, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
+/* line 463, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
 div#add-selected-groups.disabled {
   color: grey;
 }
-/* line 487, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
+/* line 466, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
 div#add-selected-groups.disabled:after {
   float: right;
   padding-left: 5px;
@@ -10979,7 +10947,7 @@ div#add-selected-groups.disabled:after {
   font-size: 2em;
 }
 
-/* line 496, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
+/* line 475, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
 div#add-selected-properties {
   background-repeat: no-repeat;
   background-position: right center;
@@ -10988,16 +10956,16 @@ div#add-selected-properties {
   font-size: 1em;
   line-height: 2em;
 }
-/* line 503, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
+/* line 482, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
 div#add-selected-properties.enabled {
   color: #21B82F;
 }
-/* line 505, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
+/* line 484, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
 div#add-selected-properties.enabled:hover {
   cursor: pointer;
   color: #198C24;
 }
-/* line 510, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
+/* line 489, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
 div#add-selected-properties.enabled:after {
   float: right;
   padding-left: 5px;
@@ -11005,11 +10973,11 @@ div#add-selected-properties.enabled:after {
   content: "\f0fe";
   font-size: 2em;
 }
-/* line 517, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
+/* line 496, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
 div#add-selected-properties.disabled {
   color: grey;
 }
-/* line 520, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
+/* line 499, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
 div#add-selected-properties.disabled:after {
   float: right;
   padding-left: 5px;
@@ -11018,7 +10986,7 @@ div#add-selected-properties.disabled:after {
   font-size: 2em;
 }
 
-/* line 529, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
+/* line 508, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
 div.group-order-action {
   background-repeat: no-repeat;
   background-position: right center;
@@ -11026,33 +10994,33 @@ div.group-order-action {
   font-family: 'FontAwesome';
   line-height: 2em;
 }
-/* line 536, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
+/* line 515, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
 div.group-order-action.enabled {
   color: #21B82F;
 }
-/* line 538, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
+/* line 517, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
 div.group-order-action.enabled:hover {
   cursor: pointer;
   color: #198C24;
 }
-/* line 543, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
+/* line 522, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
 div.group-order-action.enabled:after {
   float: left;
   padding-left: 5px;
   font-family: 'FontAwesome';
 }
-/* line 550, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
+/* line 529, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
 div.group-order-action.disabled {
   color: grey;
 }
-/* line 553, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
+/* line 532, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
 div.group-order-action.disabled:after {
   float: left;
   padding-left: 5px;
   font-family: 'FontAwesome';
 }
 
-/* line 562, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
+/* line 541, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
 div.property-order-action {
   background-repeat: no-repeat;
   background-position: right center;
@@ -11060,33 +11028,33 @@ div.property-order-action {
   font-family: 'FontAwesome';
   line-height: 2em;
 }
-/* line 569, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
+/* line 548, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
 div.property-order-action.enabled {
   color: #21B82F;
 }
-/* line 571, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
+/* line 550, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
 div.property-order-action.enabled:hover {
   cursor: pointer;
   color: #198C24;
 }
-/* line 576, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
+/* line 555, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
 div.property-order-action.enabled:after {
   float: left;
   padding-left: 5px;
   font-family: 'FontAwesome';
 }
-/* line 583, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
+/* line 562, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
 div.property-order-action.disabled {
   color: grey;
 }
-/* line 586, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
+/* line 565, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
 div.property-order-action.disabled:after {
   float: left;
   padding-left: 5px;
   font-family: 'FontAwesome';
 }
 
-/* line 595, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
+/* line 574, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
 i#clear-alerts {
   position: fixed;
   bottom: 5px;
@@ -11095,58 +11063,58 @@ i#clear-alerts {
   cursor: pointer;
 }
 
-/* line 603, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
-span#selected-entitys-group-order-actions {
+/* line 582, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
+span#selected-egr-order-actions {
   background-repeat: no-repeat;
   background-position: right center;
   float: right;
 }
 
-/* line 609, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
-span#selected-groups-property-order-actions {
+/* line 588, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
+span#selected-gpr-order-actions {
   background-repeat: no-repeat;
   background-position: right center;
   float: right;
 }
 
-/* line 616, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
+/* line 595, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
 div.alert p {
   font-size: 1em;
   line-height: 1em;
 }
 
-/* line 622, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
+/* line 601, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
 div.mid {
   float: none;
   margin: 0 auto;
 }
 
-/* line 628, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
+/* line 607, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
 a.accordion-toggle:hover {
   text-decoration: none;
 }
 
-/* line 634, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
+/* line 613, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
 div#new-group-collapse-heading:hover {
   cursor: pointer;
 }
 
-/* line 640, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
+/* line 619, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
 div#new-entity-collapse-heading:hover {
   cursor: pointer;
 }
 
-/* line 646, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
+/* line 625, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
 div#new-property-collapse-heading:hover {
   cursor: pointer;
 }
 
-/* line 651, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
+/* line 630, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
 input[type="checkbox"].checkbox {
   display: none;
 }
 
-/* line 654, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
+/* line 633, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
 input[type="checkbox"].checkbox + label {
   display: inline;
   position: relative;
@@ -11166,12 +11134,12 @@ input[type="checkbox"].checkbox + label {
   cursor: pointer;
 }
 
-/* line 673, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
+/* line 652, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
 input[type="checkbox"].checkbox:checked + label {
   background-color: #21B82F;
 }
 
-/* line 677, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
+/* line 656, /Users/astoutj/Documents/Work/_sync/Work-sync/ror/workspace/spex/app/assets/stylesheets/custom.css.scss */
 input[type="checkbox"].checkbox:disabled + label {
   opacity: 0.5;
 }

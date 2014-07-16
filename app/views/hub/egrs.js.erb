@@ -1,13 +1,14 @@
+$("#debug").html('<%= params %>');
 var alert_html = "";
 
-<% unless @entitys_group_relations.nil? %>
-    <% if @entitys_group_relations[:status] == 0 %>
+<% unless @egrs.nil? %>
+    <% if @egrs[:status] == 0 %>
         alert_html += "    <div class='alert alert-danger small-font center'>";
-        alert_html += "        <p><%= @entitys_group_relations[:msg] %></p>";
+        alert_html += "        <p><%= @egrs[:msg] %></p>";
         alert_html += "    </div>";
-    <% elsif @entitys_group_relations[:status] == 2 %>
+    <% elsif @egrs[:status] == 2 %>
         alert_html += "    <div class='alert alert-info small-font center'>";
-        alert_html += "        <i><%= @entitys_group_relations[:msg] %></i>";
+        alert_html += "        <i><%= @egrs[:msg] %></i>";
         alert_html += "    </div>";
     <% end %>
 <% else %>
@@ -40,11 +41,11 @@ if(selected_groups.length > 0 && selected_entity > -1)
 persistStyling();
 
 <% if @selected_entity.nil? %>
-    window.selected_entitys_max_group_order = -1;
+    window.selected_egr_max_order = -1;
 <% else %>
-    window.selected_entitys_max_group_order = <%= @selected_entity.groups.count %>;
+    window.selected_egr_max_order = <%= @selected_entity.groups.count %>;
 <% end %>
 
-$('#entitys_groups').html("  <%= j render partial: 'entities/groups', locals: { show_created: false, show_remove: false } %>");
+$('#egrs').html("  <%= j render partial: 'entities/groups', locals: { show_created: false, show_remove: false } %>");
 
 

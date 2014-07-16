@@ -72,7 +72,7 @@ window.entityPagination = entityPagination
 toggleEntitySelect = (id) ->
     $("tr.selected-entity").removeClass("selected-entity")
     clearSelectedEGRs()
-    validateEntitysGroupSelection()
+    validateEGRselection()
 
     if window.selected_entity == id
         clearSelectedEntity()
@@ -80,16 +80,16 @@ toggleEntitySelect = (id) ->
     else
         $("tr#"+id+".entity").addClass "selected-entity"
         window.selected_entity = id + ""
-        getEntitysGroups id
+        getEGRs id
         validateEntitySelection()
 window.toggleEntitySelect = toggleEntitySelect
 
 clearSelectedEntity = () ->
     $("tr.selected-entity").removeClass "selected-entity"
     window.selected_entity = -1
-    window.selected_entitys_max_group_order = -1
+    window.selected_egr_max_order = -1
     validateEntitySelection()
-    getEntitysGroups window.selected_entity
+    getEGRs window.selected_entity
 window.clearSelectedEntity = clearSelectedEntity
 
 validateEntitySelection = () ->
@@ -97,7 +97,7 @@ validateEntitySelection = () ->
     if window.selected_entity < 0
         _html = "<div class='alert alert-info small-font center'>"
         _html += "<i>No Entity selected.</i></div>"
-        $("#entitys_groups").html ""
+        $("#egrs").html ""
         $("#entitys-groups-alert").html _html
         $("#clear-selected-entity").addClass("disabled")
         $("#delete-selected-entity").addClass("disabled")

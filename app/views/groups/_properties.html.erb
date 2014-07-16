@@ -1,7 +1,7 @@
-<% if defined? @groups_property_relations %>
-    <% unless @groups_property_relations[:data].blank? %>
+<% if defined? @gprs %>
+    <% unless @gprs[:data].blank? %>
         <%= render partial: 'groups/property_relation_actions' %>
-        <table class="table table-condensed groups_properties">
+        <table class="table table-condensed gprs">
             <th>
                 Name
             </th>
@@ -28,15 +28,15 @@
                     Remove
                 </th>
             <% end %>
-            <%= render partial: 'groups/property_relationship', collection: @groups_property_relations[:data], locals: { show_units: show_units, show_created: show_created, show_remove: show_remove, show_order: @show_order }  %>
+            <%= render partial: 'groups/property_relationship', collection: @gprs[:data], locals: { show_units: show_units, show_created: show_created, show_remove: show_remove, show_order: @show_order }  %>
         </table>
-        <%= will_paginate @groups_property_relations[:data], inner_window: 0, outer_window: 0, param_name: 'groups_properties_page', params: { groups_property_event: true } %>
+        <%= will_paginate @gprs[:data], inner_window: 0, outer_window: 0, param_name: 'gprs_page', params: { groups_property_event: true } %>
     <% end %>
 <% end %>
 <% if defined? @eprs %>
     <% unless @eprs[:data].blank? %>
         <%= render partial: 'entities/property_relation_actions' %>
-        <table class="table table-condensed entitys_properties">
+        <table id="accordion" class="table table-condensed entitys_properties">
             <th>
                 Name
             </th>
@@ -68,11 +68,11 @@
             <% end %>
             <%= render partial: 'entities/property_relationship', collection: @eprs[:data], locals: { show_units: show_units, show_created: show_created, show_remove: show_remove, show_order: @show_order }  %>
         </table>
-        <%= will_paginate @eprs[:data], inner_window: 0, outer_window: 0, param_name: 'groups_properties_page', params: { groups_property_event: true } %>
+        <%= will_paginate @eprs[:data], inner_window: 0, outer_window: 0, param_name: 'gprs_page', params: { groups_property_event: true } %>
     <% end %>
 <% end %>
 <% unless defined? @eprs %>
-    <% unless defined? @groups_property_relations %>
+    <% unless defined? @gprs %>
         <div class='alert alert-info small-font center'>
             <i>No groups selected.</i>
         </div>

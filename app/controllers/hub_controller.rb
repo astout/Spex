@@ -6,7 +6,7 @@ class HubController < ApplicationController
   include EntitiesHelper
   include GroupsHelper
   include PropertiesHelper
-  helper_method :entity_sort_column, :entity_sort_direction, :group_sort_column, :group_sort_direction, :entitys_group_sort_column, :entitys_group_sort_direction, :property_sort_column, :property_sort_direction
+  helper_method :entity_sort_column, :entity_sort_direction, :group_sort_column, :group_sort_direction, :egr_sort_column, :egr_sort_direction, :property_sort_column, :property_sort_direction
 
   #users of the hub must be admin
   before_action do
@@ -99,11 +99,11 @@ class HubController < ApplicationController
 
   #deletes the groups passed as :selected_groups param
   #:selected_groups is expeced to be an array
-  def delete_entity_group_relations
+  def delete_egrs
 
-    @deleted_entity_group_relations = egr_delete(selected_egrs)
+    @deleted_egrs = egr_delete(selected_egrs)
 
-    @entitys_group_relations = { status: 1, msg: "", data: egr_list(selected_entity) }
+    @egrs = { status: 1, msg: "", data: egr_list(selected_entity) }
 
     @groups = groups_list(selected_entity)
 
@@ -114,70 +114,70 @@ class HubController < ApplicationController
   end
 
   #request to move selected entity group relationships to top
-  def top_entity_group_relations
+  def top_egrs
     @moved_egrs = egr_top(selected_egrs)
 
     #response for entity group relations
-    @entitys_group_relations = { status: 1, msg: "", data: egr_list(selected_entity) }
+    @egrs = { status: 1, msg: "", data: egr_list(selected_entity) }
 
     @groups = groups_list(selected_entity)
 
     respond_to do |format|
-      format.js { render 'move_entity_group_relations' }
+      format.js { render 'move_egrs' }
       format.html { redirect_to hub_path }
     end
   end
 
   #request to move selected entity group relations to bottom
-  def bottom_entity_group_relations
+  def bottom_egrs
     @moved_egrs = egr_bottom(selected_entity, selected_egrs)
 
     #response for entity group relations
-    @entitys_group_relations = { status: 1, msg: "", data: egr_list(selected_entity) }
+    @egrs = { status: 1, msg: "", data: egr_list(selected_entity) }
 
     @groups = groups_list(selected_entity)
 
     respond_to do |format|
-      format.js { render 'move_entity_group_relations' }
+      format.js { render 'move_egrs' }
       format.html { redirect_to hub_path }
     end
   end
 
   #request to move selected entity group relations up one
-  def up_entity_group_relations
+  def up_egrs
     @moved_egrs = egr_up(selected_egrs)
 
     #response for entity group relations
-    @entitys_group_relations = { status: 1, msg: "", data: egr_list(selected_entity) }
+    @egrs = { status: 1, msg: "", data: egr_list(selected_entity) }
 
     @groups = groups_list(selected_entity)
 
     respond_to do |format|
-      format.js { render 'move_entity_group_relations' }
+      format.js { render 'move_egrs' }
       format.html { redirect_to hub_path }
     end
   end
 
   #request to move selected entity group relations down one
-  def down_entity_group_relations
+  def down_egrs
     @moved_egrs = egr_down(selected_egrs)
 
     #response for entity group relations
-    @entitys_group_relations = { status: 1, msg: "", data: egr_list(selected_entity) }
+    @egrs = { status: 1, msg: "", data: egr_list(selected_entity) }
 
     @groups = groups_list(selected_entity)
 
     respond_to do |format|
-      format.js { render 'move_entity_group_relations' }
+      format.js { render 'move_egrs' }
       format.html { redirect_to hub_path }
     end
   end
 
   #Gets the group_property_relationships for the selected groups
-  def groups_properties
+  def gprs
     #get the group property relationships list
     # groups_property_relations
-    @groups_property_relations = get_gprs(selected_groups)
+    @gprs = get_gprs(selected_groups)
 
     #update the properties list
     @properties = properties_list(selected_egrs, selected_groups)
@@ -194,7 +194,7 @@ class HubController < ApplicationController
 
     @deleted_gprs = gpr_delete(selected_gprs)
 
-    @groups_property_relations = get_gprs(selected_groups)
+    @gprs = get_gprs(selected_groups)
 
     @properties = properties_list(selected_egrs, selected_groups)
 
@@ -209,7 +209,7 @@ class HubController < ApplicationController
     @moved_gprs = gpr_top(selected_gprs)
 
     #response for entity group relations
-    @groups_property_relations = { status: 1, msg: "", data: gpr_list(selected_groups) }
+    @gprs = { status: 1, msg: "", data: gpr_list(selected_groups) }
 
     # @properties = properties_list(selected_egrs, selected_groups)
 
@@ -224,7 +224,7 @@ class HubController < ApplicationController
     @moved_gprs = gpr_bottom(selected_groups, selected_gprs)
 
     #response for entity group relations
-    @groups_property_relations = { status: 1, msg: "", data: gpr_list(selected_groups) }
+    @gprs = { status: 1, msg: "", data: gpr_list(selected_groups) }
 
     # @properties = properties_list(selected_egrs, selected_groups)
 
@@ -239,7 +239,7 @@ class HubController < ApplicationController
     @moved_gprs = gpr_up(selected_gprs)
 
     #response for entity group relations
-    @groups_property_relations = { status: 1, msg: "", data: gpr_list(selected_groups) }
+    @gprs = { status: 1, msg: "", data: gpr_list(selected_groups) }
 
     # @properties = properties_list(selected_egrs, selected_groups)
 
@@ -254,7 +254,7 @@ class HubController < ApplicationController
     @moved_gprs = gpr_down(selected_gprs)
 
     #response for entity group relations
-    @groups_property_relations = { status: 1, msg: "", data: gpr_list(selected_groups) }
+    @gprs = { status: 1, msg: "", data: gpr_list(selected_groups) }
 
     # @properties = properties_list(selected_egrs, selected_groups)
 
@@ -326,10 +326,24 @@ class HubController < ApplicationController
 
   #update entity property relationship with submitted params
   def update_epr
-    puts "got here"
+    @epr = epr_update(epr_update_params)
+
+    unless @epr.blank?
+      unless @epr[:data].blank?
+        egr = @epr[:data].egr
+        puts " -- GETTING EGRS -- "
+        puts egr
+        @eprs = { status: 1, msg: "", data: epr_list(selected_egrs([egr.id])) }
+        puts " -- SELECTED EGRS -- "
+        puts @selected_egrs
+      end
+    end
+
+    puts " -- FINAL EPR -- "
+    puts @epr
 
     respond_to do |format|
-      format.js { render 'main' }
+      format.js
       format.html { redirect_to hub_path }
     end
   end
@@ -343,14 +357,14 @@ class HubController < ApplicationController
     @properties = properties_list(@selected_egrs, selected_groups)
 
     respond_to do |format|
-      format.js { render 'groups_properties' }
+      format.js { render 'gprs' }
       format.html { redirect_to hub_path }
     end
   end
 
   #request list of entity group relationships
-  def entitys_groups
-    @entitys_group_relations = get_egrs(selected_entity)
+  def egrs
+    @egrs = get_egrs(selected_entity)
 
     #update appropriate lists
     selected_groups
@@ -363,11 +377,11 @@ class HubController < ApplicationController
   end
 
   #request to add selected groups to selected entity
-  def entity_add_groups
+  def create_egrs
     @created_relations = create_egrs(selected_entity, selected_groups)
 
     #response structure
-    @entitys_group_relations = { status: 1, msg: "", data: egr_list(selected_entity) }
+    @egrs = { status: 1, msg: "", data: egr_list(selected_entity) }
 
     @groups = groups_list(selected_entity)
 
@@ -378,11 +392,11 @@ class HubController < ApplicationController
   end
 
   #request to add selected properties to selected group
-  def group_add_properties
-    @added_properties = create_gprs(selected_groups, selected_properties)
+  def create_gprs
+    @added_properties = gprs_create(selected_groups, selected_properties)
 
     #update list of group property relations
-    @groups_property_relations = { status: 1, msg: "", data: gpr_list(selected_groups) }
+    @gprs = { status: 1, msg: "", data: gpr_list(selected_groups) }
     # groups_property_relations #HubHelper
 
     #update list of properties
@@ -437,6 +451,10 @@ class HubController < ApplicationController
       params.require(:property).permit(:name, :units, :units_short, :default_label, :default_value)
     end
 
+    def epr_update_params
+      params.require(:entity_property_relationship).permit(:id, :label, :value, :visibility)
+    end
+
     def entity_sort_column
       Entity.column_names.include?(params[:entity_sort]) ? params[:entity_sort] : "created_at"
     end
@@ -453,12 +471,12 @@ class HubController < ApplicationController
       %w[asc desc].include?(params[:group_direction]) ? params[:group_direction] : "desc"
     end
 
-    def entitys_group_sort_column
-      EntityGroupRelationship.column_names.include?(params[:entitys_group_sort]) || Group.column_names.include?(params[:entitys_group_sort]) ? params[:entitys_group_sort] : "order"
+    def egr_sort_column
+      EntityGroupRelationship.column_names.include?(params[:egr_sort]) || Group.column_names.include?(params[:egr_sort]) ? params[:egr_sort] : "order"
     end
 
-    def entitys_group_sort_direction
-      %w[asc desc].include?(params[:entitys_group_direction]) ? params[:entitys_group_direction] : "desc"
+    def egr_sort_direction
+      %w[asc desc].include?(params[:egr_direction]) ? params[:egr_direction] : "desc"
     end
 
     def property_sort_column

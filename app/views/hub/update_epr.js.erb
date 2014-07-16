@@ -1,0 +1,23 @@
+$("#debug").html('<%= params %>');
+var alert_html = "";
+
+<% unless @epr.blank? %>
+    alert_html += "<div class='alert alert-success small-font'>";
+    alert_html += "<p><strong>Property updated for '<%= @epr[:data].entity.name %>':</strong></p>";
+    <% unless @epr[:data].blank? %>
+        alert_html += "<p style='padding-left: 10px'> <%= @epr[:data].property.name %> </p>";
+        // clearSelectedEPRs();
+    <% end %>
+<% else %>
+    alert_html += "<div class='alert alert-danger small-font'>";
+    alert_html += "<p><strong>Property not updated.</strong></p>";
+    alert_html += "<p style='padding-left: 10px'><i>The server returned no results.</i></p>";
+<% end %>
+alert_html += "</div>"
+
+hubAlert("#groups-properties-alert", alert_html);
+
+$('#gprs').html("  <%= j render partial: 'groups/properties', locals: { show_units: false, show_created: false, show_remove: false } %>");
+window.epr_update = true;
+getEntitysProperties(window.selected_egrs);
+validateEPRselection();

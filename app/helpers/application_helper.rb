@@ -22,11 +22,11 @@ module ApplicationHelper
     link_to title, params.merge(property_sort: column, property_direction: direction, event: "property", page: nil), {class: css_class}  
   end
 
-  def entitys_group_sortable(column, title = nil)
+  def egr_sortable(column, title = nil)
     title ||= column.titleize 
-    css_class = (column == entitys_group_sort_column) ? "current #{entitys_group_sort_direction}" : nil  
-    direction = (column == entitys_group_sort_column && entitys_group_sort_direction == "asc") ? "desc" : "asc"  
-    link_to title, params.merge(entitys_group_sort: column, entitys_group_direction: direction, entitys_group_event: true, page: nil), {class: css_class}  
+    css_class = (column == egr_sort_column) ? "current #{egr_sort_direction}" : nil  
+    direction = (column == egr_sort_column && egr_sort_direction == "asc") ? "desc" : "asc"  
+    link_to title, params.merge(egr_sort: column, egr_direction: direction, entitys_group_event: true, page: nil), {class: css_class}  
   end
 
   # Returns the full title on a per-page basis.

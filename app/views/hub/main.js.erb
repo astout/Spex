@@ -8,7 +8,7 @@ $("#debug").html('<%= params %>');
 
 <% unless params[:search] == "group" || params[:event] == "group" %>
     <% unless params[:search] == "property" || params[:event] == "property" %>
-        <% unless params[:event] == "entitys_groups" %>
+        <% unless params[:event] == "egrs" %>
             $('#entities').html("<%= j render partial: 'entities/entities', locals: { show_created: false, show_remove: false } %>");
         <% end %>
     <% end %>
@@ -16,7 +16,7 @@ $("#debug").html('<%= params %>');
 
 <% unless params[:search] == "group" || params[:event] == "group" %>
     <% unless params[:search] == "entity" || params[:event] == "entity" %>
-        <% unless params[:event] == "entitys_groups" %>
+        <% unless params[:event] == "egrs" %>
             $('#properties').html("<%= j render partial: 'properties/properties', locals: { show_units: false, show_created: false, show_remove: false } %>");
         <% end %>
     <% end %>

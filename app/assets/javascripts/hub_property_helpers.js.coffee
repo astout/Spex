@@ -100,7 +100,7 @@ validatePropertySelection = () ->
     else
         $("#clear-selected-properties").addClass("disabled")
         $("#delete-selected-properties").addClass("disabled")
-    validateAddPropertiesToGroup()
+    validateCreateGPR()
 window.validatePropertySelection = validatePropertySelection
 
 deleteProperties = (properties) ->

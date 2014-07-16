@@ -1,3 +1,4 @@
+$("#debug").html('<%= params %>');
 var alert_html = "";
 
 <% unless @deleted_gprs.nil? %>
@@ -18,7 +19,7 @@ alert_html += "</div>"
 
 hubAlert("#groups-properties-alert", alert_html);
 
-$('#groups_properties').html("  <%= j render partial: 'groups/properties', locals: { show_units: false, show_created: false, show_remove: false } %>");
+$('#gprs').html("  <%= j render partial: 'groups/properties', locals: { show_units: false, show_created: false, show_remove: false } %>");
 
 $('#properties').html("<%= j render partial: 'properties/properties', locals: { show_units: false, show_created: false, show_remove: false } %>");
 

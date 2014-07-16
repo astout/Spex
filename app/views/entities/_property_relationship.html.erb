@@ -15,7 +15,7 @@
         <%= "#{property_relationship.created_at.strftime('%m/%d/%Y')}" %>
       </td>
     <% end %>
-    <td id='edit-entity-property-relation-<%="#{property_relationship.id}"%>' data-toggle="collapse" data-target='#<%="edit-#{property_relationship.id}"%>' class="accordion-toggle" >
+    <td>
         <%= link_to property_relationship.value || "", "#edit-#{property_relationship.id}" %>
     </td>
     <td>
@@ -30,10 +30,13 @@
                 style: "margin-left: 5px; color: #FF4F4D" %>
       </td>
     <% end %>
+    <td id=<%= property_relationship.id %> class="edit-epr-trigger">
+      <span><i class="glyphicon glyphicon-edit" style="color: #FF740D"></i></span>
+    </td>
 </tr>
 <tr>
-  <td colspan="100%" class="hidden-edit-entity-property-relation-form" style="padding: 0 !important">
-    <div id=<%= "edit-#{property_relationship.id}" %> class="collapse accordion-body">
+  <td colspan="100%" class="hidden-edit-epr-form" style="padding: 0 !important">
+    <div id=<%= property_relationship.id %> class="edit-epr-form">
       <%= render partial: 'entities/edit_epr', locals: { relation: property_relationship } %>
     </div>
   </td>

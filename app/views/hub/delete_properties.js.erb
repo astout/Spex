@@ -1,3 +1,4 @@
+$("#debug").html('<%= params %>');
 $('#properties').html("<%= j render partial: 'properties/properties', locals: { show_units: false, show_created: false, show_remove: false } %>");
 
 clearSelectedProperties();
