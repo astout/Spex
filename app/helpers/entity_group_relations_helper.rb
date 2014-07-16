@@ -15,7 +15,7 @@ module EntityGroupRelationsHelper
     @selected_egrs
   end
 
-  def create_egrs(selected_entity, selected_groups)
+  def egr_create(selected_entity, selected_groups)
     created_relations = []
 
     #unless there's no selected entity

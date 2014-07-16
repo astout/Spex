@@ -378,7 +378,7 @@ class HubController < ApplicationController
 
   #request to add selected groups to selected entity
   def create_egrs
-    @created_relations = create_egrs(selected_entity, selected_groups)
+    @created_relations = egr_create(selected_entity, selected_groups)
 
     #response structure
     @egrs = { status: 1, msg: "", data: egr_list(selected_entity) }
