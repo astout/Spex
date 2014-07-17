@@ -62,6 +62,18 @@ module EntitiesHelper
     entity
   end
 
+  def entity_params
+    params.require(:entity).permit(:name, :label, :img)
+  end
+
+  def entity_sort_column
+    Entity.column_names.include?(params[:entity_sort]) ? params[:entity_sort] : "created_at"
+  end
+    
+  def entity_sort_direction
+    %w[asc desc].include?(params[:entity_direction]) ? params[:entity_direction] : "desc"
+  end
+
   # def link_to_add_property(entity, property)
   #   link_to "Add Property", controller: :entity_property_relationships, 
   #     action: :create,  method: :post, entity_id: entity.id, property_id: property.id

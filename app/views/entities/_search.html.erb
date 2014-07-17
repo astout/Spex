@@ -1,9 +1,11 @@
-<%= form_tag path, method: 'get', remote: true do %>
+<%= form_tag path, method: 'get', remote: remote do %>
     <%= hidden_field_tag :entity_direction, params[:entity_direction] %>
     <%= hidden_field_tag :entity_sort, params[:entity_sort] %>
     <%= hidden_field_tag :event, 'entity' %>
+    <%= hidden_field_tag :entities_page, "1" %>
+    <%= hidden_field_tag :search, "entity" %>
     <div class="input-group" style="margin-bottom: 15px">
-        <%= text_field_tag :entity_search, params[:entity_search], class: "form-control" %>
+        <%= text_field_tag :entity_search, params[:entity_search], class: "form-control", id: "entity_search_field" %>
         <span class="input-group-btn" >
             <%= submit_tag "Search", name: nil, class: "btn btn-default" %>
         </span>

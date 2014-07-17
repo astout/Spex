@@ -146,4 +146,12 @@ module EntityGroupRelationsHelper
     return moved_egrs
   end
 
+  def egr_sort_column
+    EntityGroupRelationship.column_names.include?(params[:egr_sort]) || Group.column_names.include?(params[:egr_sort]) ? params[:egr_sort] : "order"
+  end
+
+  def egr_sort_direction
+    %w[asc desc].include?(params[:egr_direction]) ? params[:egr_direction] : "desc"
+  end
+
 end

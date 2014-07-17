@@ -71,4 +71,16 @@ module PropertiesHelper
     return deleted_properties
   end
 
+  def property_params
+    params.require(:property).permit(:name, :units, :units_short, :default_label, :default_value)
+  end
+
+  def property_sort_column
+    Property.column_names.include?(params[:property_sort]) ? params[:property_sort] : "created_at"
+  end
+
+  def property_sort_direction
+    %w[asc desc].include?(params[:property_direction]) ? params[:property_direction] : "desc"
+  end
+
 end

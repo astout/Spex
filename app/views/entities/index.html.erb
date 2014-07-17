@@ -11,26 +11,7 @@
 <br/>
 
 <!-- Search Form -->
-<%= render partial: 'search', locals: { path: entities_path } %>
+<%= render partial: 'search', locals: { path: entities_path, remote: false } %>
 
 <!-- List -->
-<table class="table entities">
-    <th>
-        <%= entity_sortable "name" %>
-    </th>
-    <th>
-        <%= entity_sortable "label" %>
-    </th>
-    <th>
-        <%= entity_sortable "created_at", "Created" %>
-    </th>
-    <th>
-        <%= entity_sortable "updated_at", "Updated" %>
-    </th>
-    <th>
-        Remove
-    </th>
-  <%= render partial: 'entity', collection: @entities, locals: { created: true } %>
-</table>
-
-<%= will_paginate @entities, inner_window: 2, outer_window: 2, param_name: 'entities_page' %>
+<%= render partial: 'entities/entities', locals: { show_created: true, show_remove: true } %>

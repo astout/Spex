@@ -11,7 +11,7 @@
                 Existing Entities
             </h6>
             <div id="entity-alert"></div>
-            <%= render partial: 'search_entity', locals: { path: hub_path } %>
+            <%= render partial: 'entities/search', locals: { path: hub_path, remote: true } %>
             <div id="clear-selected-entity" class="btn btn-default btn-sm disabled">Clear</div>
             <div id="delete-selected-entity" class="btn btn-danger btn-sm disabled">Delete</div>
             <div style="padding-top: 10px"></div>
@@ -40,7 +40,7 @@
                 Existing Groups
             </h6>
             <div id="group-alert"></div>
-            <%= render partial: 'search_group', locals: { path: hub_path } %>
+            <%= render partial: 'search_group', locals: { path: hub_path, remote: true } %>
             <div id="clear-selected-groups" class="btn btn-default btn-sm disabled">Clear</div>
             <div id="delete-selected-groups" class="btn btn-danger btn-sm disabled">Delete</div>
             <div id="add-selected-groups" class="disabled">Add To Entity</div>

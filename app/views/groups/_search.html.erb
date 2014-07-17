@@ -1,4 +1,4 @@
-<%= form_tag path, method: 'get', remote: true do %>
+<%= form_tag path, method: 'get', remote: remote do %>
     <%= hidden_field_tag :group_direction, params[:group_direction] %>
     <%= hidden_field_tag :group_sort, params[:group_sort] %>
     <%= hidden_field_tag :event, 'group' %>

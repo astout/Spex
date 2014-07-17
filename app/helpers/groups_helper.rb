@@ -57,4 +57,16 @@ module GroupsHelper
     return deleted_groups
   end
 
+  def group_params
+    params.require(:group).permit(:name, :default_label)
+  end
+
+  def group_sort_column
+    Group.column_names.include?(params[:group_sort]) ? params[:group_sort] : "created_at"
+  end
+    
+  def group_sort_direction
+    %w[asc desc].include?(params[:group_direction]) ? params[:group_direction] : "desc"
+  end
+
 end

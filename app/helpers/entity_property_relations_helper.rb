@@ -171,4 +171,8 @@ module EntityPropertyRelationsHelper
     return moved_eprs
   end
 
+  def epr_update_params
+    params.require(:entity_property_relationship).permit(:id, :label, :value, :visibility)
+  end
+
 end

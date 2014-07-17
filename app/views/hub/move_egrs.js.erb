@@ -1,4 +1,3 @@
-$("#debug").html('<%= params %>');
 var alert_html = "";
 
 <% unless @moved_egrs.nil? %>
@@ -21,8 +20,8 @@ alert_html += "</div>"
 
 hubAlert("#entitys-groups-alert", alert_html);
 
-$('#egrs').html("  <%= j render partial: 'entities/groups', locals: { show_created: false, show_remove: false } %>");
+$('#entitys_groups').html("  <%= j render partial: 'entities/groups', locals: { show_created: false, show_remove: false } %>");
 
 persistStyling();
 
-validateEGRselection();
+validateEntitysGroupSelection();

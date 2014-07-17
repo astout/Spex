@@ -1,4 +1,5 @@
 class EntitiesController < ApplicationController
+  include EntitiesHelper
   # helper_method :entity_sort_column, :entity_sort_direction, :group_sort_column, :group_sort_direction
   helper_method :egr_sort_column, :egr_sort_direction
 
@@ -9,11 +10,9 @@ class EntitiesController < ApplicationController
       redirect_to root_url
     end
   end
- 
 
   def index
-    # @entities = Entity.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(page: params[:entities_page])
-    @entities = Entity.search(params[:entity_search]).order(entity_sort_column + ' ' + entity_sort_direction).paginate(page: params[:entities_page])
+    @entities = Entity.search(params[:entity_search]).order(entity_sort_column + ' ' + entity_sort_direction).paginate(page: params[:entities_page].blank? ? 1 : params[:entities_page], per_page: 10)
   end
 
   def new

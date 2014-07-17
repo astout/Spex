@@ -2,7 +2,6 @@
 <div class="row">
   <div class="col-xs-10 col-xs-offset-1">
     <%= bootstrap_form_for(relation, url: { controller: "hub", action: "update_epr" }, method: :post, remote: true) do |f| %>
-      <%= hidden_field_tag :selected_egrs, "" %>
       <%= render partial: 'entity_property_relationships/fields', locals: { f: f, relation: relation } %>
       <%= f.submit "Update", class: "btn btn-sm btn-primary btn75", id: "update-epr" %>
     <% end %>
