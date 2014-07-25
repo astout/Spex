@@ -4,6 +4,9 @@ module GroupsHelper
     @selected_groups = []
     selected_group_ids = params[:selected_groups]
     unless selected_group_ids.nil?
+      if selected_group_ids.class == String
+        selected_group_ids = selected_group_ids.split(",")
+      end
       selected_group_ids.each do |id|
         group = Group.find_by(id: id)
         unless group.nil? 

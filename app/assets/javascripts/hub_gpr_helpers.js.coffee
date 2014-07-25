@@ -10,7 +10,6 @@ $ ->
         #On list element click
         $("body").on "click", '.table tr.gpr', (e) ->
             #get the group id
-            console.log " test 00 "
             toggleGPRselect this.id, $(this).data().order, e.metaKey || e.ctrlKey
 
         #When the clear groups button is clicked
@@ -81,7 +80,6 @@ window.createGPRs = createGPRs
 
 toggleGPRselect = (id, order, multiSelect) ->
     #if the clicked property is already selected
-    console.log " Called toggleGPRselect "
 
     id += "" #stringify
     index = $.inArray id, window.selected_gprs

@@ -60,7 +60,6 @@ window.getEntityParams = getEntityParams
 
 #Ensure ajaxified pagination buttons on any additions to list
 entityPagination = () ->
-    console.log "called entity pagination"
     #Ajaxify List Page changes
     $("div#entities").on "click", '.pagination a', (e) ->
         window.entities_page = getParameterByName( "entities_page", this.href ) || "1"
@@ -81,6 +80,7 @@ toggleEntitySelect = (id) ->
     else
         $("tr#"+id+".entity").addClass "selected-entity"
         window.selected_entity = id + ""
+        $("input#selected_entity").val id
         getEGRs id
         validateEntitySelection()
 window.toggleEntitySelect = toggleEntitySelect

@@ -64,7 +64,6 @@ window.getPropertyParams = getPropertyParams
 
 #Ensure ajaxified pagination buttons on any additions to list
 propertyPagination = () ->
-    console.log "called property pagination"
     #Ajaxify List Page changes
     $("div#properties").on "click", '.pagination a', (e) ->
         window.properties_page = getParameterByName( "properties_page", this.href ) || "1"

@@ -14,7 +14,6 @@ $ ->
             toggleEPRselect this.id, $(this).data().order, e.metaKey || e.ctrlKey
 
         $("body").on "click", "td.edit-epr-trigger", (e) ->
-            # console.log this
             toggleEPRform this
             e.preventDefault()
 

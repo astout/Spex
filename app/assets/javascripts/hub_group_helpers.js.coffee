@@ -63,7 +63,6 @@ window.getGroupParams = getGroupParams
 
 #Ensure ajaxified pagination buttons on any additions to list
 groupPagination = () ->
-    console.log "called group pagination"
     #Ajaxify List Page changes
     $("div#groups").on "click", '.pagination a', (e) ->
         window.groups_page = getParameterByName( "groups_page", this.href ) || "1"
@@ -91,6 +90,7 @@ toggleGroupSelect = (id, multiSelect) ->
         clearSelectedGroups()
         $("tr#"+id+".group").addClass "selected-group"
         window.selected_groups.push(id)
+    $("input#selected_groups").val window.selected_groups
     getGPRs window.selected_groups
     validateGroupSelection()
 window.toggleGroupSelect = toggleGroupSelect

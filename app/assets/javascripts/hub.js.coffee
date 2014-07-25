@@ -15,7 +15,6 @@ $ ->
         hub()
     
 hub = () ->
-    console.log "running hub methods"
     #disable autocomplete across all forms
     $("input[type='text']").prop("autocomplete", "off")
     
@@ -101,7 +100,6 @@ ajaxPagination = () ->
     entityPagination()
     groupPagination()
     propertyPagination()
-    # console.log "called ajax pagination"
     # #Ajaxify All List Page changes
     # $("body").on "click", '.pagination a', (e) ->
     #     window.entities_page = getParameterByName "entities_page", this.href || "1"

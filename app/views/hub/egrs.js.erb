@@ -31,7 +31,6 @@ if(selected_groups.length > 0 && selected_entity > -1)
             var index = $.inArray( <%= group.id %> + "" , selected_groups ) 
             if ( index > -1 )
             {
-                console.log ("deselecting: <%= group.id %>")
                 toggleGroupSelect(<%= group.id %> + "", false);
             }
         <% end %>
