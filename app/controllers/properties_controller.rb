@@ -28,7 +28,7 @@ class PropertiesController < ApplicationController
     @property = Property.new(property_params)
     if @property.save
       flash[:success] = "Property Created."
-      redirect_to @property
+      redirect_to properties_path
     else
       render 'new'
     end

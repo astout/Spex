@@ -1,11 +1,17 @@
 <% provide(:title, 'All Properties') %>
+
+<!-- Reload defaults -->
+<a style="color: #494A4A" href="<%= properties_path %>">Properties</a>
+
 <h1>All Properties</h1>
 
-<%= will_paginate %>
+<!-- Link to Entity creation form -->
+<%= link_to "Create New", new_property_path, class: "btn btn-primary btn-sm", style: "float: right; margin-bottom: 10px"%>
+<br/>
+<br/>
 
-<%= link_to "Create New", new_property_path, class: "btn btn-primary btn-sm", style: "float: right"%>
-<ul class="properties">
-  <%= render @properties %>
-</ul>
+<!-- Search Form -->
+<%= render partial: 'search', locals: { path: properties_path, remote: false } %>
 
-<%= will_paginate %>
+<!-- List -->
+<%= render partial: 'properties/properties', locals: { show_units: true, show_created: true, show_remove: true } %>

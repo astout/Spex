@@ -1,0 +1,11 @@
+<%= form_tag path, method: 'get', remote: remote do %>
+    <%= hidden_field_tag :property_direction, params[:property_direction] %>
+    <%= hidden_field_tag :property_sort, params[:property_sort] %>
+    <%= hidden_field_tag :event, 'property' %>
+    <div class="input-group" style="margin-bottom: 15px">
+        <%= text_field_tag :property_search, params[:property_search], class: "form-control" %>
+        <span class="input-group-btn" >
+            <%= submit_tag "Search", name: nil, class: "btn btn-default" %>
+        </span>
+    </div>
+<% end %>

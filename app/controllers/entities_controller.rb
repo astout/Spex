@@ -41,7 +41,7 @@ class EntitiesController < ApplicationController
         @result[:msg] = "Name: '#{@entity.name}' is already taken."
       end
       format.js
-      format.html { redirect_to hub_path }
+      format.html {redirect_to entities_path }
     end
 
 

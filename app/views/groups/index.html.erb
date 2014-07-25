@@ -14,23 +14,4 @@
 <%= render partial: 'search', locals: { path: groups_path, remote: false } %>
 
 <!-- List -->
-<table class="table entities">
-    <th>
-        <%= sortable "name" %>
-    </th>
-    <th>
-        <%= sortable "default_label", "Label" %>
-    </th>
-    <th>
-        <%= sortable "created_at", "Created" %>
-    </th>
-    <th>
-        <%= sortable "updated_at", "Updated" %>
-    </th>
-    <th>
-        Remove
-    </th>
-  <%= render partial: 'group', collection: @groups, locals: { created: true } %>
-</table>
-
-<%= will_paginate @groups, inner_window: 2, outer_window: 2, param_name: 'groups_page' %>
+<%= render partial: 'groups/groups', locals: { show_created: true, show_remove: true } %>

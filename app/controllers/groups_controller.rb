@@ -1,4 +1,5 @@
 class GroupsController < ApplicationController
+  include GroupsHelper
   helper_method :group_sort_column, :group_sort_direction
 
   def index
@@ -66,11 +67,4 @@ class GroupsController < ApplicationController
       params.require(:group).permit(:name, :default_label)
     end
 
-    def group_sort_column
-      Group.column_names.include?(params[:sort]) ? params[:sort] : "name"
-    end
-      
-    def group_sort_direction
-      %w[asc desc].include?(params[:direction]) ? params[:direction] : "asc"
-    end
 end
