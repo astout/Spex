@@ -1,13 +1,18 @@
 class Entity < ActiveRecord::Base
   has_many :entity_property_relationships
   has_many :entity_group_relationships
-  has_many :properties, through: :entity_property_relationships, inverse_of: :entities
-  has_many :groups, through: :entity_group_relationships, inverse_of: :entities
-  validates :name, presence: true
+  has_many :properties, 
+    through: :entity_property_relationships, 
+    inverse_of: :entities
+  has_many :groups, 
+    through: :entity_group_relationships, 
+    inverse_of: :entities
+  validates :name, 
+    presence: true
 
   # before_destroy { |entity| EntityPropertyRelationship.destroy_all "entity_id = #{entity.id}" }
   before_destroy do |entity|
-    EntityPropertyRelationship.destroy_all "entity_id = #{entity.id}"
+    EntityPropertyRelationship.destroy_all :entity_id => entity.id
     groups = entity.groups
     groups.each do |group|
       entity.disown! group
@@ -76,7 +81,7 @@ class Entity < ActiveRecord::Base
     end
     index = relationship.order
     relationship.destroy
-    self.update_order(index)
+    # self.update_order(index)
   end
 
   #removes all relationships between this entity and its groups
@@ -93,9 +98,9 @@ class Entity < ActiveRecord::Base
   #returns true if there is a EntityPropertyRelationship between the entity and
   #the given property
   def utilizes?(property)
-    return if property.class != Property
+    return false if property.class != Property
     property = Property.find_by(id: property.id)
-    return if property.nil?
+    return false if property.nil?
     self.properties.include?(property)
   end
 
@@ -130,15 +135,30 @@ class Entity < ActiveRecord::Base
     properties
   end
 
+  #destroys the EntityGroupRelationship between the entity and the given group
+  def disown_property!(property)
+    return false if property.class != Property
+    return false if Entity.find_by_id(self.id).nil?
+    return false if Property.find_by_id(property.id).nil?
+    relationship = EntityPropertyRelationship.find_by(entity_id: self.id, property_id: property.id)
+    return if relationship.nil?
+    if relationship.order.nil?
+      return relationship.destroy
+    end
+    index = relationship.order
+    relationship.destroy
+    # self.p_update_order(index)
+  end
+
 
   ####################
   # # # PROPERTY ORDER
   ####################
 
   #updates the order of all the children after the given index
-  def p_update_order(index)
+  def p_update_order_via(index, group)
     relationships = self.property_relations
-    relationships |= self.property_relations.select { |r| r[:order] != nil }
+    relationships |= self.property_relations.select { |r| r[:order] != nil && r[:group_id] == group.id }
     last = relationships.count 
     relationships.each do |r|
       if r.order.nil?
@@ -402,6 +422,8 @@ class Entity < ActiveRecord::Base
     #return all entities if search is nil
     return all if search.nil?
 
+    search.downcase!
+
     #split the search by spaces
     _elements = search.split ' '
 
@@ -423,7 +445,7 @@ class Entity < ActiveRecord::Base
       #for each word from the search string
       _elements.each do |element|
         #append to the clause the full query
-        clause += '(name LIKE ? OR label LIKE ? OR created_at::text LIKE ? OR updated_at::text LIKE ?) AND '
+        clause += '(LOWER(name) LIKE ? OR LOWER(label) LIKE ? OR created_at::text LIKE ? OR updated_at::text LIKE ?) AND '
       end
       #remove the trailing 'AND' from the clause
       clause = clause.gsub(/(.*)( AND )(.*)/, '\1')

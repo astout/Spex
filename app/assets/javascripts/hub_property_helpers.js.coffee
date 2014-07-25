@@ -50,6 +50,8 @@ $ ->
 
 getPropertyParams = () ->
     params = $.param( { 
+            selected_groups: window.selected_groups,
+            selected_egrs: window.selected_egrs,
             selected_properties: window.selected_properties,
             property_search: $("input#property_search_field").val(), 
             property_direction: window.property_direction, 

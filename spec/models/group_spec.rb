@@ -152,8 +152,8 @@ describe Group do
       EntityGroupRelationship.find_by(entity_id: @e1.id, group_id: @group.id).should_not eq nil
       @group.serve! @e2
       EntityGroupRelationship.find_by(entity_id: @e2.id, group_id: @group.id).should_not eq nil
-      @group.serve! @e2
-      EntityGroupRelationship.find_by(entity_id: @e2.id, group_id: @group.id).should_not eq nil
+      @group.serve! @e3
+      EntityGroupRelationship.find_by(entity_id: @e3.id, group_id: @group.id).should_not eq nil
 
       @group.flee_all!
       EntityGroupRelationship.find_by(entity_id: @e1.id, group_id: @group.id).should eq nil

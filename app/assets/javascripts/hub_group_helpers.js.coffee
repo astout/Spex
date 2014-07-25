@@ -5,50 +5,52 @@ window.groups_page = "1"
 
 $ ->
 
-    #ajaxify new group collapse form
-    $("#new-group-collapse-heading").on "click", (e) ->
-        e.preventDefault()
+    if $('body').hasClass "hub"
+        #ajaxify new group collapse form
+        $("#new-group-collapse-heading").on "click", (e) ->
+            e.preventDefault()
 
-    #on group list element click
-    $("body").on "click", '.table tr.group', (e) ->
-        toggleGroupSelect this.id, e.ctrlKey || e.metaKey
+        #on group list element click
+        $("body").on "click", '.table tr.group', (e) ->
+            toggleGroupSelect this.id, e.ctrlKey || e.metaKey
 
-    #Ajaxify Group List Sorting
-    $('#groups').on 'click', "th a", (e) ->
-        window.group_sort = getParameterByName "group_sort", this.href
-        window.group_direction = getParameterByName "group_direction", this.href
-        params = getGroupParams()
+        #Ajaxify Group List Sorting
+        $('#groups').on 'click', "th a", (e) ->
+            window.group_sort = getParameterByName "group_sort", this.href
+            window.group_direction = getParameterByName "group_direction", this.href
+            params = getGroupParams()
 
-        #send the request
-        $.get "/hub?" + params
-        false
+            #send the request
+            $.get "/hub?" + params
+            false
 
-    #Every character change in Search field, submit query
-    $("input#group_search_field").on 'input', ->
-        window.groups_page = "1"
-        params = getGroupParams()
-        #send the request
-        $.get "/hub?" + params
-        false
-        # $("input#selected_entity").val window.selected_entity
-        # $("#search_group").submit()
+        #Every character change in Search field, submit query
+        $("input#group_search_field").on 'input', ->
+            window.groups_page = "1"
+            params = getGroupParams()
+            #send the request
+            $.get "/hub?" + params
+            false
+            # $("input#selected_entity").val window.selected_entity
+            # $("#search_group").submit()
 
-    #When the clear groups button is clicked
-    $("body").on "click", "#clear-selected-groups", (e) ->
-        #if it's enabled
-        unless $(this).hasClass "disabled"
-            clearSelectedGroups()
+        #When the clear groups button is clicked
+        $("body").on "click", "#clear-selected-groups", (e) ->
+            #if it's enabled
+            unless $(this).hasClass "disabled"
+                clearSelectedGroups()
 
-    #When the delete groups button is clicked
-    $("body").on "click", "#delete-selected-groups", (e) ->
-        #if it's enabled
-        unless $(this).hasClass "disabled"
-            deleteGroups window.selected_groups
+        #When the delete groups button is clicked
+        $("body").on "click", "#delete-selected-groups", (e) ->
+            #if it's enabled
+            unless $(this).hasClass "disabled"
+                deleteGroups window.selected_groups
 
 #end onLoad function
 
 getGroupParams = () ->
     params = $.param( { 
+            selected_entity: window.selected_entity,
             selected_groups: window.selected_groups,
             group_search: $("input#group_search_field").val(), 
             group_direction: window.group_direction, 

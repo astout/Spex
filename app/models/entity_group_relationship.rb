@@ -1,9 +1,12 @@
 class EntityGroupRelationship < ActiveRecord::Base
-  belongs_to :entity, class_name: "Entity", foreign_key: "entity_id"
-  belongs_to :group, class_name: "Group", foreign_key: "group_id"
-  validates :entity_id, presence: true
-  validates :group_id, presence: true
-  validates :order, presence: true
+  belongs_to :entity
+  belongs_to :group 
+  validates :entity_id, 
+    presence: true
+  validates :group_id, 
+    presence: true
+  validates :order, 
+    presence: true
 
   after_create do |r|
     r.group.properties.each do |property|
@@ -11,9 +14,15 @@ class EntityGroupRelationship < ActiveRecord::Base
     end
   end
 
-  before_destroy { |r| EntityPropertyRelationship.destroy_all group_id: "#{r.group_id}", entity_id: "#{r.entity_id}" }
+  before_destroy do |r| 
+    EntityPropertyRelationship.destroy_all group_id: "#{r.group_id}", entity_id: "#{r.entity_id}"
+  end
 
-  def entity_property_relations
+  after_destroy do |r|
+    r.entity.update_order(r.order)
+  end
+
+  def eprs
     relations = EntityPropertyRelationship.where(entity_id: self.entity.id, group_id: self.group.id)
     relations.sort_by { |r| r[:order] }
   end

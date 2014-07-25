@@ -1,15 +1,50 @@
 class Property < ActiveRecord::Base
   has_many :group_property_relationships
   has_many :entity_property_relationships
-  has_many :entities, through: :entity_property_relationships, inverse_of: :properties
-  has_many :groups, through: :group_property_relationships, inverse_of: :properties
-  validates :name, presence: true
+  has_many :entities, 
+    through: :entity_property_relationships, 
+    inverse_of: :properties
+  has_many :groups, 
+    through: :group_property_relationships, 
+    inverse_of: :properties
+  validates :name, 
+    presence: true
 
-  # before_destroy { |property| GroupPropertyRelationship.destroy_all "property_id = #{property.id}" }
-  before_destroy do |property| 
+  # # before_destroy { |property| GroupPropertyRelationship.destroy_all "property_id = #{property.id}" }
+  # before_destroy do |property|
+  #   puts " -- DESTROYING PROPERTY: NAME => #{property.name}, ID => #{property.id} -- " 
+  #   #puts "test"
+  #   return false
+  #   # self.flee_all!
+  # end
+
+  before_destroy do |property|
+    GroupPropertyRelationship.destroy_all "property_id = #{property.id}"
     EntityPropertyRelationship.destroy_all "property_id = #{property.id}"
-    self.flee_all!
+    # self.flee_all!
+    # self.entities.each do |e|
+    #   self.flee_entity!(e)
+    # end
   end
+
+  before_create do |p|
+    p.default_visibility = p.default_visibility.blank? ? 0 : p.default_visibility
+  end
+
+  # def do_delete
+  #   result = {data: self, status: 1, msg: "Property '#{self.name}' deleted."}
+  #   self.flee_all! 
+  #   self.entities.each do |e|
+  #     self.flee_entity!(e)
+  #   end
+  #   self.delete
+  #   r = Property.find_by_id(self.id)
+  #   unless r.blank?
+  #     result[:status] = 0
+  #     result[:msg] = "failed to delete property: '#{self.name}'"
+  #   end
+  #   result    
+  # end
 
   #######################
   # # # PROPERTY TO GROUP
@@ -67,14 +102,20 @@ class Property < ActiveRecord::Base
   #an array of all the entities that utilize this property
   def entities
     result = []
-    self.groups.each do |group|
-      result |= group.entities
+    self.entity_relations.each do |epr|
+      result.push epr.entity
     end
     result
   end
 
   def entity_relations
     EntityPropertyRelationship.where(property_id: self.id)
+  end
+
+  #Breaks the relationship of this property to the given group
+  def flee_entity!(e)
+    return if e.class != Entity
+    e.disown_property!(self)
   end
 
   ##################
@@ -87,6 +128,8 @@ class Property < ActiveRecord::Base
   def self.search(search)
     #return all entities if search is nil
     return all if search.nil?
+
+    search.downcase!
 
     #split the search by spaces
     _elements = search.split ' '
@@ -109,7 +152,7 @@ class Property < ActiveRecord::Base
       #for each word from the search string
       _elements.each do |element|
         #append to the clause the full query
-        clause += '(name LIKE ? OR default_label LIKE ? OR created_at::text LIKE ? OR updated_at::text LIKE ?) AND '
+        clause += '(LOWER(name) LIKE ? OR LOWER(default_label) LIKE ? OR created_at::text LIKE ? OR updated_at::text LIKE ?) AND '
       end
       #remove the trailing 'AND' from the clause
       clause = clause.gsub(/(.*)( AND )(.*)/, '\1')

@@ -413,6 +413,90 @@ describe Entity do
       end
     end
 
+    describe "Destroying owned groups" do
+      it "should still own non-destroyed groups" do
+        @entity = Entity.create!(name: "entity")
+
+        @group1 = Group.create!(name: "group1")
+        @group2 = Group.create!(name: "group2")
+
+        @entity.own!(@group1)
+        @entity.own!(@group2)
+
+        @entity.owns?(@group1).should eq(true)
+        @entity.owns?(@group2).should eq(true)
+
+        @group1.destroy
+
+        @entity.owns?(@group1).should eq(false)
+        @entity.owns?(@group2).should eq(true)
+      end
+
+      it "should still utilize non-destroyed groups' properties" do
+        @entity = Entity.create!(name: "entity")
+
+        @group1 = Group.create!(name: "group1")
+        @group2 = Group.create!(name: "group2")
+
+        @property1 = Property.create!(name: "property1")
+        @property2 = Property.create!(name: "property2")
+
+        @group1.own!(@property1)
+        @group2.own!(@property2)
+
+        @entity.own!(@group1)
+        @entity.own!(@group2)
+
+        @entity.owns?(@group1).should eq(true)
+        @entity.owns?(@group2).should eq(true)
+        @entity.utilizes?(@property1).should eq(true)
+        @entity.utilizes?(@property2).should eq(true)
+
+        @group1.destroy
+
+        @entity.owns?(@group1).should eq(false)
+        @entity.owns?(@group2).should eq(true)
+        @entity.utilizes?(@property1).should eq(false)
+        @entity.utilizes?(@property2).should eq(true)
+      end
+
+      it "should still utilize non-destroyed groups' properties 2" do
+        @entity = Entity.create!(name: "entity")
+
+        @group1 = Group.create!(name: "group1")
+        @group2 = Group.create!(name: "group2")
+
+        @property1 = Property.create!(name: "property1")
+        @property2 = Property.create!(name: "property2")
+        @property3 = Property.create!(name: "property3")
+        @property4 = Property.create!(name: "property4")
+
+        @group1.own!(@property1)
+        @group1.own!(@property2)
+        @group2.own!(@property3)
+        @group2.own!(@property4)
+
+        @entity.own!(@group1)
+        @entity.own!(@group2)
+
+        @entity.owns?(@group1).should eq(true)
+        @entity.owns?(@group2).should eq(true)
+        @entity.utilizes?(@property1).should eq(true)
+        @entity.utilizes?(@property2).should eq(true)
+        @entity.utilizes?(@property3).should eq(true)
+        @entity.utilizes?(@property4).should eq(true)
+
+        @property1.destroy
+
+        @entity.owns?(@group1).should eq(true)
+        @entity.owns?(@group2).should eq(true)
+        @entity.utilizes?(@property1).should eq(false)
+        @entity.utilizes?(@property2).should eq(true)
+        @entity.utilizes?(@property3).should eq(true)
+        @entity.utilizes?(@property4).should eq(true)
+      end
+    end
+
   end
 
   describe "Property Relationships" do
@@ -471,6 +555,30 @@ describe Entity do
         @entity.own!(@group)
 
         @entity.utilizes?(@property1).should eq(false)
+      end
+
+      it "should still own non-destroyed properties" do
+        @entity = Entity.create!(name: "entity")
+
+        @property1 = Property.create!(name: "property1")
+        @property2 = Property.create!(name: "property2")
+
+        @group = Group.create!(name: "group")
+        @group.own!(@property1)
+        @group.own!(@property2)
+
+        @entity.own!(@group)
+
+        @entity.utilizes?(@property1).should eq(true)
+        @entity.utilizes?(@property2).should eq(true)
+
+        @property1.destroy
+
+        @entity.utilizes?(@property1).should eq(false)
+        @entity.utilizes?(@property2).should eq(true)
+
+        @group.owns?(@property1).should eq(false)
+        @group.owns?(@property2).should eq(true)
       end
     end
 

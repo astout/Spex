@@ -36,6 +36,7 @@ var alert_html = "";
         alert_html += "<div class='alert alert-info small-font'>";
         alert_html += "<p><strong>No properties for <%= @selected_egrs.first.group.name %>.</strong></p>";
         alert_html += "<p style='padding-left: 10px'><i>Try adding properties to the group.</i></p>";
+    <% else %>
     <% end %>
     alert_html += "</div>";
     if(!window.epr_update)
@@ -54,7 +55,7 @@ var alert_html = "";
 
 $('#properties').html("<%= j render partial: 'properties/properties', locals: { show_units: false, show_created: false, show_remove: false } %>");
 
-$('#gprs').html("<%= j render partial: 'groups/properties', locals: { show_units: false, show_created: false, show_remove: false } %>");
+$('#gprs').html("<%= j render partial: 'groups/properties', locals: { show_units: false, show_created: false, show_remove: false, show_order: true } %>");
 
 persistStyling();
 

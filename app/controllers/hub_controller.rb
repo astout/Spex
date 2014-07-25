@@ -381,7 +381,8 @@ class HubController < ApplicationController
     @created_relations = egr_create(selected_entity, selected_groups)
 
     #response structure
-    @egrs = { status: 1, msg: "", data: egr_list(selected_entity) }
+    @egrs = get_egrs(selected_entity)
+    # @egrs = { status: 1, msg: "", data: egr_list(selected_entity) }
 
     @groups = groups_list(selected_entity)
 

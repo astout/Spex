@@ -6,49 +6,50 @@ window.selected_egr_max_order = -1
 
 $ ->
 
-    #On EntityGroupRelationship element click
-    $("body").on "click", '.table tr.egr', (e) ->
-        #get the group id
-        toggleEGRselect this.id, $(this).data().order, e.ctrlKey || e.metaKey
+    if $('body').hasClass "hub"
+        #On EntityGroupRelationship element click
+        $("body").on "click", '.table tr.egr', (e) ->
+            #get the group id
+            toggleEGRselect this.id, $(this).data().order, e.ctrlKey || e.metaKey
 
-    #When the add groups button is clicked
-    $("body").on "click", "#add-selected-groups", (e) ->
-        #if it's enabled
-        if $(this).hasClass "enabled"
-            addGroupsToEntity window.selected_groups, window.selected_entity
+        #When the add groups button is clicked
+        $("body").on "click", "#add-selected-groups", (e) ->
+            #if it's enabled
+            if $(this).hasClass "enabled"
+                addGroupsToEntity window.selected_groups, window.selected_entity
 
-    #When the clear groups button is clicked
-    $("body").on "click", "#clear-selected-egrs", (e) ->
-        #if it's enabled
-        unless $(this).hasClass "disabled"
-            clearSelectedEGRs()
-            validateEGRselection()
+        #When the clear groups button is clicked
+        $("body").on "click", "#clear-selected-egrs", (e) ->
+            #if it's enabled
+            unless $(this).hasClass "disabled"
+                clearSelectedEGRs()
+                validateEGRselection()
 
-    #When the delete egr button is clicked
-    $("body").on "click", "#delete-selected-egrs", (e) ->
-        #if it's enabled
-        unless $(this).hasClass "disabled"
-            deleteEntityGroupRelations window.selected_egrs
+        #When the delete egr button is clicked
+        $("body").on "click", "#delete-selected-egrs", (e) ->
+            #if it's enabled
+            unless $(this).hasClass "disabled"
+                deleteEntityGroupRelations window.selected_egrs
 
-    $("body").on "click", "#top-selected-egrs", (e) ->
-        #if it's enabled
-        unless $(this).hasClass "disabled"
-            topEntityGroupRelations window.selected_egrs
+        $("body").on "click", "#top-selected-egrs", (e) ->
+            #if it's enabled
+            unless $(this).hasClass "disabled"
+                topEntityGroupRelations window.selected_egrs
 
-    $("body").on "click", "#up-selected-egrs", (e) ->
-        #if it's enabled
-        unless $(this).hasClass "disabled"
-            upEntityGroupRelations window.selected_egrs
+        $("body").on "click", "#up-selected-egrs", (e) ->
+            #if it's enabled
+            unless $(this).hasClass "disabled"
+                upEntityGroupRelations window.selected_egrs
 
-    $("body").on "click", "#down-selected-egrs", (e) ->
-        #if it's enabled
-        unless $(this).hasClass "disabled"
-            downEntityGroupRelations window.selected_egrs
+        $("body").on "click", "#down-selected-egrs", (e) ->
+            #if it's enabled
+            unless $(this).hasClass "disabled"
+                downEntityGroupRelations window.selected_egrs
 
-    $("body").on "click", "#bottom-selected-egrs", (e) ->
-        #if it's enabled
-        unless $(this).hasClass "disabled"
-            bottomEntityGroupRelations window.selected_egrs
+        $("body").on "click", "#bottom-selected-egrs", (e) ->
+            #if it's enabled
+            unless $(this).hasClass "disabled"
+                bottomEntityGroupRelations window.selected_egrs
 
 #end onLoad function
 

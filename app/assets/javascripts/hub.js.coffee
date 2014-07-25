@@ -11,7 +11,11 @@
 #= require hub_gpr_helpers
 
 $ ->
-
+    if $('body').hasClass("hub")
+        hub()
+    
+hub = () ->
+    console.log "running hub methods"
     #disable autocomplete across all forms
     $("input[type='text']").prop("autocomplete", "off")
     
@@ -115,8 +119,13 @@ hubAlert = (documentId, html) ->
     #clear all alerts
     $("#hub-alert").html ""
     # $("#entitys-groups-alert").html ""
-    $("#entity-alert").html ""
-    $("#group-alert").html ""
+    $("#entity-alert1").html ""
+    $("#entity-alert2").html ""
+    $("#group-alert1").html ""
+    $("#group-alert2").html ""
+    $("#property-alert2").html ""
+    $("#property-alert1").html ""
+            
 
     #update the given div to the html
     if documentId.length < 1

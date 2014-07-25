@@ -26,7 +26,7 @@ module HubHelper
       @selected_egrs.each do |group_relation|
 
         #get the entity property relations that involve the current entity group relation
-        group_relation.entity_property_relations.each do |entity_property_relation|
+        group_relation.eprs.each do |entity_property_relation|
 
           #unless the current entity property relation's property is already listed
           unless used_properties.include? entity_property_relation.property

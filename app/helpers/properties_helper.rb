@@ -35,9 +35,11 @@ module PropertiesHelper
     end
     unless selected_egrs.blank?
       selected_egrs.each do |relation|
-        reject_properties |= relation.group.properties
+        reject_properties |= relation.entity.properties_via(relation.group)
       end
     end
+    puts '-- REJECT RELATIONS --'
+    puts reject_properties
     properties = Property.search(params[:property_search]).order(property_sort_column + ' ' + property_sort_direction).reject { |property| reject_properties.any? { |g_property| g_property[:id] == property[:id] } }.paginate(page: params[:properties_page].blank? ? 1 : params[:properties_page], per_page: 10)
   end
 
@@ -66,7 +68,7 @@ module PropertiesHelper
   def properties_delete(properties)
     deleted_properties = []
     properties.each do |property|
-      deleted_properties.push property ? { data: property.destroy, msg: "deleted" } : { data: nil, msg: "property not found" }
+      deleted_properties.push property ? { data: property.destroy, msg: "" } : { data: nil, msg: "property not found" }
     end
     return deleted_properties
   end

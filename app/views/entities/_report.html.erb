@@ -1,0 +1,54 @@
+<div class="panel panel-default report">
+  <div class="panel-heading">
+    <h3 class="panel-title"><%= "#{@entity.name} Spec Report" %></h3>
+  </div>
+  <div class="panel-body">
+    <% if @entity.properties.any? %>
+      <table class="table table-condensed spec-report">
+        <% @entity.group_relations.each do |egr| %>
+          <tr class="egr-row">
+            <td class="group-name" colspan="100%">
+              <strong>
+                <% found = false %>
+                <% if !egr.label.blank? && !found %>
+                  <%= egr.label %>
+                  <% found = true %>
+                <% elsif !egr.group.default_label.blank? && !found %>
+                  <%= egr.group.default_label %>
+                  <% found = true %>
+                <% else !egr.group.name.blank? && !found %>
+                  <%= egr.group.name %>
+                  <% found = true %>
+                <% end %>
+              </strong>
+            </td>
+          </tr>
+            <% @entity.property_relations_via(egr.group).each do |epr| %>
+              <tr class="epr-row">
+                <td class="property-name" style="padding: 5px 0px 0px 20px">
+                  <% found = false %>
+                  <% if !epr.label.blank? && !found %>
+                    <%= epr.label %>
+                    <% found = true %>
+                  <% elsif !epr.property.default_label.blank? && !found %>
+                    <%= epr.property.default_label %>
+                    <% found = true %>
+                  <% else !epr.property.name.blank? && !found %>
+                    <%= epr.property.name %>
+                    <% found = true %>
+                  <% end %>
+                </td>
+                <td class="property-value" style="text-align: right">
+                  <%= epr.value %>
+                </td>
+              </tr>
+          <% end %>
+        <% end %>
+      </table>
+    <% else %>
+      <div class="alert alert-info">
+        <center><i><%= "'#{@entity.name}' contains no properties." %></i></center>
+      </div>
+    <% end %>
+  </div>
+</div>

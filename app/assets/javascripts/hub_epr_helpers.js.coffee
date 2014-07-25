@@ -7,40 +7,41 @@ window.selected_epr_max_order = -1
 
 $ ->
 
-    #On list element click
-    $("body").on "click", '.table tr.epr', (e) ->
-        #toggle the selection
-        toggleEPRselect this.id, $(this).data().order, e.metaKey || e.ctrlKey
+    if $('body').hasClass "hub"
+        #On list element click
+        $("body").on "click", '.table tr.epr', (e) ->
+            #toggle the selection
+            toggleEPRselect this.id, $(this).data().order, e.metaKey || e.ctrlKey
 
-    $("body").on "click", "td.edit-epr-trigger", (e) ->
-        # console.log this
-        toggleEPRform this
-        e.preventDefault()
+        $("body").on "click", "td.edit-epr-trigger", (e) ->
+            # console.log this
+            toggleEPRform this
+            e.preventDefault()
 
-    $("body").on "click", "#top-selected-eprs", (e) ->
-        #if it's enabled
-        unless $(this).hasClass "disabled"
-            topEPRs window.selected_eprs
+        $("body").on "click", "#top-selected-eprs", (e) ->
+            #if it's enabled
+            unless $(this).hasClass "disabled"
+                topEPRs window.selected_eprs
 
-    $("body").on "click", "#up-selected-eprs", (e) ->
-        #if it's enabled
-        unless $(this).hasClass "disabled"
-            upEPRs window.selected_eprs
+        $("body").on "click", "#up-selected-eprs", (e) ->
+            #if it's enabled
+            unless $(this).hasClass "disabled"
+                upEPRs window.selected_eprs
 
-    $("body").on "click", "#down-selected-eprs", (e) ->
-        #if it's enabled
-        unless $(this).hasClass "disabled"
-            downEPRs window.selected_eprs
+        $("body").on "click", "#down-selected-eprs", (e) ->
+            #if it's enabled
+            unless $(this).hasClass "disabled"
+                downEPRs window.selected_eprs
 
-    $("body").on "click", "#bottom-selected-eprs", (e) ->
-        #if it's enabled
-        unless $(this).hasClass "disabled"
-            bottomEPRs window.selected_eprs
+        $("body").on "click", "#bottom-selected-eprs", (e) ->
+            #if it's enabled
+            unless $(this).hasClass "disabled"
+                bottomEPRs window.selected_eprs
 
-    $("body").on "click", "#clear-selected-eprs", (e) ->
-        unless $(this).hasClass "disabled"
-            closeAllEPRforms()
-            clearSelectedEPRs()
+        $("body").on "click", "#clear-selected-eprs", (e) ->
+            unless $(this).hasClass "disabled"
+                closeAllEPRforms()
+                clearSelectedEPRs()
 
 #end onLoad function
 

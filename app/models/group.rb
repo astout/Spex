@@ -1,15 +1,21 @@
 class Group < ActiveRecord::Base
-  has_many :group_property_relationships, foreign_key: "group_id"
-  has_many :entity_group_relationships, foreign_key: "group_id"
-  has_many :entities, through: :entity_group_relationships, inverse_of: :groups
-  has_many :properties, through: :group_property_relationships, inverse_of: :groups
-  validates :name, presence: true
+  has_many :group_property_relationships
+  has_many :entity_group_relationships
+  has_many :entity_property_relationships
+  has_many :entities, 
+    through: :entity_group_relationships, 
+    inverse_of: :groups
+  has_many :properties, 
+    through: :group_property_relationships, 
+    inverse_of: :groups
+  validates :name, 
+    presence: true
 
   # before_destroy { |group| GroupPropertyRelationship.destroy_all "group_id = #{group.id}" }
   # before_destroy { |group| EntityGroupRelationship.destroy_all "group_id = #{group.id}" }
 
   before_destroy do |group| 
-    EntityPropertyRelationship.destroy_all "group_id = #{group.id}"
+    EntityPropertyRelationship.destroy_all :group_id => group.id
     properties = group.properties
     entities = group.entities
     properties.each do |property|
@@ -86,7 +92,7 @@ class Group < ActiveRecord::Base
   #Queries GroupPropertyRelationships for a group_id value of the
   #property's id and a property_id of the given property
   def owns?(property)
-    return if property.class != Property
+    return false if property.blank? || property.class != Property
     self.properties.any? { |p| p[:id] == property.id }
   end
 
@@ -128,8 +134,9 @@ class Group < ActiveRecord::Base
       return relationship.destroy
     end
     index = relationship.order
-    relationship.destroy
+    r = relationship.destroy
     self.update_order(index)
+    return r
   end
 
   #Break relationship between group and all its properties
@@ -269,6 +276,8 @@ class Group < ActiveRecord::Base
     #return all entities if search is nil
     return all if search.nil?
 
+    search.downcase!
+
     #split the search by spaces
     _elements = search.split ' '
 
@@ -290,7 +299,7 @@ class Group < ActiveRecord::Base
       #for each word from the search string
       _elements.each do |element|
         #append to the clause the full query
-        clause += '(name LIKE ? OR default_label LIKE ? OR created_at::text LIKE ? OR updated_at::text LIKE ?) AND '
+        clause += '(LOWER(name) LIKE ? OR LOWER(default_label) LIKE ? OR created_at::text LIKE ? OR updated_at::text LIKE ?) AND '
       end
       #remove the trailing 'AND' from the clause
       clause = clause.gsub(/(.*)( AND )(.*)/, '\1')

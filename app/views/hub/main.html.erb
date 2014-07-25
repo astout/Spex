@@ -1,16 +1,20 @@
+<script type="text/javascript">
+    $('body').addClass('hub');
+</script>
 <div id="hub-alert"></div>
 <i id="clear-alerts" class="fa fa-ban fa-lg"></i>
 <div class="row">
     <aside class="col-xs-4 v-divider">
         <a style="color: #494A4A" href="<%= entities_path %>">Entities</a>
         <section>
+            <div id="entity-alert1"></div>
             <%= render 'new_entity' %>
         </section>
         <section>
             <h6>
                 Existing Entities
             </h6>
-            <div id="entity-alert"></div>
+            <div id="entity-alert2"></div>
             <%= render partial: 'entities/search', locals: { path: hub_path, remote: true } %>
             <div id="clear-selected-entity" class="btn btn-default btn-sm disabled">Clear</div>
             <div id="delete-selected-entity" class="btn btn-danger btn-sm disabled">Delete</div>
@@ -24,6 +28,7 @@
     <aside class="col-xs-4 v-divider">
         <a style="color: #494A4A" href="<%= groups_path %>">Groups</a>
         <section>
+            <div id="group-alert1"></div>
             <%= render 'new_group' %>
         </section>
         <section>
@@ -39,7 +44,7 @@
             <h6>
                 Existing Groups
             </h6>
-            <div id="group-alert"></div>
+            <div id="group-alert2"></div>
             <%= render partial: 'search_group', locals: { path: hub_path, remote: true } %>
             <div id="clear-selected-groups" class="btn btn-default btn-sm disabled">Clear</div>
             <div id="delete-selected-groups" class="btn btn-danger btn-sm disabled">Delete</div>
@@ -48,12 +53,12 @@
             <div id="groups">
                 <%= render partial: 'groups/groups', locals: { show_created: false, show_remove: false } %>
             </div>
-            <div id='ajax-test'></div>
         </section>
     </aside>
     <aside class="col-xs-4 v-divider">
         <a style="color: #494A4A" href="<%= properties_path %>">Properties</a>
         <section>
+            <div id="property-alert1"></div>
             <%= render 'new_property' %>
         </section>
         <section>
@@ -63,14 +68,14 @@
             <div id="groups-properties-alert"></div>
             <div style="padding-top: 10px"></div>
             <div id="gprs"> 
-                <%= render partial: 'groups/properties', locals: { show_units: false, show_created: false, show_remove: false } %>
+                <%= render partial: 'groups/properties', locals: { show_units: false, show_created: false, show_order: true, show_remove: false } %>
             </div>
         </section>
         <section>
             <h6>
                 Existing Properties
             </h6>
-            <div id="property-alert"></div>
+            <div id="property-alert2"></div>
             <%= render partial: 'search_property', locals: { path: hub_path } %>
             <div id="clear-selected-properties" class="btn btn-default btn-sm disabled">Clear</div>
             <div id="delete-selected-properties" class="btn btn-danger btn-sm disabled">Delete</div>
@@ -79,7 +84,6 @@
             <div id="properties">
                 <%= render partial: 'properties/properties', locals: { show_units: false, show_created: false, show_remove: false } %>
             </div>
-            <div id='ajax-test'></div>
         </section>
     </aside>
 </div>

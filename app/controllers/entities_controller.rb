@@ -69,14 +69,10 @@ class EntitiesController < ApplicationController
   def edit
     @back ||= request.referer
     @entity = Entity.find(params[:id])
-    @relationships = EntityPropertyRelationship.where(entity_id: @entity.id).paginate(page: params[:page])
-    @all_properties = Property.paginate(page: params[:page])
   end
 
   def show
     @entity = Entity.find(params[:id])
-    @properties = @entity.properties.paginate(page: params[:page])
-    @relationships = EntityPropertyRelationship.where(entity_id: @entity.id).paginate(page: params[:page])
   end
 
   def employ

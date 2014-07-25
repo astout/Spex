@@ -439,6 +439,12 @@ aside.v-divider {
   }
 }
 
+span.new-entity-label, span.new-group-label, span.new-property-label {
+  &.valid {
+    background-color: #21B82F;
+  }
+}
+
 div#add-selected-groups {
   background-repeat: no-repeat;  
   background-position: right center;

@@ -1,9 +1,12 @@
 class GroupPropertyRelationship < ActiveRecord::Base
-  belongs_to :group, class_name: "Group", foreign_key: "group_id"
-  belongs_to :property, class_name: "Property", foreign_key: "property_id"
-  validates :group_id, presence: true
-  validates :property_id, presence: true
-  validates :order, presence: true
+  belongs_to :group
+  belongs_to :property
+  validates :group_id, 
+    presence: true
+  validates :property_id, 
+    presence: true
+  validates :order, 
+    presence: true
 
   after_create do |r|
     property = Property.find_by id: r.property_id
@@ -14,8 +17,7 @@ class GroupPropertyRelationship < ActiveRecord::Base
   end
 
   after_destroy do |r|
-    r.group.entities.each do |entity|
-      EntityPropertyRelationship.destroy_all group_id: r.group_id, entity_id: entity.id
-    end
+    EntityPropertyRelationship.destroy_all group_id: r.group_id, property_id: r.property_id
+    r.group.update_order(r.order)
   end
 end

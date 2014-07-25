@@ -1,3 +1,5 @@
-<%= f.text_field :name, class: "input-sm" %>
+<span id="group_name" class="label label-default new-group-label">Name</span>
+<%= f.text_field :name, class: "input-sm", hide_label: true %>
 
-<%= f.text_field :default_label, class: "input-sm" %>
+<span id="group_label" class="label label-default new-group-label">Label</span>
+<%= f.text_field :default_label, class: "input-sm", hide_label: true %>

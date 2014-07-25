@@ -1,11 +1,19 @@
 <!--%= render 'shared/error_messages', object: f.object %-->
 
-<%= f.text_field :name, class: "input-sm" %>
+<span id="property_name" class="label label-default new-property-label">Name</span>
+<%= f.text_field :name, class: "input-sm", hide_label: true %>
 
-<%= f.text_field :units, class: "input-sm" %>
+<span id="property_units" class="label label-default new-property-label">Units</span>
+<%= f.text_field :units, class: "input-sm", hide_label: true %>
 
-<%= f.text_field :units_short, class: "input-sm" %>
+<span id="property_units_short" class="label label-default new-property-label">Units Short</span>
+<%= f.text_field :units_short, class: "input-sm", hide_label: true %>
 
-<%= f.text_field :default_label, class: "input-sm" %>
+<span id="property_default_label" class="label label-default new-property-label">Label</span>
+<%= f.text_field :default_label, class: "input-sm", hide_label: true %>
 
-<%= f.text_field :default_value, class: "input-sm" %>
+<span id="property_default_value" class="label label-default new-property-label">Value</span>
+<%= f.text_field :default_value, class: "input-sm", hide_label: true %>
+
+<span id="property_default_visibility" class="label label-default new-property-label">Visibility</span>
+<%= f.number_field :default_visibility, class: "input-sm", hide_label: true, value: "0" %>

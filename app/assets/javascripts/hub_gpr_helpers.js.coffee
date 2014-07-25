@@ -6,49 +6,50 @@ window.selected_gpr_max_order = -1
 
 $ ->
 
-    #On list element click
-    $("body").on "click", '.table tr.gpr', (e) ->
-        #get the group id
-        console.log " test 00 "
-        toggleGPRselect this.id, $(this).data().order, e.metaKey || e.ctrlKey
+    if $('body').hasClass "hub"
+        #On list element click
+        $("body").on "click", '.table tr.gpr', (e) ->
+            #get the group id
+            console.log " test 00 "
+            toggleGPRselect this.id, $(this).data().order, e.metaKey || e.ctrlKey
 
-    #When the clear groups button is clicked
-    $("body").on "click", "#clear-selected-gprs", (e) ->
-        #if it's enabled
-        unless $(this).hasClass "disabled"
-            clearSelectedGPRs()
+        #When the clear groups button is clicked
+        $("body").on "click", "#clear-selected-gprs", (e) ->
+            #if it's enabled
+            unless $(this).hasClass "disabled"
+                clearSelectedGPRs()
 
-    #When the add properties button is clicked
-    $("body").on "click", "#add-selected-properties", (e) ->
-        #if it's enabled
-        if $(this).hasClass "enabled"
-            createGPRs window.selected_properties, window.selected_groups
+        #When the add properties button is clicked
+        $("body").on "click", "#add-selected-properties", (e) ->
+            #if it's enabled
+            if $(this).hasClass "enabled"
+                createGPRs window.selected_properties, window.selected_groups
 
-    #When the delete egr button is clicked
-    $("body").on "click", "#delete-selected-gprs", (e) ->
-        #if it's enabled
-        unless $(this).hasClass "disabled"
-            deleteGPRs window.selected_gprs
+        #When the delete egr button is clicked
+        $("body").on "click", "#delete-selected-gprs", (e) ->
+            #if it's enabled
+            unless $(this).hasClass "disabled"
+                deleteGPRs window.selected_gprs
 
-    $("body").on "click", "#top-selected-gprs", (e) ->
-        #if it's enabled
-        unless $(this).hasClass "disabled"
-            topGPRs window.selected_gprs
+        $("body").on "click", "#top-selected-gprs", (e) ->
+            #if it's enabled
+            unless $(this).hasClass "disabled"
+                topGPRs window.selected_gprs
 
-    $("body").on "click", "#up-selected-gprs", (e) ->
-        #if it's enabled
-        unless $(this).hasClass "disabled"
-            upGPRs window.selected_gprs
+        $("body").on "click", "#up-selected-gprs", (e) ->
+            #if it's enabled
+            unless $(this).hasClass "disabled"
+                upGPRs window.selected_gprs
 
-    $("body").on "click", "#down-selected-gprs", (e) ->
-        #if it's enabled
-        unless $(this).hasClass "disabled"
-            downGPRs window.selected_gprs
+        $("body").on "click", "#down-selected-gprs", (e) ->
+            #if it's enabled
+            unless $(this).hasClass "disabled"
+                downGPRs window.selected_gprs
 
-    $("body").on "click", "#bottom-selected-gprs", (e) ->
-        #if it's enabled
-        unless $(this).hasClass "disabled"
-            bottomGPRs window.selected_gprs
+        $("body").on "click", "#bottom-selected-gprs", (e) ->
+            #if it's enabled
+            unless $(this).hasClass "disabled"
+                bottomGPRs window.selected_gprs
 
 #end onLoad function
 

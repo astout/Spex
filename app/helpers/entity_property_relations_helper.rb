@@ -49,7 +49,7 @@ module EntityPropertyRelationsHelper
     selected_egrs.each do |group_relation|
 
       #get the entity property relations that involve the current entity group relation
-      group_relation.entity_property_relations.each do |epr|
+      group_relation.eprs.each do |epr|
 
         #unless the current entity property relation's property is already listed
         unless used_properties.include? epr.property

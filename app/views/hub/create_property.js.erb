@@ -11,6 +11,7 @@ var alert_html = "";
         alert_html += "    </div>";
         //clear the property form fields
         $('input[id^=property]').val('');
+        $('input#property_default_visibility').val('0');
     <% else %>
         alert_html += "    <div class='alert alert-danger small-font center'>";
         alert_html += "        <%= @property[:msg] %>";
@@ -22,7 +23,8 @@ var alert_html = "";
     alert_html += "    </div>";
 <% end %>
 
-hubAlert("#property-alert", alert_html);
+hubAlert("#property-alert1", alert_html);
 persistStyling();
+NewPropertyValidation();
 clearPropertyAttributes();
 ajaxPagination();

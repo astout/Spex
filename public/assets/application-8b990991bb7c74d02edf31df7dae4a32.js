@@ -14780,6 +14780,10 @@ Copyright (c) 2012-2013 Sasha Koss & Rico Sta. Cruz
   var ajaxPagination, getAllParams, hubAlert, persistStyling, toggleChevron;
 
   $(function() {
+    console.log("please?");
+    if ($('body').hasClass("hub")) {
+      alert("hub");
+    }
     $("input[type='text']").prop("autocomplete", "off");
     $("div[id^=accordion]").on('hidden.bs.collapse', toggleChevron);
     $("div[id^=accordion]").on('shown.bs.collapse', toggleChevron);

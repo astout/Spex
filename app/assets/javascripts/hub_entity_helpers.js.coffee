@@ -5,43 +5,44 @@ window.entities_page = "1"
 
 $ ->
 
-    #Ajaxify List Sorting
-    $('#entities').on 'click', "th a", (e) ->
-        window.entity_sort = getParameterByName "entity_sort", this.href
-        window.entity_direction = getParameterByName "entity_direction", this.href
-        params = getEntityParams()
-        #send the request
-        $.get "/hub?" + params
-        false
+    if $('body').hasClass "hub"
+        #Ajaxify List Sorting
+        $('#entities').on 'click', "th a", (e) ->
+            window.entity_sort = getParameterByName "entity_sort", this.href
+            window.entity_direction = getParameterByName "entity_direction", this.href
+            params = getEntityParams()
+            #send the request
+            $.get "/hub?" + params
+            false
 
-    #Actions/Settings for collapsing the 'Create New' panel
-    $("#new-entity-collapse-heading").on "click", (e) ->
-        e.preventDefault()
+        #Actions/Settings for collapsing the 'Create New' panel
+        $("#new-entity-collapse-heading").on "click", (e) ->
+            e.preventDefault()
 
-    #Every character change in Search field, submit query
-    $("input#entity_search_field").on 'input', ->
-        window.entities_page = "1"
-        params = getEntityParams()
-        #send the request
-        $.get "/hub?" + params
-        false
+        #Every character change in Search field, submit query
+        $("input#entity_search_field").on 'input', ->
+            window.entities_page = "1"
+            params = getEntityParams()
+            #send the request
+            $.get "/hub?" + params
+            false
 
-    #On list element click, highlight it and make it the selected item
-    #Also list any associated egrs
-    $("body").on "click", '.table tr.entity', (e) ->
-        toggleEntitySelect(this.id)
+        #On list element click, highlight it and make it the selected item
+        #Also list any associated egrs
+        $("body").on "click", '.table tr.entity', (e) ->
+            toggleEntitySelect(this.id)
 
-    #When the clear entity button is clicked
-    $("body").on "click", "#clear-selected-entity", (e) ->
-        #if it's enabled
-        unless $(this).hasClass "disabled"
-            clearSelectedEntity()
+        #When the clear entity button is clicked
+        $("body").on "click", "#clear-selected-entity", (e) ->
+            #if it's enabled
+            unless $(this).hasClass "disabled"
+                clearSelectedEntity()
 
-    #When the delete entity button is clicked
-    $("body").on "click", "#delete-selected-entity", (e) ->
-        #if it's enabled
-        unless $(this).hasClass "disabled"
-            deleteEntity window.selected_entity
+        #When the delete entity button is clicked
+        $("body").on "click", "#delete-selected-entity", (e) ->
+            #if it's enabled
+            unless $(this).hasClass "disabled"
+                deleteEntity window.selected_entity
 
 #end onLoad function
 
