@@ -11,6 +11,11 @@
 
 <%= f.text_field :label, class: "input-sm", value: relation.label || "" %>
 
+<section>
+    <select name="epr-value" class="selectize" multiple>
+    </select>
+</section>
+
 <%= f.text_field :value, class: "input-sm", value: relation.value || "" %>
 
 <%= f.number_field :visibility, min: 0, class: "input-sm", value: relation.visibility || "" %>

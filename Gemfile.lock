@@ -183,6 +183,7 @@ GEM
     sdoc (0.4.0)
       json (~> 1.8)
       rdoc (~> 4.0, < 5.0)
+    selectize-rails (0.9.1)
     selenium-webdriver (2.35.1)
       childprocess (>= 0.2.5)
       multi_json (~> 1.0)
@@ -248,6 +249,7 @@ DEPENDENCIES
   rspec-rails (= 2.13.1)
   sass-rails (~> 4.0.2)
   sdoc
+  selectize-rails
   selenium-webdriver (= 2.35.1)
   spork-rails (= 4.0.0)
   sprockets (= 2.11.0)

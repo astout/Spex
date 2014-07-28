@@ -22,6 +22,10 @@ class HubController < ApplicationController
     #get entities list
     @entities = entities_list
 
+    @entities_all = Entity.all.to_json
+    @groups_all = Group.all.to_json
+    @properties_all = Property.all.to_json
+
     #get groups list
     @groups = groups_list(selected_entity)
     

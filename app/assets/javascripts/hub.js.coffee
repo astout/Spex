@@ -13,6 +13,7 @@
 $ ->
     if $('body').hasClass("hub")
         hub()
+        do_selectize()
     
 hub = () ->
     #disable autocomplete across all forms
@@ -26,6 +27,37 @@ hub = () ->
         hubAlert "", ""
 
     ajaxPagination()
+
+do_selectize = () ->
+        console.log("selectize")
+        options = [
+            {id:0, name:"Option 0"},
+            {id:1, name:"Option 1"},
+            {id:2, name:"Option 2"},
+            {id:3, name:"Option 3"}
+        ]
+
+        $('select.selectize').selectize({
+            plugins: ['remove_button'],
+            valueField: 'id',
+            labelField: 'name',
+            searchField: ['name'],
+            options: options,
+            delimiter: '.',
+            persist: false,
+            create: (input) -> 
+              return {
+                id: input,
+                name: input,
+              }
+            hideSelected: true,
+            openOnFocus: false
+        })
+
+        $('#selectize').change( () ->
+            $('#entity_property_relationship_visibility').html("values="+$(this).val())
+        )
+window.do_selectize = do_selectize
 
 getAllParams = () ->
     params = $.param( { 
