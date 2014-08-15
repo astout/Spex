@@ -1,5 +1,6 @@
 @import "bootstrap";
 @import "font-awesome";
+@import "webhostinghub-glyphs";
 
 /* mixins, variables, etc. */
 
@@ -39,6 +40,10 @@ textarea {
 .small-font {
   font-size: 0.9em;
   line-height: 1em;
+}
+
+.light-font {
+  font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 }
 
 /* typography */
@@ -376,6 +381,9 @@ a.btn-full-width {
 
 td.edit-epr-trigger
 {
+  &:hover {
+    cursor: pointer;
+  }
   i.glyphicon-edit {
     &:hover {
       text-decoration: none;
@@ -661,4 +669,77 @@ input[type="checkbox"].checkbox:checked + label {
 
 input[type="checkbox"].checkbox:disabled + label {
     opacity: 0.5;
+}
+
+div.epr-value-types {
+  float:right;
+  button.selected {
+    background-color: #51B034;
+  }
+}
+
+div.epr-ref {
+  margin-bottom: 1em;
+}
+
+div.tab-pane {
+  input {
+    padding-top: 6px;
+  }
+  div {
+    padding-top: 6px;
+  }
+}
+
+button.epr-ref-append {
+  position: relative;
+  left: 90%;
+}
+
+textarea.epr-value {
+  max-height: 200px;
+}
+
+input.epr-evaluated-text {
+  background-color: white !important;
+}
+
+button.epr-math {
+  font-weight: bold;
+  font-size: 20px;
+}
+
+button.epr-digit {
+  background-color: #E8E8D1;
+  &:hover {
+    background-color: #CFCFBA;
+  }
+}
+
+button.epr-bracket {
+  background-color: #FCEA7B;
+  &:hover {
+    background-color: #E8D771;
+  }
+}
+
+button.epr-operator {
+  background-color: #FFBB3F;
+  &:hover {
+    background-color: #D69D35;
+  }
+}
+
+div.tooltip-inner {
+  white-space: pre-wrap;
+}
+
+td.hidden-value {
+  background-color: #A0E9FF; 
+  padding: 0 !important; 
+  text-align: right;
+}
+
+div.trueValue {
+  padding: 5px;
 }

@@ -6,11 +6,11 @@
 <div class="row">
     <aside class="col-xs-4 v-divider">
         <a style="color: #494A4A" href="<%= entities_path %>">Entities</a>
-        <section>
+        <row>
             <div id="entity-alert1"></div>
             <%= render 'new_entity' %>
-        </section>
-        <section>
+        </row>
+        <row>
             <h6>
                 Existing Entities
             </h6>
@@ -23,15 +23,15 @@
                 <%= render partial: 'entities/entities', locals: { show_created: false, show_remove: false } %>
             </div>
             <div id='ajax-test'></div>
-        </section>
+        </row>
     </aside>
     <aside class="col-xs-4 v-divider">
         <a style="color: #494A4A" href="<%= groups_path %>">Groups</a>
-        <section>
+        <row>
             <div id="group-alert1"></div>
             <%= render 'new_group' %>
-        </section>
-        <section>
+        </row>
+        <row>
             <h6>
                 Selected Entity's Groups
             </h6>
@@ -39,8 +39,8 @@
             <div id="egrs"> 
                 <%= render partial: 'entities/groups', locals: { show_created: false, show_remove: false } %>
             </div>
-        </section>
-        <section>
+        </row>
+        <row>
             <h6>
                 Existing Groups
             </h6>
@@ -53,15 +53,15 @@
             <div id="groups">
                 <%= render partial: 'groups/groups', locals: { show_created: false, show_remove: false } %>
             </div>
-        </section>
+        </row>
     </aside>
     <aside class="col-xs-4 v-divider">
         <a style="color: #494A4A" href="<%= properties_path %>">Properties</a>
-        <section>
+        <row>
             <div id="property-alert1"></div>
             <%= render 'new_property' %>
-        </section>
-        <section>
+        </row>
+        <row>
             <h6>
                 Selected Group's Properties
             </h6>
@@ -70,8 +70,8 @@
             <div id="gprs"> 
                 <%= render partial: 'groups/properties', locals: { show_units: false, show_created: false, show_order: true, show_remove: false } %>
             </div>
-        </section>
-        <section>
+        </row>
+        <row>
             <h6>
                 Existing Properties
             </h6>
@@ -84,7 +84,7 @@
             <div id="properties">
                 <%= render partial: 'properties/properties', locals: { show_units: false, show_created: false, show_remove: false } %>
             </div>
-        </section>
+        </row>
     </aside>
 </div>
 <br/>

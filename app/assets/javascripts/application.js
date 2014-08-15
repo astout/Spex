@@ -14,13 +14,14 @@
 //= require jquery.turbolinks
 //= require jquery_ujs
 //= require bootstrap
+//= require select2
 //= require turbolinks
-//= require selectize
+//= require jquery.tokeninput
 //= require_tree .
 
 $(function()
 {
-    $("[data-toggle='tooltip']").tooltip();
+    window.toolize();
 
     $("a.refresh").hover(
         function() { $(this).addClass("fa-spin") },
@@ -87,5 +88,20 @@ window.getAllParameters = function( href )
     return "";
   else
     return decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
+window.getSelectionText = function() {
+    var text = "";
+    if (window.getSelection) {
+        text = window.getSelection().toString();
+    } else if (document.selection && document.selection.type != "Control") {
+        text = document.selection.createRange().text;
+    }
+    return text;
+}
+
+window.toolize = function() {
+  console.log("toolize");
+  $("[data-toggle='tooltip']").tooltip();
 }
 

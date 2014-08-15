@@ -1,19 +1,36 @@
+
+
 <% provide(:title, "Sign in") %>
 <h1>Sign in</h1>
 
-<div class="row">
-  <div class="col-xs-4 col-xs-offset-4">
-    <%= bootstrap_form_for(:session, url: sessions_path, inline_errors: false) do |f| %>
-		
-      <!-- <%= f.label :login %> -->
-      <%= f.text_field :login %>
+<% unless signed_in? %>
 
-      <!-- <%= f.label :password %> -->
-      <%= f.password_field :password %>
+  <div class="row">
+    <div class="col-xs-4 col-xs-offset-4">
+      <%= bootstrap_form_for(:session, url: sessions_path, inline_errors: false) do |f| %>
+  		
+        <!-- <%= f.label :login %> -->
+        <%= f.text_field :login %>
 
-      <%= f.submit "Sign in", class: "btn btn-large btn-primary btn75" %>
-    <% end %>
+        <!-- <%= f.label :password %> -->
+        <%= f.password_field :password %>
 
-    <p>New user? <%= link_to "Sign up now!", signup_path %></p>
+        <%= f.submit "Sign in", class: "btn btn-large btn-primary btn75" %>
+      <% end %>
+
+      <p>New user? <%= link_to "Sign up now!", signup_path %></p>
+    </div>
   </div>
-</div>
+
+<% else %>
+
+  <div class="alert alert-info col-xs-6 col-xs-offset-3">
+    <p>You're already signed in, <%= current_user.first %>!</p>
+    <div>
+      <%= link_to "", current_user, class: "fa fa-user" %>
+      <%= link_to current_user.login, current_user %>
+    </div>
+  </div>
+  <div style="margin-bottom: 100px"></div>
+
+<% end %>

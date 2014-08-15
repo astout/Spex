@@ -1,6 +1,6 @@
 <h6> Edit Entity Property Relationship </h6>
 <div class="row">
-  <div class="col-xs-10 col-xs-offset-1">
+  <div class="col-xs-12">
     <%= bootstrap_form_for(relation, url: { controller: "hub", action: "update_epr" }, method: :post, remote: true) do |f| %>
       <%= render partial: 'entity_property_relationships/fields', locals: { f: f, relation: relation } %>
       <%= f.submit "Update", class: "btn btn-sm btn-primary btn75", id: "update-epr" %>

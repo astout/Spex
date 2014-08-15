@@ -1,17 +1,1 @@
-<% provide(:title, 'All Groups') %>
-
-<!-- Reload defaults -->
-<a style="color: #494A4A" href="<%= groups_path %>">Groups</a>
-
-<h1>All Groups</h1>
-
-<!-- Link to Entity creation form -->
-<%= link_to "Create New", new_group_path, class: "btn btn-primary btn-sm", style: "float: right; margin-bottom: 10px"%>
-<br/>
-<br/>
-
-<!-- Search Form -->
-<%= render partial: 'search', locals: { path: groups_path, remote: false } %>
-
-<!-- List -->
-<%= render partial: 'groups/groups', locals: { show_created: true, show_remove: true } %>
+<%= render partial: 'layouts/index', locals: {model: "group", locale: { show_created: true, show_remove: true } } %>

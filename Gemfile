@@ -5,6 +5,7 @@ ruby '2.1.1'
 gem 'rails', '4.0.5'
 gem 'bootstrap-sass'
 gem 'font-awesome-sass'
+gem 'webhostinghub-glyphs-rails'
 gem 'bootstrap_form'
 gem 'sprockets', '2.11.0'
 gem 'bcrypt-ruby', '3.1.2'
@@ -12,7 +13,8 @@ gem 'faker', '1.1.2'
 gem 'will_paginate'
 gem 'bootstrap-will_paginate'
 gem 'pg', '0.15.1'
-gem 'selectize-rails'
+gem 'select2-rails'
+gem 'dentaku', '~> 1.1.0'
 
 # Use sqlite3 as the database for Active Record
 group :development, :test do

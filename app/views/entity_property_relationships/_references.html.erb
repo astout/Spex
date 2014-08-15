@@ -1,0 +1,25 @@
+<div class="input-group input-group-sm select2-bootstrap-prepend">
+  <span class="input-group-btn">
+    <button id=<%= relation.id %> class="btn btn-default epr-ref-entity" type="button" >
+      Entity
+    </button>
+  </span>
+  <%= select_tag "entities", options_from_collection_for_select(@entities_all, "id", "name", entity || relation.entity.id), id: relation.id, class: "form-control epr-ref epr-ref-entity col-xs-12", include_blank: true %>
+</div>
+<div class="input-group input-group-sm select2-bootstrap-prepend">
+  <span class="input-group-btn">
+    <button id=<%= relation.id %> class="btn btn-default epr-ref-group" type="button">
+      Group
+    </button>
+  </span>
+  <%= select_tag "groups", options_from_collection_for_select(@groups_all, "id", "name", group || relation.group.id), id: relation.id, class: "form-control epr-ref epr-ref-group col-xs-12", include_blank: true %>
+</div>
+<div class="input-group input-group-sm select2-bootstrap-prepend">
+  <span class="input-group-btn">
+    <button id=<%= relation.id %> class="btn btn-default epr-ref-property" type="button">
+      Property
+    </button>
+  </span>
+  <%= select_tag "properties", options_from_collection_for_select(@properties_all.reject {|p| p.id == relation.property.id }, "id", "name"), id: relation.id, class: "form-control epr-ref epr-ref-property col-xs-12", include_blank: true %>
+</div>
+<button id=<%= relation.id %>  class="btn btn-success btn-sm epr-ref-append disabled"><span class="glyphicon glyphicon-plus"></span></button>

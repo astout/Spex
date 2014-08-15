@@ -3,6 +3,19 @@ class EntityPropertyRelationshipsController < ApplicationController
     redirect_to root_url unless current_user.admin?
   end
 
+  def index
+    @entities_all = Entity.search(params[:q])
+    @groups_all = Group.search(params[:q])
+    @properties_all = Property.search(params[:q])
+
+    @all = @entities_all + @groups_all + @properties_all
+
+    respond_to do |format|
+      format.html
+      format.json { render json: @all.map { |a| a.attributes.merge 'class' => a.class.name } }
+    end
+  end
+
   def create
     session[:return_to] ||= request.referer
     @entity = Entity.find(params[:entity])

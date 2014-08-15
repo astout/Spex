@@ -1,6 +1,15 @@
+<%= javascript_tag do %>
+    $('body').addClass('report');
+<% end %>
 <div class="panel panel-default report">
   <div class="panel-heading">
-    <h3 class="panel-title"><%= "#{@entity.name} Spec Report" %></h3>
+    <% if !@entity.label.blank? %>
+      <h3 class="panel-title"><%= "#{@entity.label} Spec Report" %></h3>
+    <% elsif !@entity.name.blank? %>
+      <h3 class="panel-title"><%= "#{@entity.name} Spec Report" %></h3>
+    <% else %>
+      <h3 class="panel-title"><%= "[NameError] Spec Report" %></h3>
+    <% end %>
   </div>
   <div class="panel-body">
     <% if @entity.properties.any? %>
@@ -23,25 +32,34 @@
               </strong>
             </td>
           </tr>
-            <% @entity.property_relations_via(egr.group).each do |epr| %>
-              <tr class="epr-row">
-                <td class="property-name" style="padding: 5px 0px 0px 20px">
-                  <% found = false %>
-                  <% if !epr.label.blank? && !found %>
-                    <%= epr.label %>
-                    <% found = true %>
-                  <% elsif !epr.property.default_label.blank? && !found %>
-                    <%= epr.property.default_label %>
-                    <% found = true %>
-                  <% else !epr.property.name.blank? && !found %>
-                    <%= epr.property.name %>
-                    <% found = true %>
-                  <% end %>
-                </td>
-                <td class="property-value" style="text-align: right">
-                  <%= epr.value %>
+          <% @entity.property_relations_via(egr.group).each do |epr| %>
+            <tr class="epr-row">
+              <td class="property-name" style="padding: 5px 0px 0px 20px">
+                <% found = false %>
+                <% if !epr.label.blank? && !found %>
+                  <%= epr.label %>
+                  <% found = true %>
+                <% elsif !epr.property.default_label.blank? && !found %>
+                  <%= epr.property.default_label %>
+                  <% found = true %>
+                <% else !epr.property.name.blank? && !found %>
+                  <%= epr.property.name %>
+                  <% found = true %>
+                <% end %>
+              </td>
+              <td id=<%= epr.id %> class="property-value" style="text-align: right">
+                <%= parse_value("#{epr.value}") %>
+              </td>
+            </tr>
+            <% if current_user.admin? %>
+              <tr>
+                <td colspan="100%" class="hidden-value">
+                  <div id=<%= epr.id %> class="trueValue light-font">
+                    <%= epr.value %>
+                  </div>
                 </td>
               </tr>
+            <% end %>
           <% end %>
         <% end %>
       </table>

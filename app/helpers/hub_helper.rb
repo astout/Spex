@@ -103,4 +103,99 @@ module HubHelper
     end
   end #end groups_property_relations
 
+  #regex matches ThreeVariables.separatedBy.oneDecimal 
+  #((?<![.])\b+\w+[.]\w+[.]\w+\b+(?![.]))
+
+  #regex matches {ThreeVariables.separatedBy.oneDecimal} (surrounded by curly braces).
+  #([{]\w+[.]\w+[.]\w+[}])
+
+  #same as above but allows spaces in names
+  #([{]\w*\s*\w+[.]\w*\s*\w+[.]\w*\s*\w+[}])
+  #remember only what's inside the brackets
+  #[{](\w*\s*\w+[.]\w*\s*\w+[.]\w*\s*\w+)[}]
+
+  #get any int or decimal number
+  #\d+[.]?(?!\d)*
+
+  #match anything between square brackets
+  #(\[.*\])
+
+  #match each occurrence of enclosures of double brackets
+  #\[\[([^]]+)\]\]
+
+  def parse_value(value)
+    return unless value.class == String
+    result = value
+    vars = []
+    #split the string by variable references
+    pieces = value.split(/([{]\w*\s*\w+[.]\w*\s*\w+[.]\w*\s*\w+[}])/)
+    pieces.each do |piece|
+      #each sub-part, if it's a variable, get just the variable w/o curly braces
+      scan = piece.scan(/[{](\w*\s*\w+[.]\w*\s*\w+[.]\w*\s*\w+)[}]/).flatten
+      unless scan.empty?
+        puts "GETTING VALUE FOR: "
+        puts scan.first
+        #parse the reference, get the value
+        val = parse_reference(scan.first)
+        puts "VALUE RETRIEVED: "
+        puts val
+        puts "REPLACING #{piece} WITH #{val}"
+        result.sub!(piece, val)
+        puts "RESULT CHANGED: "
+        puts result
+      end
+    end
+
+    #split the result by equations
+    pieces = result.split(/(\[\[[^\]]+\]\])/)
+    pieces.each do |piece|
+      scan = piece.scan(/\[\[([^\]]+)\]\]/).flatten
+      unless scan.empty?
+        puts "PIECE BEFORE EVALUATE: #{scan.first}"
+        _scan = evaluate_value(scan.first)
+        val = _scan.nil? ? scan : _scan
+        puts "PIECE AFTER EVALUATE: #{val}"
+        puts "REPLACING #{piece} WITH #{val}"
+        result.sub!(piece, val)
+        puts "RESULT CHANGED: "
+        puts result
+      end
+    end
+    result
+  end
+
+  def evaluate_value(value)
+    return value if value.blank?
+    result = value
+    begin result = Dentaku.evaluate(value)
+    rescue Exception => e
+      puts "error caught:"
+      puts e.message
+    end
+    result.to_s
+  end
+
+  def parse_formula(formula)
+    return unless formula.class == String
+    pieces = formula.scan(/\{(.*?)\}/)
+  end
+
+  def parse_reference(ref)
+    return unless ref.class == String
+    pieces = ref.split "."
+    return if pieces.empty?
+
+    ename = pieces.first.strip
+    gname = pieces[1].strip
+    pname = pieces.last.strip
+
+    entity = Entity.find_by_name ename
+    group = Group.find_by_name gname
+    property = Property.find_by_name pname
+
+    relationship = EntityPropertyRelationship.find_by entity_id: entity.id, group_id: group.id, property_id: property.id
+
+    relationship.value
+  end
+
 end

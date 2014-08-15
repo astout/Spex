@@ -1,0 +1,29 @@
+<table class="table table-condensed users">
+    <th>
+        Avatar
+    </th>
+    <th>
+        <%= user_sortable "first" %>
+    </th>
+    <th>
+        <%= user_sortable "last" %>
+    </th>
+    <th>
+        <%= user_sortable "email" %>
+    </th>
+    <th>
+        <%= user_sortable "login" %>
+    </th>
+    <% if current_user.admin? %>
+        <th>
+            <%= user_sortable "created_at", "Created" %>
+        </th>
+    <% end %>
+    <% if current_user.admin? %>
+        <th>
+            Remove
+        </th>
+    <% end %>
+  <%= render partial: 'users/user', collection: @users, locals: {}  %>
+</table>
+<%= will_paginate @users, inner_window: 0, outer_window: 0, param_name: 'users_page', params: { event: 'user' } %>

@@ -1,3 +1,12 @@
+<script type="text/javascript">
+  // "<% @saved_value = property_relationship.value.dup %>"
+  // window.epr_value = "<% @_ = property_relationship.value %>";
+  // var text = "<%= property_relationship.id %>"; 
+  // console.log("value for " + text);
+  // text = "<%= property_relationship.value %>"; 
+  // console.log(text);
+  // console.log("ogVal: <%= @_ogVal %>");
+</script>
 <tr id=<%= "#{property_relationship.id}" %> class="list-item epr" data-order=<%= property_relationship.order+1 %> >
     <td>
       <%= link_to property_relationship.property.name, property_relationship %>
@@ -16,7 +25,13 @@
       </td>
     <% end %>
     <td>
-        <%= link_to property_relationship.value || "", "#edit-#{property_relationship.id}" %>
+        <% @_value_copy = property_relationship.value.dup %>
+        <% @_value_copy = parse_value(@_value_copy) || "" %>
+        <% if @_value_copy.to_s.length > 10 %>
+            <span class="fa fa-ellipsis-h"></span>
+        <% else %>
+            <%= @_value_copy %>
+        <% end %>
     </td>
     <td>
       <%= property_relationship.order+1 %>

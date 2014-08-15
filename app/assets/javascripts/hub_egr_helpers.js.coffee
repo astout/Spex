@@ -230,20 +230,24 @@ clearSelectedEGRs = () ->
 window.clearSelectedEGRs = clearSelectedEGRs
 
 getEGRs = (id) ->
-    params = $.param( { 
-        selected_entity: id, 
-        selected_groups: window.selected_groups, 
-        group_search: $("input#group_search_field").val(), 
-        group_direction: window.group_direction, 
-        group_sort: window.group_sort, 
-        groups_page: window.groups_page,
-        event: 'egrs'
-        } )
-    $
-    #send the request to add the selected groups to the selected entity
-    $.ajax 
-        url: "/hub/egrs?" + params
-        type: 'POST'
+    if id < 0
+        $.get "/hub"
+        false
+    else
+        params = $.param( { 
+            selected_entity: id, 
+            selected_groups: window.selected_groups, 
+            group_search: $("input#group_search_field").val(), 
+            group_direction: window.group_direction, 
+            group_sort: window.group_sort, 
+            groups_page: window.groups_page,
+            event: 'egrs'
+            } )
+        $
+        #send the request to add the selected groups to the selected entity
+        $.ajax 
+            url: "/hub/egrs?" + params
+            type: 'POST'
 window.getEGRs = getEGRs
 
 topEntityGroupRelations = (relationship_ids) ->

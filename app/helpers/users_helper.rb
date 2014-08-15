@@ -6,4 +6,16 @@ module UsersHelper
     gravatar_url = "https://secure.gravatar.com/avatar/#{gravatar_id}?s=#{size}"
     image_tag(gravatar_url, alt: user.first + " " + user.last, class: "gravatar")
   end
+
+  def user_params
+    params.require(:user).permit(:first, :last, :login, :email)
+  end
+
+  def user_sort_column
+    User.column_names.include?(params[:user_sort]) ? params[:user_sort] : "created_at"
+  end
+
+  def user_sort_direction
+    %w[asc desc].include?(params[:user_direction]) ? params[:user_direction] : "desc"
+  end
 end

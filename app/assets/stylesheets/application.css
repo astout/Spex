@@ -11,9 +11,12 @@
  *= require_self
  *= require_tree .
  *= require rails_bootstrap_forms
- *= require selectize
- *= require selectize.default
-
+ *= require token-input
+ *= require token-input-facebook
+ *= require token-input-mac
+ *= require select2
+ *= require select2-bootstrap1
+ *= require webhostinghub-glyphs
  */
 
 .input-xs {

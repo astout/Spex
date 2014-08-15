@@ -26,8 +26,11 @@ Spex::Application.routes.draw do
   post "hub/bottom_gprs"
   post "hub/eprs"
   get "groups/new"
+  get "hub/epr_ref_update"
+  get "hub/epr_evaluate"
   get "entities/new"
   get "properties/new"
+  get "hub/selectize"
   resources :users
   resources :group_property_relationships
   resources :entity_group_relationships

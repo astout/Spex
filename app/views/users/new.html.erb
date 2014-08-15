@@ -1,11 +1,26 @@
 <% provide(:title, 'Sign up') %>
 <h1>Sign up</h1>
 
-<div class="row">
-  <div class="col-xs-6 col-xs-offset-3">
-    <%= bootstrap_form_for(@user, inline_errors: false) do |f| %>
-      <%= render 'users/fields', f: f %>
-      <%= f.submit "Create my account", class: "btn btn-large btn-primary btn150"%>
-    <% end %>
-  </div>
-</div>
+<% unless signed_in? %>
+
+	<div class="row">
+	  <div class="col-xs-6 col-xs-offset-3">
+	    <%= bootstrap_form_for(@user, inline_errors: false) do |f| %>
+	      <%= render 'users/fields', f: f %>
+	      <%= f.submit "Create my account", class: "btn btn-large btn-primary btn150"%>
+	    <% end %>
+	  </div>
+	</div>
+
+<% else %>
+
+	<div class="alert alert-info col-xs-6 col-xs-offset-3">
+	  <p>You're already signed in, <%= current_user.first %>!</p>
+	  <div>
+	    <%= link_to "", current_user, class: "fa fa-user" %>
+	    <%= link_to current_user.login, current_user %>
+	  </div>
+	</div>
+	<div style="margin-bottom: 100px"></div>
+	
+<% end %>

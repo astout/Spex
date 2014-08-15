@@ -22,6 +22,13 @@ module ApplicationHelper
     link_to title, params.merge(property_sort: column, property_direction: direction, event: "property", page: nil), {class: css_class}  
   end
 
+  def user_sortable(column, title = nil)
+    title ||= column.titleize 
+    css_class = (column == user_sort_column) ? "current #{user_sort_direction}" : nil  
+    direction = (column == user_sort_column && user_sort_direction == "asc") ? "desc" : "asc"  
+    link_to title, params.merge(user_sort: column, user_direction: direction, event: "user", page: nil), {class: css_class}  
+  end
+
   def egr_sortable(column, title = nil)
     title ||= column.titleize 
     css_class = (column == egr_sort_column) ? "current #{egr_sort_direction}" : nil  
@@ -39,21 +46,5 @@ module ApplicationHelper
     end
   end
 
-  def parse_value(value)
-    return unless value.class == String
-    pieces = value.split "."
-    return if pieces.empty?
-
-    ename = pieces.first.strip
-    gname = pieces[1].strip
-    pname = pieces.last.strip
-
-    entity = Entity.find_by name: ename
-    group = Group.find_by name: gname
-    property = Property.find_by name: pname
-
-    relationship = EntityPropertyRelationship.find_by entity_id: entity.id, group_id: group.id, property_id: property.id
-
-    relationship.value
-  end 
+  
 end

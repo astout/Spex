@@ -111,7 +111,12 @@ class Entity < ActiveRecord::Base
   end
 
   def property_relations_via(group)
-    relations = self.property_relations.select { |r| r[:group_id] == group.id }
+    relations = []
+    if group.class == Fixnum
+      relations = self.property_relations.select { |r| r[:group_id] == group }
+    else
+      relations = self.property_relations.select { |r| r[:group_id] == group.id }
+    end
     relations.sort_by { |r| r[:order] }
   end
 
@@ -450,7 +455,7 @@ class Entity < ActiveRecord::Base
       #remove the trailing 'AND' from the clause
       clause = clause.gsub(/(.*)( AND )(.*)/, '\1')
 
-      #call the query using the clause and each binding element
+      #call the query using the clause and each binding element and return the result
       where clause, *elements
     else
       all # if _elements.empty?

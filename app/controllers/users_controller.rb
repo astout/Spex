@@ -1,11 +1,13 @@
 class UsersController < ApplicationController
+  include UsersHelper
   before_action :signed_in_user, only: [:index, :edit, :update, :destroy,
       :following, :followers]
   before_action :correct_user,   only: [:edit, :update]
-  before_action :admin_user,     only: :destroy
+  before_action :admin_user,     only: [:destroy, :index]
 
   def index
-    @users = User.paginate(page: params[:page])
+    # @users = User.paginate(page: params[:page])
+    @users = User.search(params[:user_search]).order(user_sort_column + ' ' + user_sort_direction).paginate(page: params[:users_page])
   end
 
   def show
@@ -13,8 +15,6 @@ class UsersController < ApplicationController
   end
 
   def new
-    # TODO: Display a page notifying they're already registered.
-    redirect_to(root_url) unless current_user?(@user)
     @user = User.new
   end
 

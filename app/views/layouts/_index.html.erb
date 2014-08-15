@@ -1,0 +1,19 @@
+<% provide(:title, "All #{model.capitalize.pluralize}") %>
+<script type="text/javascript">
+    $("body").addClass('<%= "#{model.pluralize}-index" %>');
+</script>
+<!-- Reload defaults -->
+<%= link_to "#{model.capitalize.pluralize}", send("#{model.pluralize}_path"), style: "color: #494A4A"%>
+
+<h1><%= "All #{model.capitalize.pluralize}" %></h1>
+
+<!-- Link to Entity creation form -->
+<%= link_to "Create New", send("new_#{model}_path"), class: "btn btn-primary btn-sm", style: "float: right; margin-bottom: 10px"%>
+<br/>
+<br/>
+
+<!-- Search Form -->
+<%= render partial: 'search', locals: { path: send("#{model.pluralize}_path"), remote: false } %>
+
+<!-- List -->
+<%= render partial: "#{model.pluralize}/#{model.pluralize}", locals: locale %>

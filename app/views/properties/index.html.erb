@@ -1,17 +1,1 @@
-<% provide(:title, 'All Properties') %>
-
-<!-- Reload defaults -->
-<a style="color: #494A4A" href="<%= properties_path %>">Properties</a>
-
-<h1>All Properties</h1>
-
-<!-- Link to Entity creation form -->
-<%= link_to "Create New", new_property_path, class: "btn btn-primary btn-sm", style: "float: right; margin-bottom: 10px"%>
-<br/>
-<br/>
-
-<!-- Search Form -->
-<%= render partial: 'search', locals: { path: properties_path, remote: false } %>
-
-<!-- List -->
-<%= render partial: 'properties/properties', locals: { show_units: true, show_created: true, show_remove: true } %>
+<%= render partial: 'layouts/index', locals: {model: params[:controller].singularize, locale: { show_units: true, show_created: true, show_remove: true} } %>

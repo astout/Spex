@@ -1,0 +1,24 @@
+<label class="control-label" for="epr-formula">Value Formula Helper</label>
+<div id=<%= relation.id %> class="epr-formula panel panel-default">
+  <ul id=<%= "formulaTabs-#{relation.id}" %> class="nav nav-tabs sm nav-justified" role="tablist">
+    <li class="active"><a href=<%= "\#text-#{relation.id}" %> role="tab" data-toggle="tab">Text</a></li>
+    <li class=""><a href=<%= "\#ref-#{relation.id}" %> role="tab" data-toggle="tab">Reference</a></li>
+    <li class=""><a href=<%= "\#math-#{relation.id}" %> role="tab" data-toggle="tab">Math</a></li>
+  </ul>
+  <div id=<%= "formulaTabContent-#{relation.id}" %> class="tab-content">
+    <div class="tab-pane fade active in" id=<%= "text-#{relation.id}" %> >
+      <div class="input-group input-group-sm"> 
+        <input class="form-control epr-formula-text" id=<%= relation.id %> name="epr-formula" type="text" autocomplete="off">
+        <span class="input-group-btn">
+          <button class="btn btn-success disabled epr-text-append" id=<%= relation.id %> ><span class="glyphicon glyphicon-plus"></span></button>
+        </span>
+      </div>
+    </div>
+    <div class="tab-pane fade" id=<%= "ref-#{relation.id}" %> >
+      <%= render partial: 'entity_property_relationships/references', locals: { relation: relation, entity: nil, group: nil, properties: nil } %>
+    </div>
+    <div class="tab-pane fade" id=<%= "math-#{relation.id}" %> >
+      <%= render partial: 'entity_property_relationships/calculator', locals: { relation: relation } %>
+    </div>
+  </div>
+</div>

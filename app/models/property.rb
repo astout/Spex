@@ -119,7 +119,7 @@ class Property < ActiveRecord::Base
   end
 
   ##################
-  # # # GROUP SEARCH
+  # # # PROPERTY SEARCH
   ##################
 
   #class function

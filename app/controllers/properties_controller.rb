@@ -1,10 +1,12 @@
 class PropertiesController < ApplicationController
+  include PropertiesHelper
   before_action do
     redirect_to root_url unless current_user.admin?
   end
 
   def index
-    @properties = Property.paginate(page: params[:page])
+    # @properties = Property.paginate(page: params[:page])
+    @properties = Property.search(params[:property_search]).order(property_sort_column + ' ' + property_sort_direction).paginate(page: params[:properties_page])
   end
 
   def show

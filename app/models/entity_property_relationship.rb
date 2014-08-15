@@ -1,4 +1,6 @@
 class EntityPropertyRelationship < ActiveRecord::Base
+  attr_accessor :evaluation
+  attr_reader :evaluation
   belongs_to :entity
   belongs_to :property
   belongs_to :group
@@ -21,6 +23,10 @@ class EntityPropertyRelationship < ActiveRecord::Base
 
   def egr
     egr = EntityGroupRelationship.find_by entity_id: self.entity_id, group_id: self.group_id
+  end
+
+  def evaluation=(value)
+
   end
 
 end

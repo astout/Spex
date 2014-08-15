@@ -1,0 +1,11 @@
+<%= form_tag path, method: 'get', remote: remote do %>
+    <%= hidden_field_tag :user_direction, params[:user_direction] %>
+    <%= hidden_field_tag :user_sort, params[:user_sort] %>
+    <%= hidden_field_tag :event, 'user' %>
+    <div class="input-group" style="margin-bottom: 15px">
+        <%= text_field_tag :user_search, params[:user_search], class: "form-control" %>
+        <span class="input-group-btn" >
+            <%= submit_tag "Search", name: nil, class: "btn btn-default" %>
+        </span>
+    </div>
+<% end %>

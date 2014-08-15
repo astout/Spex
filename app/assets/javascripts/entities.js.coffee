@@ -4,10 +4,37 @@
 
 $ ->
 
+    if $("body").hasClass "report"
+
+      $(".trueValue").hide();
+
+      $("td.property-value").hover (e) ->
+        _this = this
+        openTrueValue _this 
+        e.preventDefault()
+
     if $("form#new_entity").length > 0
-        $("input#entity_name, input#entity_label, input#entity_img").on "input", ->
-            NewEntityValidation()
-        NewEntityValidation()
+      $("input#entity_name, input#entity_label, input#entity_img").on "input", ->
+          NewEntityValidation()
+      NewEntityValidation()
+
+openTrueValue = (element) ->
+  openForm = $(element).hasClass('openForm')
+  open = []
+  if openForm 
+    id = element.id
+    $(element).removeClass('openForm')
+    $('#'+id+".trueValue").delay(300).slideUp()
+  else
+    open = $('td.property-value.openForm')
+    if( open.length == 1)
+        id = open[0].id
+        open.removeClass('openForm')
+        $('#'+id+'.trueValue').delay(300).slideUp()
+    $(element).addClass('openForm')
+    id = element.id
+    $('#'+id+'.trueValue').slideDown()
+
 
 NewEntityValidation = () ->
     name = $("input#entity_name").val()
