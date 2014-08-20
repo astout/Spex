@@ -139,6 +139,7 @@ module HubHelper
         val = parse_reference(scan.first)
         puts "VALUE RETRIEVED: "
         puts val
+        val = piece if val == scan.first
         puts "REPLACING #{piece} WITH #{val}"
         result.sub!(piece, val)
         puts "RESULT CHANGED: "
@@ -153,7 +154,7 @@ module HubHelper
       unless scan.empty?
         puts "PIECE BEFORE EVALUATE: #{scan.first}"
         _scan = evaluate_value(scan.first)
-        val = _scan.nil? ? scan : _scan
+        val = _scan.blank? ? piece : _scan
         puts "PIECE AFTER EVALUATE: #{val}"
         puts "REPLACING #{piece} WITH #{val}"
         result.sub!(piece, val)
@@ -171,7 +172,9 @@ module HubHelper
     rescue Exception => e
       puts "error caught:"
       puts e.message
+      return value
     end
+    puts "EVAL RESULT: #{result}"
     result.to_s
   end
 
@@ -181,9 +184,9 @@ module HubHelper
   end
 
   def parse_reference(ref)
-    return unless ref.class == String
+    return ref unless ref.class == String
     pieces = ref.split "."
-    return if pieces.empty?
+    return ref if pieces.empty?
 
     ename = pieces.first.strip
     gname = pieces[1].strip
@@ -192,6 +195,8 @@ module HubHelper
     entity = Entity.find_by_name ename
     group = Group.find_by_name gname
     property = Property.find_by_name pname
+
+    return ref if entity.nil? || group.nil? || property.nil?
 
     relationship = EntityPropertyRelationship.find_by entity_id: entity.id, group_id: group.id, property_id: property.id
 
