@@ -16,6 +16,7 @@
                     <%= bootstrap_form_for(@property, url: { controller: "hub", action: "create_property" }, method: :post, remote: true) do |f| %>
                       <%= render 'properties/fields', f: f %>
                       <%= hidden_field_tag :selected_groups, "" %>
+                      <div class="padding15-block col-xs-12"><br></div>
                       <%= f.submit "Create Property", class: "btn btn-sm btn-primary btn110", id: "create-property" %>
                     <% end %>
                   </div>

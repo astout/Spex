@@ -46,7 +46,6 @@ class HubController < ApplicationController
   end
 
   def selectize
-
     puts "models: #{params[:model]}"
     model = params[:model]
     @entities_all = model == "entity" ? Entity.search(params[:q]) : []
@@ -148,64 +147,93 @@ class HubController < ApplicationController
     end
   end
 
-  #request to move selected entity group relationships to top
-  def top_egrs
-    @moved_egrs = egr_top(selected_egrs)
+  # #request to move selected entity group relationships to top
+  # def top_egrs
+  #   @moved_egrs = egr_top(selected_egrs)
 
-    #response for entity group relations
-    @egrs = { status: 1, msg: "", data: egr_list(selected_entity) }
+  #   #response for entity group relations
+  #   # @egrs = { status: 1, msg: "", data: egr_list(selected_entity) }
+  #   @egrs = get_egrs(selected_entity)
+
+  #   @groups = groups_list(selected_entity)
+
+  #   respond_to do |format|
+  #     format.js { render 'move_egrs' }
+  #     format.html { redirect_to hub_path }
+  #   end
+  # end
+
+  # #request to move selected entity group relations to bottom
+  # def bottom_egrs
+  #   @moved_egrs = egr_bottom(selected_entity, selected_egrs)
+
+  #   #response for entity group relations
+  #   # @egrs = { status: 1, msg: "", data: egr_list(selected_entity) }
+  #   @egrs = get_egrs(selected_entity)
+
+  #   @groups = groups_list(selected_entity)
+
+  #   respond_to do |format|
+  #     format.js { render 'move_egrs' }
+  #     format.html { redirect_to hub_path }
+  #   end
+  # end
+
+  # #request to move selected entity group relations up one
+  # def up_egrs
+  #   @moved_egrs = egr_up(selected_egrs)
+
+  #   #response for entity group relations
+  #   # @egrs = { status: 1, msg: "", data: egr_list(selected_entity) }
+  #   @egrs = get_egrs(selected_entity)
+
+  #   @groups = groups_list(selected_entity)
+
+  #   respond_to do |format|
+  #     format.js { render 'move_egrs' }
+  #     format.html { redirect_to hub_path }
+  #   end
+  # end
+
+  # #request to move selected entity group relations down one
+  # def down_egrs
+  #   @moved_egrs = egr_down(selected_egrs)
+
+  #   #response for entity group relations
+  #   # @egrs = { status: 1, msg: "", data: egr_list(selected_entity) }
+  #   @egrs = get_egrs(selected_entity)
+
+  #   @groups = groups_list(selected_entity)
+
+  #   respond_to do |format|
+  #     format.js { render 'move_egrs' }
+  #     format.html { redirect_to hub_path }
+  #   end
+  # end
+
+  def move_egrs
+    # @egrs = get_egrs(selected_entity)
+    if params[:move] == "top"
+      @moved_egrs = egr_top(selected_egrs)
+    elsif params[:move] == "bottom"
+      @moved_egrs = egr_bottom(selected_entity, selected_egrs)
+    elsif params[:move] == "down"
+      @moved_egrs = egr_down(selected_egrs)
+    else
+      @moved_egrs = egr_up(selected_egrs)
+    end
 
     @groups = groups_list(selected_entity)
 
-    respond_to do |format|
-      format.js { render 'move_egrs' }
-      format.html { redirect_to hub_path }
-    end
-  end
+    @egrs = { status: 1, msg: "", data: egr_list(@selected_entity) }
 
-  #request to move selected entity group relations to bottom
-  def bottom_egrs
-    @moved_egrs = egr_bottom(selected_entity, selected_egrs)
-
-    #response for entity group relations
-    @egrs = { status: 1, msg: "", data: egr_list(selected_entity) }
-
-    @groups = groups_list(selected_entity)
+    # @properties = properties_list(selected_egrs, selected_groups)
 
     respond_to do |format|
-      format.js { render 'move_egrs' }
+      format.js
       format.html { redirect_to hub_path }
     end
-  end
-
-  #request to move selected entity group relations up one
-  def up_egrs
-    @moved_egrs = egr_up(selected_egrs)
-
-    #response for entity group relations
-    @egrs = { status: 1, msg: "", data: egr_list(selected_entity) }
-
-    @groups = groups_list(selected_entity)
-
-    respond_to do |format|
-      format.js { render 'move_egrs' }
-      format.html { redirect_to hub_path }
-    end
-  end
-
-  #request to move selected entity group relations down one
-  def down_egrs
-    @moved_egrs = egr_down(selected_egrs)
-
-    #response for entity group relations
-    @egrs = { status: 1, msg: "", data: egr_list(selected_entity) }
-
-    @groups = groups_list(selected_entity)
-
-    respond_to do |format|
-      format.js { render 'move_egrs' }
-      format.html { redirect_to hub_path }
-    end
+      
   end
 
   #Gets the group_property_relationships for the selected groups
@@ -299,65 +327,89 @@ class HubController < ApplicationController
     end
   end
 
-  #request to move selected entity group relationships to top
-  def top_eprs
-    @moved_eprs = epr_top(selected_eprs)
+  def move_eprs
+    eprs_data
+    if params[:move] == "top"
+      @moved_eprs = epr_top(selected_eprs)
+    elsif params[:move] == "bottom"
+      @moved_eprs = epr_bottom(@selected_egrs, selected_eprs)
+    elsif params[:move] == "down"
+      @moved_eprs = epr_down(selected_eprs)
+    else
+      @moved_eprs = epr_up(selected_eprs)
+    end
 
-    #response for entity group relations
-    @eprs = { status: 1, msg: "", data: epr_list(selected_egrs) }
+    @eprs = { status: 1, msg: "", data: epr_list(@selected_egrs) }
 
     # @properties = properties_list(selected_egrs, selected_groups)
 
     respond_to do |format|
-      format.js { render 'move_eprs' }
+      format.js
       format.html { redirect_to hub_path }
     end
+      
   end
 
-  #request to move selected entity group relations to bottom
-  def bottom_eprs
-    @moved_eprs = epr_bottom(selected_egrs, selected_eprs)
 
-    #response for entity group relations
-    @eprs = { status: 1, msg: "", data: epr_list(selected_egrs) }
+  # #request to move selected entity group relationships to top
+  # def top_eprs
+  #   @moved_eprs = epr_top(selected_eprs)
 
-    # @properties = properties_list(selected_egrs, selected_groups)
+  #   #response for entity group relations
+  #   @eprs = { status: 1, msg: "", data: epr_list(selected_egrs) }
 
-    respond_to do |format|
-      format.js { render 'move_eprs' }
-      format.html { redirect_to hub_path }
-    end
-  end
+  #   # @properties = properties_list(selected_egrs, selected_groups)
 
-  #request to move selected entity group relations up one
-  def up_eprs
-    @moved_eprs = epr_up(selected_eprs)
+  #   respond_to do |format|
+  #     format.js { render 'move_eprs' }
+  #     format.html { redirect_to hub_path }
+  #   end
+  # end
 
-    #response for entity group relations
-    @eprs = { status: 1, msg: "", data: epr_list(selected_egrs) }
+  # #request to move selected entity group relations to bottom
+  # def bottom_eprs
+  #   @moved_eprs = epr_bottom(selected_egrs, selected_eprs)
 
-    # @properties = properties_list(selected_egrs, selected_groups)
+  #   #response for entity group relations
+  #   @eprs = { status: 1, msg: "", data: epr_list(selected_egrs) }
 
-    respond_to do |format|
-      format.js { render 'move_eprs' }
-      format.html { redirect_to hub_path }
-    end
-  end
+  #   # @properties = properties_list(selected_egrs, selected_groups)
 
-  #request to move selected entity group relations down one
-  def down_eprs
-    @moved_eprs = epr_down(selected_eprs)
+  #   respond_to do |format|
+  #     format.js { render 'move_eprs' }
+  #     format.html { redirect_to hub_path }
+  #   end
+  # end
 
-    #response for entity group relations
-    @eprs = { status: 1, msg: "", data: epr_list(selected_egrs) }
+  # #request to move selected entity group relations up one
+  # def up_eprs
+  #   @moved_eprs = epr_up(selected_eprs)
 
-    # @properties = properties_list(selected_egrs, selected_groups)
+  #   #response for entity group relations
+  #   @eprs = { status: 1, msg: "", data: epr_list(selected_egrs) }
 
-    respond_to do |format|
-      format.js { render 'move_eprs' }
-      format.html { redirect_to hub_path }
-    end
-  end
+  #   # @properties = properties_list(selected_egrs, selected_groups)
+
+  #   respond_to do |format|
+  #     format.js { render 'move_eprs' }
+  #     format.html { redirect_to hub_path }
+  #   end
+  # end
+
+  # #request to move selected entity group relations down one
+  # def down_eprs
+  #   @moved_eprs = epr_down(selected_eprs)
+
+  #   #response for entity group relations
+  #   @eprs = { status: 1, msg: "", data: epr_list(selected_egrs) }
+
+  #   # @properties = properties_list(selected_egrs, selected_groups)
+
+  #   respond_to do |format|
+  #     format.js { render 'move_eprs' }
+  #     format.html { redirect_to hub_path }
+  #   end
+  # end
 
   #update entity property relationship with submitted params
   def update_epr
@@ -380,8 +432,15 @@ class HubController < ApplicationController
     eprs_data
 
     respond_to do |format|
-      format.js
-      format.html { redirect_to hub_path }
+      if params[:page] == "report"
+        puts "report"
+        format.js { redirect_to(action: 'show', controller: 'entities', id: @epr[:data].entity.id, property: @epr[:data].property.name ) and return }
+        # format.html { redirect_to entities_path(@epr[:data].entity) }
+      else
+        puts "hub"
+        format.js
+        format.html { redirect_to hub_path }
+      end
     end
   end
 
@@ -403,10 +462,10 @@ class HubController < ApplicationController
     @current_epr = EntityPropertyRelationship.find_by(id: params[:current_epr])
 
     # @entities_all = Entity.all
-    e = Entity.find_by_id @epr_ref_entity
+    e = Entity.find_by id: @epr_ref_entity
     @groups_all = e.nil? ? @current_epr.entity.groups : e.groups
 
-    g = Group.find_by_id @epr_ref_group
+    g = Group.find_by id: @epr_ref_group
     # @groups_all = Group.all
     @properties_all = g.nil? ? [] : g.properties
 
@@ -419,7 +478,7 @@ class HubController < ApplicationController
     # @ref_eprs = EntityPropertyRelationship.where(entity_id: @epr_ref_entity, group_id: @epr_ref_group)
 
     puts "ALL MODEL COLLECTIONS:"
-    puts @entities_all
+    # puts @entities_all
     puts @groups_all
     puts @properties_all
 

@@ -4,21 +4,22 @@ FactoryGirl.define do
     first    "foo"
     last     "bar"
     login    "foobar"
+    email    "foo@bar.com"
+    role_id  Roles.find_by (default: true)
     password "coffee"
     password_confirmation "coffee"
   end
 
   factory :admin_user do
-    first    "Alex"
-    last     "Stout"
+    first    "admin"
+    last     "user"
     email    "astout@goalzero.com"
-    login    "astout"
-    role     1
+    login    "admin"
     password "coffee"
     password_confirmation "coffee"
 
     factory :admin do
-      admin true
+      role_id  Roles.find_by(admin: true)
     end
   end
 

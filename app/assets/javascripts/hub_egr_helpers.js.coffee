@@ -1,8 +1,8 @@
 #entity group relationship functions
 
 window.selected_egrs = []
-window.selected_egr_orders = [] #list of selected entity's groups order
-window.selected_egr_max_order = -1 
+window.selected_egr_positions = [] #list of selected entity's groups position
+window.selected_egr_max_position = -1 
 
 $ ->
 
@@ -10,7 +10,7 @@ $ ->
         #On EntityGroupRelationship element click
         $("body").on "click", '.table tr.egr', (e) ->
             #get the group id
-            toggleEGRselect this.id, $(this).data().order, e.ctrlKey || e.metaKey
+            toggleEGRselect this.id, $(this).data().position, e.ctrlKey || e.metaKey
 
         #When the add groups button is clicked
         $("body").on "click", "#add-selected-groups", (e) ->
@@ -53,7 +53,7 @@ $ ->
 
 #end onLoad function
 
-toggleEGRselect = (id, order, multiSelect) ->
+toggleEGRselect = (id, position, multiSelect) ->
     #if the clicked group is already selected
     id += "" #stringify
     index = $.inArray id, window.selected_egrs
@@ -74,12 +74,12 @@ toggleEGRselect = (id, order, multiSelect) ->
         $("tr#"+id+".egr").addClass "selected-egr"
         window.selected_egrs.push(id)
 
-    order += "" #stringify
-    index = $.inArray order, window.selected_egr_orders
+    position += "" #stringify
+    index = $.inArray position, window.selected_egr_positions
     if index > -1
-        window.selected_egr_orders.splice(index, 1)
+        window.selected_egr_positions.splice(index, 1)
     else
-        window.selected_egr_orders.push order
+        window.selected_egr_positions.push position
 
     getEntitysProperties window.selected_egrs
     validateEGRselection()
@@ -145,17 +145,17 @@ validateEGRselection = () ->
         $("#clear-selected-egrs").addClass("disabled")
         $("#delete-selected-egrs").addClass("disabled")
 
-    orders = window.selected_egr_orders
-    maxOrder = window.selected_egr_max_order + ""
+    positions = window.selected_egr_positions
+    maxPosition = window.selected_egr_max_position + ""
 
-    if orders.length < 1
-        $("div.group-order-action").removeClass "enabled"
-        $("div.group-order-action").addClass "disabled"
+    if positions.length < 1
+        $("div.group-position-action").removeClass "enabled"
+        $("div.group-position-action").addClass "disabled"
     else
-        valid = orders.length * ( orders.length + 1) / 2
+        valid = positions.length * ( positions.length + 1) / 2
         sum = 0
         try 
-            sum += eval(order) for order in orders
+            sum += eval(position) for position in positions
         catch e
             console.log e
         finally
@@ -163,8 +163,8 @@ validateEGRselection = () ->
             $("div#up-selected-egrs").addClass "disabled"
             $("div#top-selected-egrs").removeClass "enabled"
             $("div#top-selected-egrs").addClass "disabled"
-        # index_first = $.inArray "1", orders
-        # if index_first > -1 && orders.length == 1
+        # index_first = $.inArray "1", positions
+        # if index_first > -1 && positions.length == 1
         if sum <= valid
             $("div#up-selected-egrs").removeClass "enabled"
             $("div#up-selected-egrs").addClass "disabled"
@@ -175,27 +175,27 @@ validateEGRselection = () ->
             $("div#up-selected-egrs").addClass "enabled"
             $("div#top-selected-egrs").removeClass "disabled"
             $("div#top-selected-egrs").addClass "enabled"
-        # index_last = $.inArray maxOrder, orders
+        # index_last = $.inArray maxPosition, positions
         sum = 0
         valid = false
-        index = $.inArray window.selected_egr_max_order + "", orders
+        index = $.inArray window.selected_egr_max_position + "", positions
         if index < 0
             valid = true
         else
-        # if orders.length == 1
+        # if positions.length == 1
         #     if index < 0
         #         valid = true
         # else
             try
-                orders.sort()
-                # for(i = 0; i < orders.length - 1; i++)
-                #     test = eval(orders[i]) + eval(orders[i+1])
+                positions.sort()
+                # for(i = 0; i < positions.length - 1; i++)
+                #     test = eval(positions[i]) + eval(positions[i+1])
                 #     if test > 1
                 #         valid = true
                 #         break
                 i = 0
-                while i < orders.length - 1
-                  test = eval(orders[i+1]) - eval(orders[i])
+                while i < positions.length - 1
+                  test = eval(positions[i+1]) - eval(positions[i])
                   if test > 1
                     valid = true
                     break
@@ -223,8 +223,8 @@ window.validateEGRselection = validateEGRselection
 
 clearSelectedEGRs = () ->
     window.selected_egrs = []
-    window.selected_egr_orders = []
-    # window.selected_egr_max_order = -1
+    window.selected_egr_positions = []
+    # window.selected_egr_max_position = -1
     $("tr.selected-egr").removeClass "selected-egr"
     clearSelectedEPRs()
 window.clearSelectedEGRs = clearSelectedEGRs
@@ -252,6 +252,7 @@ window.getEGRs = getEGRs
 
 topEntityGroupRelations = (relationship_ids) ->
     params = $.param( { 
+        move: "top",
         selected_entity: window.selected_entity,
         selected_egrs: relationship_ids.sort(), 
         selected_groups: window.selected_groups,
@@ -265,12 +266,13 @@ topEntityGroupRelations = (relationship_ids) ->
 
     #send the request to add the selected groups to the selected entity
     $.ajax 
-        url: "/hub/top_egrs?" + params
+        url: "/hub/move_egrs?" + params
         type: 'POST'
 window.topEntityGroupRelations = topEntityGroupRelations
 
 bottomEntityGroupRelations = (relationship_ids) ->
     params = $.param( { 
+        move: 'bottom',
         selected_entity: window.selected_entity,
         selected_egrs: relationship_ids.sort(), 
         selected_groups: window.selected_groups,
@@ -284,12 +286,13 @@ bottomEntityGroupRelations = (relationship_ids) ->
 
     #send the request to add the selected groups to the selected entity
     $.ajax 
-        url: "/hub/bottom_egrs?" + params
+        url: "/hub/move_egrs?" + params
         type: 'POST'
 window.bottomEntityGroupRelations = bottomEntityGroupRelations
 
 upEntityGroupRelations = (relationship_ids) ->
     params = $.param( { 
+        move: 'up',
         selected_entity: window.selected_entity,
         selected_egrs: relationship_ids.sort(), 
         selected_groups: window.selected_groups,
@@ -303,12 +306,13 @@ upEntityGroupRelations = (relationship_ids) ->
 
     #send the request to add the selected groups to the selected entity
     $.ajax 
-        url: "/hub/up_egrs?" + params
+        url: "/hub/move_egrs?" + params
         type: 'POST'
 window.upEntityGroupRelations = upEntityGroupRelations
 
 downEntityGroupRelations = (relationship_ids) ->
     params = $.param( { 
+        move: 'down',
         selected_entity: window.selected_entity,
         selected_egrs: relationship_ids.sort(), 
         selected_groups: window.selected_groups,
@@ -322,7 +326,7 @@ downEntityGroupRelations = (relationship_ids) ->
 
     #send the request to add the selected groups to the selected entity
     $.ajax 
-        url: "/hub/down_egrs?" + params
+        url: "/hub/move_egrs?" + params
         type: 'POST'
 window.downEntityGroupRelations = downEntityGroupRelations
 

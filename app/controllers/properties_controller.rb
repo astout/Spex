@@ -11,10 +11,10 @@ class PropertiesController < ApplicationController
 
   def show
     @property = Property.find(params[:id])
-    @children = @property.children.paginate(page: params[:page])
-    @child_relations = @property.child_relations.paginate(page: params[:page])
-    @parents = @property.parents.paginate(page: params[:page])
-    @parent_relations = PropertyAssociation.where(child_id: @property.id).paginate(page: params[:page])
+    # @children = @property.children.paginate(page: params[:page])
+    # @child_relations = @property.child_relations.paginate(page: params[:page])
+    # @parents = @property.parents.paginate(page: params[:page])
+    # @parent_relations = PropertyAssociation.where(child_id: @property.id).paginate(page: params[:page])
   end
 
   def own
@@ -43,6 +43,7 @@ class PropertiesController < ApplicationController
 
   def update
     @property = Property.find(params[:id])
+    params[:property][:role_ids] = params[:role_ids]
     if @property.update_attributes(property_params)
       flash[:success] = "Property updated"
       redirect_to @property
@@ -64,9 +65,9 @@ class PropertiesController < ApplicationController
 
   private
 
-    def property_params
-      params.require(:property).permit(:name, :units, :units_short, :default_label,
-                                   :default_value, :default_visibility)
-    end
+    # def property_params
+    #   params.require(:property).permit(:name, :units, :units_short, :default_label,
+    #                                :default_value, :role)
+    # end
 
 end

@@ -3,11 +3,11 @@
     <aside class="col-xs-2">
         <section>
             <h1>
-                <%= @property.name %>
+                <%= @property.name %> Definition
             </h1>
             <small class="note"><%= @property.default_label %></small>
             <div style="float: right">
-            <%= link_to "Edit", edit_property_path(@property), class: "btn btn75 btn-primary btn-sm" %>
+                <%= link_to "Edit", edit_property_path(@property), class: "btn btn75 btn-primary btn-sm" %>
             </div>
         </section>
     </aside>
@@ -21,7 +21,6 @@
                 <h3 class="panel-title">Entities</h3>
             </div>
             <div class="panel-body">
-                <%= render 'parents' %>
             </div>
         </div>
         <div class="panel panel-default" id="property-associations">
@@ -29,8 +28,6 @@
                 <h3 class="panel-title">Properties</h3>
             </div>
             <div class="panel-body">
-                <%= render 'parents' %>
-                <%= render 'children' %>
             </div>
         </div>
     </div>

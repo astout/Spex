@@ -26,16 +26,27 @@ module EntityPropertyRelationsHelper
       epr[:status] = 0
       epr[:msg] = "EntityPropertyRelationship with id: #{epr_params[:id]} not found."
     else
-      puts " -- SAVING EPR -- "
+      puts " -- SAVING EPR PARAMETERS -- "
       success = epr[:data].update(epr_params)
       puts " -- SUCCESS -- "
-      puts success
+      puts " -- ADDING ROLES TO EPR --"
+      puts " ROLE PARAM"
+      puts params[:role_ids]
+      # puts " -- EPR --"
+      # puts epr[:data]
+      epr[:data].role_ids = params[:role_ids]
+      puts " -- EPR ROLES -- "
+      puts epr[:data].roles      
       epr[:status] = success ? 1 : 0
       epr[:msg] = success ? "" : "the relation couldn't be updated"
       puts " -- EPR --"
       puts epr
     end
     return epr
+  end
+
+  def eprs_index
+    EntityPropertyRelationship.index(params[:epr_search], epr_sort_column, epr_sort_direction, params[:eprs_page], 10, [], [])
   end
 
   #get the entity property relations for the selected group
@@ -66,7 +77,7 @@ module EntityPropertyRelationsHelper
     
     end #end each entity group relation
 
-    eprs = eprs.paginate(page: params[:gprs_page], per_page: 10, order: 'order ASC')
+    eprs = eprs.paginate(page: params[:gprs_page], per_page: 10, position: 'position ASC')
   end
 
   def get_eprs(selected_egrs)
@@ -95,7 +106,7 @@ module EntityPropertyRelationsHelper
     #set the count to one more than actual for iterative reduction
     count = selected_eprs.count + 1
 
-    #move each selected relation to the top in reverse order
+    #move each selected relation to the top in reverse position
     moved_eprs = []
     selected_eprs.reverse.each do |relation|
       success = relation.entity.first_via! relation.property, relation.group
@@ -116,8 +127,8 @@ module EntityPropertyRelationsHelper
     #store the status of what is moved
     moved_eprs = []
 
-    #sort the relations by order
-    relations = selected_eprs.sort_by { |r| r[:order] }
+    #sort the relations by position
+    relations = selected_eprs.sort_by { |r| r[:position] }
 
     #enumerate over the relations, get a 0-based index
     relations.to_enum.with_index(0).each do |relation, i|
@@ -134,16 +145,16 @@ module EntityPropertyRelationsHelper
     #data for what is moved
     moved_eprs = []
 
-    #sort the relations by order
-    relations = selected_eprs.sort_by { |r| r[:order] }
+    #sort the relations by position
+    relations = selected_eprs.sort_by { |r| r[:position] }
 
     #enumerate the relations and get a 0-based index
     relations.to_enum.with_index(0).each do |relation, i|
-      if relation.order == i #if order is the current index, doesn't need to move
+      if relation.position == i #if position is the current index, doesn't need to move
         moved_eprs.push({ data: relation, msg: "not moved", idx: i+1 })
       else #move it
         success = relation.entity.up_via! relation.property, relation.group
-        moved_eprs.push success ? { data: relation, msg: "moved", idx: relation.order } : { data: relation, msg: "not moved", idx: relation.order + 1 }
+        moved_eprs.push success ? { data: relation, msg: "moved", idx: relation.position } : { data: relation, msg: "not moved", idx: relation.position + 1 }
       end
     end
 
@@ -155,24 +166,38 @@ module EntityPropertyRelationsHelper
     #data for moved relations
     moved_eprs = []
 
-    #sort the relations by order
-    relations = selected_eprs.sort_by { |r| r[:order] }
+    #sort the relations by position
+    relations = selected_eprs.sort_by { |r| r[:position] }
 
     #reverse the order, enumerate with 0-based index i
     relations.reverse.to_enum.with_index(0).each do |relation, i|
-      #if the order is the inverse of the current index (indexing from high to low)
-      if relation.order == relation.group.properties.count - 1 - i 
+      #if the position is the inverse of the current index (indexing from high to low)
+      if relation.position == relation.group.properties.count - 1 - i 
         moved_eprs.push({ data: relation, msg: "not moved", idx: i+1 })
       else
         success = relation.entity.down_via! relation.property, relation.group
-        moved_eprs.push success ? { data: relation, msg: "moved", idx: relation.order + 2 } : { data: relation, msg: "not moved", idx: relation.order + 1 }
+        moved_eprs.push success ? { data: relation, msg: "moved", idx: relation.position + 2 } : { data: relation, msg: "not moved", idx: relation.position + 1 }
       end
     end
     return moved_eprs
   end
 
+  def epr_sort_column
+    columns = EntityPropertyRelationship.column_names
+    # columns |= ["entity", "group", "property"]
+    columns.include?(params[:epr_sort]) ? params[:epr_sort] : "created_at"
+  end
+    
+  def epr_sort_direction
+    %w[asc desc].include?(params[:epr_direction]) ? params[:epr_direction] : "desc"
+  end
+
+  def epr_params
+    params.require(:entity_property_relationship).permit(:entity_id, :group_id, :property_id, :position, :label, :value, :units, :units_short)
+  end
+  
   def epr_update_params
-    params.require(:entity_property_relationship).permit(:id, :label, :value, :visibility)
+    params.require(:entity_property_relationship).permit(:id, :label, :value, :role_ids, :units, :units_short)
   end
 
 end

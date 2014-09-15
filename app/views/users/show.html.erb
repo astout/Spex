@@ -4,11 +4,53 @@
         <section>
             <h1>
                 <%= gravatar_for @user %>
-                <%= @user.first %> <%= @user.last %>
+                <%= @user.first.capitalize %> <%= @user.last.capitalize %>
             </h1>
-            <small><%= mail_to @user.email %></small>
         </section>
+            <b>Email: </b><small><%= mail_to @user.email %></small>
+            <br>
+            <b>Login: </b><small><%= @user.login %></small>
+            <br>
+            <b>Role: </b><small><%= @user.role.caps_name %></small>
         <section>
+            <a href="<%= edit_user_path(@user) %>" class="btn btn75 btn-primary btn-sm" data-toggle="tooltip" data-placement="bottom" title="Edit Fields" style="float: right">Edit</a>
         </section>
+    </aside>
+    <aside class="col-xs-8">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4>
+                    Viewable Properties
+                </h4>
+            </div>
+            <div class="viewable-properties panel-body">
+                <% unless @user.role.viewables.empty? %>
+                    <table class="table">
+                        <tr>
+                            <th>Entity</th>
+                            <th>Group</th>
+                            <th>Property</th>
+                        </tr>
+                        <% @user.role.viewables.each do |viewable| %>
+                            <tr>
+                                <td>
+                                    <%= viewable.entity.name %>
+                                </td>
+                                <td>
+                                    <%= viewable.group.name %>
+                                </td>
+                                <td>
+                                    <%= viewable.property.name %>
+                                </td>
+                            </tr>
+                        <% end %>
+                    </table>
+                <% else %>
+                    <div class="alert alert-info center">
+                        <p><i>Users assigned to <span class="badge alert-warning"><%= @user.role.caps_name %></span> currently can't view any properties in product reports.</i></p>
+                    </div>
+                <% end %>
+            </div>
+        </div>
     </aside>
 </div>

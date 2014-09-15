@@ -7,8 +7,10 @@ class Entity < ActiveRecord::Base
   has_many :groups, 
     through: :entity_group_relationships, 
     inverse_of: :entities
-  validates :name, 
-    presence: true
+  VALID_NAME_REGEX = /\A[a-z0-9]+[a-z0-9\-\_]*[a-z0-9]+\z/i
+  validates :name,  presence: true, format: { with: VALID_NAME_REGEX }, 
+    length: { minimum: 2, maximum: 32 },
+    uniqueness: { case_sensitive: false }
 
   # before_destroy { |entity| EntityPropertyRelationship.destroy_all "entity_id = #{entity.id}" }
   before_destroy do |entity|
@@ -29,7 +31,7 @@ class Entity < ActiveRecord::Base
     return if group.class != Group
     group = Group.find_by(id: group.id)
     return if group.nil?
-    EntityGroupRelationship.create!(entity_id: self.id, group_id: group.id, order: self.groups.count)
+    EntityGroupRelationship.create!(entity_id: self.id, group_id: group.id, position: self.groups.count)
   end
 
   # returns true if there exists an EntityGroupRelationship between the entity and the given group
@@ -52,7 +54,7 @@ class Entity < ActiveRecord::Base
   #by the order field
   def group_relations
     relations = EntityGroupRelationship.where(entity_id: self.id)
-    relations.sort_by { |r| r[:order] }
+    relations.sort_by { |r| r[:position] }
   end
 
   #gives the EntityGroupRelationship between the entity and the given group
@@ -76,12 +78,12 @@ class Entity < ActiveRecord::Base
     return if e.nil?
     relationship = EntityGroupRelationship.find_by(entity_id: self.id, group_id: group.id)
     return if relationship.nil?
-    if relationship.order.nil?
+    if relationship.position.nil?
       return relationship.destroy
     end
-    index = relationship.order
+    index = relationship.position
     relationship.destroy
-    # self.update_order(index)
+    # self.update_position(index)
   end
 
   #removes all relationships between this entity and its groups
@@ -107,7 +109,7 @@ class Entity < ActiveRecord::Base
   #Array of all property associations for this entity
   def property_relations
     relations = EntityPropertyRelationship.where(entity_id: self.id)
-    relations.sort_by { |r| r[:order] }
+    relations.sort_by { |r| r[:position] }
   end
 
   def property_relations_via(group)
@@ -117,7 +119,7 @@ class Entity < ActiveRecord::Base
     else
       relations = self.property_relations.select { |r| r[:group_id] == group.id }
     end
-    relations.sort_by { |r| r[:order] }
+    relations.sort_by { |r| r[:position] }
   end
 
   # an array of all employed properties
@@ -147,12 +149,12 @@ class Entity < ActiveRecord::Base
     return false if Property.find_by_id(property.id).nil?
     relationship = EntityPropertyRelationship.find_by(entity_id: self.id, property_id: property.id)
     return if relationship.nil?
-    if relationship.order.nil?
+    if relationship.position.nil?
       return relationship.destroy
     end
-    index = relationship.order
+    index = relationship.position
     relationship.destroy
-    # self.p_update_order(index)
+    # self.p_update_position(index)
   end
 
 
@@ -160,18 +162,18 @@ class Entity < ActiveRecord::Base
   # # # PROPERTY ORDER
   ####################
 
-  #updates the order of all the children after the given index
-  def p_update_order_via(index, group)
+  #updates the position of all the children after the given index
+  def p_update_position_via(index, group)
     relationships = self.property_relations
-    relationships |= self.property_relations.select { |r| r[:order] != nil && r[:group_id] == group.id }
+    relationships |= self.property_relations.select { |r| r[:position] != nil && r[:group_id] == group.id }
     last = relationships.count 
     relationships.each do |r|
-      if r.order.nil?
-        r.order = last -= 1
+      if r.position.nil?
+        r.position = last -= 1
         r.save
       else
-        if r.order > index
-          r.order -= 1 
+        if r.position > index
+          r.position -= 1 
           r.save
         end
       end
@@ -179,8 +181,8 @@ class Entity < ActiveRecord::Base
   end
 
   #sets the property to be the first ordered property of this entity
-  #updates the orders of all affected entity-property relationships
-  #order is the order which properties will be displayed under an
+  #updates the positions of all affected entity-property relationships
+  #position is the position which properties will be displayed under an
   #entity in ascending order
   def first_via!(property, group)
     return if property.class != Property
@@ -189,27 +191,27 @@ class Entity < ActiveRecord::Base
     return if relationship.nil?
     relationships = self.property_relations.select { |r| r[:group_id] == group.id }
     last = relationships.count 
-    return if relationship.order == 0
-    if relationship.order.nil?
+    return if relationship.position == 0
+    if relationship.position.nil?
       line = last - 1
     else
-      line = relationship.order
+      line = relationship.position
     end
     relationships.each do |r|
       next if r == relationship
-      if r.order.nil?
-        r.update_attribute(:order, last -= 1)
+      if r.position.nil?
+        r.update_attribute(:position, last -= 1)
       else
-        if r.order < line
-          r.update_attribute(:order, r.order + 1)
+        if r.position < line
+          r.update_attribute(:position, r.position + 1)
         end
       end
     end
-    relationship.update_attribute(:order, 0)
+    relationship.update_attribute(:position, 0)
   end
 
-  #moves the given property up (decrement order) in order with the associated group
-  #also moves the property above it down (increment order)
+  #moves the given property up (decrement position) in order with the associated group
+  #also moves the property above it down (increment position)
   def up_via!(property, group)
     #parameter passed a property type?
     return if property.class != Property
@@ -220,17 +222,17 @@ class Entity < ActiveRecord::Base
     #relationship exist?
     return if relationship.nil?
     #already last?
-    return if relationship.order == 0
+    return if relationship.position == 0
     #relationship after property
-    swap = self.property_relations_via(group)[relationship.order - 1]
+    swap = self.property_relations_via(group)[relationship.position - 1]
     #move the property below the passed property up
-    swap.update_attribute(:order, swap.order + 1)
+    swap.update_attribute(:position, swap.position + 1)
     #move the passed property down
-    relationship.update_attribute(:order, relationship.order - 1)
+    relationship.update_attribute(:position, relationship.position - 1)
   end
 
-  #moves the given property down (increment order) in order with the associated group
-  #also moves the property below it up (decrement order)
+  #moves the given property down (increment position) in order with the associated group
+  #also moves the property below it up (decrement position)
   def down_via!(property, group)
     #parameter passed a property type?
     return if property.class != Property
@@ -241,26 +243,26 @@ class Entity < ActiveRecord::Base
     #relationship exist?
     return if relationship.nil?
     #already last?
-    return if relationship.order == relationships.count - 1
+    return if relationship.position == relationships.count - 1
     #relationship after property
-    swap = self.property_relations_via(group)[relationship.order + 1]
+    swap = self.property_relations_via(group)[relationship.position + 1]
     #move the property below the passed property up
-    swap.update_attribute(:order, swap.order - 1)
+    swap.update_attribute(:position, swap.position - 1)
     #move the passed property down
-    relationship.update_attribute(:order, relationship.order + 1)
+    relationship.update_attribute(:position, relationship.position + 1)
   end
 
   #returns the property that is first in ordering
   def first_via(group)
-    relationship = self.property_relations.select { |r| r[:order] == 0 && r[:group_id] == group.id }[0]
+    relationship = self.property_relations.select { |r| r[:position] == 0 && r[:group_id] == group.id }[0]
     return if relationship.nil?
     Property.find_by(id: relationship.property_id)
   end
 
 
   #sets the property to be the last ordered property of this entity
-  #updates the orders of all affected entity-property relationships
-  #order is the order which properties will be displayed under an
+  #updates the positions of all affected entity-property relationships
+  #position is the order which properties will be displayed under an
   #entity in ascending order
   def last_via!(property, group)
     return if property.class != Property
@@ -269,23 +271,23 @@ class Entity < ActiveRecord::Base
     return if relationship.nil?
     relationships = self.property_relations.select { |r| r[:group_id] == relationship.group_id }
     last = relationships.count - 1 # - 1 because child will be set to last at the end
-    return if relationship.order == last
-    if relationship.order.nil?
+    return if relationship.position == last
+    if relationship.position.nil?
       line = 0
     else
-      line = relationship.order
+      line = relationship.position
     end
     relationships.each do |r|
       next if r == relationship
-      if r.order.nil?
-        r.update_attribute(:order, last -= 1)
+      if r.position.nil?
+        r.update_attribute(:position, last -= 1)
       else
-        if r.order > line
-          r.update_attribute(:order, r.order - 1)
+        if r.position > line
+          r.update_attribute(:position, r.position - 1)
         end
       end
     end
-    relationship.update_attribute(:order, relationships.count - 1)
+    relationship.update_attribute(:position, relationships.count - 1)
   end
 
   #returns the property that is first in ordering
@@ -293,7 +295,7 @@ class Entity < ActiveRecord::Base
     relationships = self.property_relations_via group
     return if relationships.empty?
     last_index = relationships.count - 1
-    last_relationship  = relationships.select { |r| r[:order] == last_index }.first
+    last_relationship  = relationships.select { |r| r[:position] == last_index }.first
     return if last_relationship.nil?
     Property.find_by(id: last_relationship.property_id)
   end
@@ -303,53 +305,53 @@ class Entity < ActiveRecord::Base
   # # # GROUP ORDER
   #################
 
-  #updates the order of all the children after the given index
-  def update_order(index)
+  #updates the position of all the children after the given index
+  def update_position(index)
     relationships = self.group_relations
     last = relationships.count 
     relationships.each do |r|
-      if r.order.nil?
-        r.update_attribute(:order, last -= 1)
+      if r.position.nil?
+        r.update_attribute(:position, last -= 1)
       else
-        if r.order > index
-          r.update_attribute(:order, r.order - 1)
+        if r.position > index
+          r.update_attribute(:position, r.position - 1)
         end
       end
     end
   end
 
   #sets the property to be the first ordered property of this entity
-  #updates the orders of all affected entity-property relationships
-  #order is the order which properties will be displayed under an
+  #updates the positions of all affected entity-property relationships
+  #position is the order which properties will be displayed under an
   #entity in ascending order
   def first!(group)
     return if group.class != Group
     relationship = self.group_relations.select { |r| r[:group_id] == group.id }.first
     return if relationship.nil?
     last = self.group_relations.count 
-    return if relationship.order == 0
-    if relationship.order.nil?
+    return if relationship.position == 0
+    if relationship.position.nil?
       line = last - 1
     else
-      line = relationship.order
+      line = relationship.position
     end
     relations = self.group_relations
     relations.each do |r|
       next if r == relationship
-      if r.order.nil?
-        r.update_attribute(:order, last -= 1)
+      if r.position.nil?
+        r.update_attribute(:position, last -= 1)
       else
-        if r.order < line
-          r.update_attribute(:order, r.order + 1)
+        if r.position < line
+          r.update_attribute(:position, r.position + 1)
         end
       end
     end
-    relationship.update_attribute(:order, 0)
+    relationship.update_attribute(:position, 0)
   end
 
   #returns the property that is first in ordering
   def first
-    first_relationship = self.group_relations.select { |r| r[:order] == 0 }.first
+    first_relationship = self.group_relations.select { |r| r[:position] == 0 }.first
     return if first_relationship.nil?
     first_relationship.group
   end
@@ -359,28 +361,28 @@ class Entity < ActiveRecord::Base
     return if group.class != Group
     relationship = self.relation_for(group)
     return if relationship.nil?
-    return if relationship.order == 0
-    r = self.group_relations[relationship.order - 1]
-    r.update_attribute(:order, relationship.order)
-    relationship.update_attribute(:order, relationship.order - 1)
+    return if relationship.position == 0
+    r = self.group_relations[relationship.position - 1]
+    r.update_attribute(:position, relationship.position)
+    relationship.update_attribute(:position, relationship.position - 1)
   end
 
-  #moves the specified group down in order and moves the group below it up
+  #moves the specified group down in position and moves the group below it up
   def down!(group)
     return if group.class != Group
     relationship = self.relation_for(group)
     return if relationship.nil?
     last = self.group_relations.count - 1
-    return if relationship.order == last
-    r = self.group_relations[relationship.order + 1]
-    # r = self.relation_at(relationship.order + 1)
-    r.update_attribute(:order, relationship.order)
-    relationship.update_attribute(:order, relationship.order + 1)
+    return if relationship.position == last
+    r = self.group_relations[relationship.position + 1]
+    # r = self.relation_at(relationship.position + 1)
+    r.update_attribute(:position, relationship.position)
+    relationship.update_attribute(:position, relationship.position + 1)
   end
 
   #sets the property to be the last ordered property of this entity
-  #updates the orders of all affected entity-property relationships
-  #order is the order which properties will be displayed under an
+  #updates the positions of all affected entity-property relationships
+  #position is the order which properties will be displayed under an
   #entity in ascending order
   def last!(group)
     return if group.class != Group
@@ -388,30 +390,30 @@ class Entity < ActiveRecord::Base
     return if relationship.nil?
     relationships = self.group_relations
     last = relationships.count - 1 # - 1 because child will be set to last at the end
-    return if relationship.order == last
-    if relationship.order.nil?
+    return if relationship.position == last
+    if relationship.position.nil?
       line = 0
     else
-      line = relationship.order
+      line = relationship.position
     end
     relationships.reverse.each do |r|
       next if r == relationship
-      if r.order.nil?
-        r.update_attribute(:order, last -= 1)
+      if r.position.nil?
+        r.update_attribute(:position, last -= 1)
       else
-        if r.order > line
-          r.update_attribute(:order, last -= 1)
+        if r.position > line
+          r.update_attribute(:position, last -= 1)
         end
       end
     end
-    relationship.update_attribute( :order, relationships.count - 1 )
+    relationship.update_attribute( :position, relationships.count - 1 )
   end
 
   #returns the property that is last in ordering
   def last
     relationships = self.group_relations
     last_index = relationships.count - 1
-    last_relationship = relationships.select { |child| child[:order] == last_index }.first
+    last_relationship = relationships.select { |child| child[:position] == last_index }.first
     return if last_relationship.nil?
     last_relationship.group
   end

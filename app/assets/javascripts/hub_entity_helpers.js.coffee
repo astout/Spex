@@ -88,7 +88,7 @@ window.toggleEntitySelect = toggleEntitySelect
 clearSelectedEntity = () ->
     $("tr.selected-entity").removeClass "selected-entity"
     window.selected_entity = -1
-    window.selected_egr_max_order = -1
+    window.selected_egr_max_position = -1
     validateEntitySelection()
     getEGRs window.selected_entity
 window.clearSelectedEntity = clearSelectedEntity

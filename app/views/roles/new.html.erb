@@ -1,0 +1,23 @@
+<script type="text/javascript">
+  $("body").addClass("roles");
+</script>
+<% provide(:title, 'New Role') %>
+
+<div>
+    <%= link_to "Roles", roles_path, style: "color: #494A4A" %>
+    <span class="glyphicon glyphicon-chevron-right", style="font-size: 12px;"></span>
+    New
+</div>
+
+<h1>New Role</h1>
+
+<div class="row">
+  <div class="col-xs-6 col-xs-offset-3">
+    <%= bootstrap_form_for(@role, inline_errors: false) do |f| %>
+      <%= render 'roles/fields', f: f %>
+      <%= f.submit "Create Role", class: "btn btn-large btn-primary btn150 disabled"%>
+    <% end %>
+  </div>
+</div>
+
+<%= render "roles/change_default_confirm" %>

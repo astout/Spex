@@ -57,7 +57,15 @@ module EntityGroupRelationsHelper
 
   #get the entity group relations for the selected entity
   def egr_list(selected_entity)
-    egrs = selected_entity.group_relations.paginate(page: params[:egrs_page], per_page: 10, order: 'order ASC')
+    # egrs = EntityGroupRelationship.index("", "position", "ASC", params[:egrs_page], 10, [], selected_entity.group_relations)
+    egrs = selected_entity.group_relations.paginate(page: params[:egrs_page], per_page: 10, position: 'position ASC')
+    puts "-- EGR LIST --"
+    egrs.each do |egr|
+      puts egr['entity_id']
+      puts egr['group_id']
+      puts egr['position']
+    end
+    return egrs
   end
 
   def egr_delete(selected_egrs)
@@ -75,7 +83,7 @@ module EntityGroupRelationsHelper
     #set the count to one more than actual for iterative reduction
     count = selected_egrs.count + 1
 
-    #move each selected relation to the top in reverse order
+    #move each selected relation to the top in reverse position
     moved_egrs = []
     selected_egrs.reverse.each do |relation|
       success = relation.entity.first! relation.group
@@ -91,8 +99,8 @@ module EntityGroupRelationsHelper
     #store the status of what is moved
     moved_egrs = []
 
-    #sort the relations by order
-    relations = selected_egrs.sort_by { |r| r[:order] }
+    #sort the relations by position
+    relations = selected_egrs.sort_by { |r| r[:position] }
 
     #enumerate over the relations, get a 0-based index
     relations.to_enum.with_index(0).each do |relation, i|
@@ -101,7 +109,7 @@ module EntityGroupRelationsHelper
       moved_egrs.push success ? { data: relation, msg: "moved to bottom", idx: _index += 1 } : { data: relation, msg: "not moved", idx: _index += 1 }
     end
 
-    #reverse the order of what was moved for reporting to user
+    #reverse the position of what was moved for reporting to user
     moved_egrs.reverse!
   end
 
@@ -109,16 +117,16 @@ module EntityGroupRelationsHelper
     #data for what is moved
     moved_egrs = []
 
-    #sort the relations by order
-    relations = selected_egrs.sort_by { |r| r[:order] }
+    #sort the relations by position
+    relations = selected_egrs.sort_by { |r| r[:position] }
 
     #enumerate the relations and get a 0-based index
     relations.to_enum.with_index(0).each do |relation, i|
-      if relation.order == i #if order is the current index, doesn't need to move
+      if relation.position == i #if position is the current index, doesn't need to move
         moved_egrs.push({ data: relation, msg: "not moved", idx: i+1 })
       else #move it
         success = relation.entity.up! relation.group
-        moved_egrs.push success ? { data: relation, msg: "moved", idx: relation.order } : { data: relation, msg: "not moved", idx: relation.order + 1 }
+        moved_egrs.push success ? { data: relation, msg: "moved", idx: relation.position } : { data: relation, msg: "not moved", idx: relation.position + 1 }
       end
     end
 
@@ -130,24 +138,24 @@ module EntityGroupRelationsHelper
     #data for moved relations
     moved_egrs = []
 
-    #sort the relations by order
-    relations = selected_egrs.sort_by { |r| r[:order] }
+    #sort the relations by position
+    relations = selected_egrs.sort_by { |r| r[:position] }
 
-    #reverse the order, enumerate with 0-based index i
+    #reverse the position, enumerate with 0-based index i
     relations.reverse.to_enum.with_index(0).each do |relation, i|
-      #if the order is the inverse of the current index (indexing from high to low)
-      if relation.order == relation.entity.groups.count - 1 - i 
+      #if the position is the inverse of the current index (indexing from high to low)
+      if relation.position == relation.entity.groups.count - 1 - i 
         moved_egrs.push({ data: relation, msg: "not moved", idx: i+1 })
       else
         success = relation.entity.down! relation.group
-        moved_egrs.push success ? { data: relation, msg: "moved", idx: relation.order + 2 } : { data: relation, msg: "not moved", idx: relation.order + 1 }
+        moved_egrs.push success ? { data: relation, msg: "moved", idx: relation.position + 2 } : { data: relation, msg: "not moved", idx: relation.position + 1 }
       end
     end
     return moved_egrs
   end
 
   def egr_sort_column
-    EntityGroupRelationship.column_names.include?(params[:egr_sort]) || Group.column_names.include?(params[:egr_sort]) ? params[:egr_sort] : "order"
+    EntityGroupRelationship.column_names.include?(params[:egr_sort]) || Group.column_names.include?(params[:egr_sort]) ? params[:egr_sort] : "position"
   end
 
   def egr_sort_direction

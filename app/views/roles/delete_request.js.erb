@@ -1,0 +1,17 @@
+$("#debug").html('<%= params %>');
+<% if @role.default? %>
+    $("div#delete-modal").html("<%= j render partial: 'roles/delete_default_confirm' %>");
+    $("#delete-confirm").on("shown.bs.modal", function(e) {
+        console.log("show delete confirm");
+        return $("span#new-default").html($("select#new-default")[0].options[$("select#new-default")[0].selectedIndex].text);
+    });
+    $("body").on("change", "select#new-default", function(e) {
+        console.log("new default value changed");
+        return $("span#new-default").html($("select#new-default")[0].options[$("select#new-default")[0].selectedIndex].text);
+    });
+<% else %>
+    $("div#delete-modal").html("<%= j render partial: 'roles/delete_confirm' %>");
+<% end %>
+
+console.log("delete requested for <%= @role.name %>");
+$("#delete-confirm").modal("show");

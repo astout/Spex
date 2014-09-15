@@ -1,18 +1,48 @@
-<% provide(:title, @entity.name) %>
+<% unless @entity.label.blank? %>
+  <% @label = "#{@entity.label.to_s}" %>
+<% else %>
+  <% unless @entity.name.blank? %>
+    <% @label = "#{@entity.name.to_s.capitalize}" %>
+  <% else %>
+    <% @label = "Entity id: #{@entity.id.to_s}" %>
+  <% end %>
+<% end %>
+
+<% provide(:title, @label) %>
+<div id="alert-banner"></div>
+
+<div style="margin-bottom: 10px;">
+    <%= link_to "Home", root_path, style: "color: #494A4A" %>
+    <span class="glyphicon glyphicon-chevron-right", style="font-size: 12px;"></span>
+    <%= link_to "Entities", entities_path, style: "color: #494A4A" %>
+    <span class="glyphicon glyphicon-chevron-right", style="font-size: 12px;"></span>
+    <%= link_to @label, @entity, style: "color: #494A4A" %>
+</div>
+
 <div class="row">
-    <aside class="col-xs-4">
-        <small><a style="color: #494A4A" href="<%= entities_path %>">Entities</a></small>
-        <section>
-            <h1>
-                <%= @entity.name %>
-            </h1>
-            <small class="note"><%= @entity.label %></small>
-            <div style="float: right">
-            <a href="<%= edit_entity_path(@entity) %>" class="btn btn75 btn-primary btn-sm" data-toggle="tooltip" data-placement="bottom" title="Edit attributes &amp; properties">Edit</a>
-            </div>
-        </section>
-    </aside>
+  <aside class="col-xs-4">
+    <section>
+      <h1>
+        <%= @label %>
+      </h1>
+      <div style="float: right">
+      <% if current_user.admin? %>
+        <a href="<%= edit_entity_path(@entity) %>" class="btn btn75 btn-primary btn-sm" data-toggle="tooltip" data-placement="bottom" title="Edit attributes &amp; properties">Edit</a>
+      <% end %>
+      </div>
+    </section>
+  </aside>
     <div class="col-xs-8" id="entity_properties">
+      <% if current_user.role.change_view? %>
+        <% if current_user.admin? %>
+          <%= select_tag "role_ids", options_from_collection_for_select(Role.all, "id", "name", @role['id'] || current_user.role_id), id: "select-role", data: {entity: @entity.id}, class: "form-control roles col-xs-12"%>
+        <% else %>
+          <%= select_tag "role_ids", options_from_collection_for_select(Role.where(admin: false), "id", "name", @role['id'] || current_user.role_id), id: "select-role", data: {entity: @entity.id}, class: "form-control roles col-xs-12"%>
+        <% end %>
+        <div style="padding-bottom: 50px;"></div>
+      <% end %>
+      <div id="report">
         <%= render 'report' %>
+      </div>
     </div>
 </div>

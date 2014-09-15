@@ -1,0 +1,26 @@
+<% provide(:title, @role.name) %>
+<div class="row">
+    <aside class="col-xs-4">
+        <small><a style="color: #494A4A" href="<%= roles_path %>">Roles</a></small>
+        <section>
+            <h1>
+                <%= @role.name %>
+            </h1>
+            <div style="float: right">
+            <a href="<%= edit_role_path(@role) %>" class="btn btn75 btn-primary btn-sm" data-toggle="tooltip" data-placement="bottom" title="Edit attributes">Edit</a>
+            </div>
+        </section>
+    </aside>
+    <div class="col-xs-8" id="role_attributes">
+        <div class="col-xs-12">
+            <h4>Admin</h4>
+            <%= @role.admin? %>
+            <h4>Default</h4>
+            <%= @role.default? %>
+            <h4>Change Views</h4>
+            <%= @role.change_view? %>
+        </div>
+    </div>
+</div>
+
+

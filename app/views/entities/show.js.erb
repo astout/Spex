@@ -1,0 +1,21 @@
+$("#debug").html('<%= params %>');
+$("#report").html("<%= j render partial: 'entities/report' %>");
+
+<% unless @updated_property.blank? %>
+  closeAllOpenForms()
+  alert_html = "<div id='temp-alert' class='alert alert-success small-font'>";
+  alert_html += "<p>'<%= @updated_property %>' updated. </p>";
+  alert_html += "</div>";
+  $("div#alert-banner").html(alert_html);
+  setTimeout(function(){ $("div#temp-alert").fadeOut(1500); }, 3000);
+  // $("div#temp-alert").fadeOut(5000);
+
+<% else %>
+  $(".trueValue").hide();
+<% end %> 
+
+selectize_all();
+hideDisabledFields();
+window.toolize();
+
+console.log("finished report show.js");

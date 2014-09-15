@@ -1,5 +1,13 @@
 <% provide(:title, "Edit user") %>
-<h1>Update your profile</h1>
+<script type="text/javascript">
+  $("body").addClass("edit-user");
+</script>
+
+<% if current_user.admin? %>
+    <h1>Update User Profile</h1>
+<% else %>
+    <h1>Update Your Profile</h1>
+<% end %>
 
 <div class="row">
   <div class="col-xs-6 col-xs-offset-3">

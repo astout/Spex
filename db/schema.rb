@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140707202737) do
+ActiveRecord::Schema.define(version: 20140915193826) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,7 +29,7 @@ ActiveRecord::Schema.define(version: 20140707202737) do
   create_table "entity_group_relationships", force: true do |t|
     t.integer  "entity_id"
     t.integer  "group_id"
-    t.integer  "order"
+    t.integer  "position"
     t.string   "label"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -41,18 +41,26 @@ ActiveRecord::Schema.define(version: 20140707202737) do
     t.integer  "entity_id"
     t.integer  "property_id"
     t.integer  "group_id"
-    t.integer  "order"
+    t.integer  "position"
     t.string   "label"
     t.string   "value"
-    t.integer  "visibility"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "units"
+    t.string   "units_short"
   end
+
+  create_table "eprs_roles", id: false, force: true do |t|
+    t.integer "epr_id"
+    t.integer "role_id"
+  end
+
+  add_index "eprs_roles", ["epr_id", "role_id"], name: "index_eprs_roles_on_epr_id_and_role_id", unique: true, using: :btree
 
   create_table "group_property_relationships", force: true do |t|
     t.integer  "group_id"
     t.integer  "property_id"
-    t.integer  "order"
+    t.integer  "position"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -76,24 +84,46 @@ ActiveRecord::Schema.define(version: 20140707202737) do
     t.string   "units_short"
     t.string   "default_label"
     t.string   "default_value"
-    t.integer  "default_visibility"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   add_index "properties", ["name"], name: "index_properties_on_name", unique: true, using: :btree
 
+  create_table "properties_roles", id: false, force: true do |t|
+    t.integer "property_id"
+    t.integer "role_id"
+  end
+
+  add_index "properties_roles", ["property_id", "role_id"], name: "index_properties_roles_on_property_id_and_role_id", unique: true, using: :btree
+
+  create_table "roles", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.boolean  "change_view"
+    t.boolean  "admin"
+  end
+
+  add_index "roles", ["name"], name: "index_roles_on_name", unique: true, using: :btree
+
+  create_table "settings", force: true do |t|
+    t.string   "name"
+    t.string   "value"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "users", force: true do |t|
     t.string   "first"
     t.string   "last"
     t.string   "email"
     t.string   "login"
-    t.integer  "role",            default: 0
-    t.boolean  "admin",           default: false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "password_digest"
     t.string   "remember_token"
+    t.integer  "role_id"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree

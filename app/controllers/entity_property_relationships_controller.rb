@@ -1,4 +1,5 @@
 class EntityPropertyRelationshipsController < ApplicationController
+  include EntityPropertyRelationsHelper
   before_action do
     redirect_to root_url unless current_user.admin?
   end
@@ -16,54 +17,49 @@ class EntityPropertyRelationshipsController < ApplicationController
     end
   end
 
+  def query
+    @eprs = eprs_index
+    puts "--NUMBER OF RESULTS--"
+    puts @eprs.count
+
+    respond_to do |format|
+      format.js
+      format.html
+    end
+  end
+
+  def new
+    require_admin
+    @epr = EntityPropertyRelationship.new
+  end
+
   def create
-    session[:return_to] ||= request.referer
-    @entity = Entity.find(params[:entity])
-    @property = Property.find(params[:property])
-    @relationship = EntityPropertyRelationship.new(entity_id: @entity.id, property_id: @property.id)
-    if @relationship.save
-      child_results = create_child_eprs(@entity, @property)
-      result = !child_results.any? {|item| item[:result] == false}
-      if result
-        flash[:success] = "'" + @property.name + "' added to '" + @entity.name + "'"
+    require_admin
+    match_params = {entity_id: epr_params[:entity_id], group_id: epr_params[:group_id], property_id: epr_params[:property_id]}
+    @epr = EntityPropertyRelationship.find_by(match_params)
+    @result = {msg: "", r: -1}
+    # @eprs = EntityPropertyRelationship.search(params[:epr_search]).order(epr_sort_column + ' ' + epr_sort_direction).paginate(page: params[:eprs_page], per_page: 10, order: 'created_at DESC')
+
+    if @epr.nil?
+      @epr = EntityPropertyRelationship.new(epr_params)
+      if !@epr.save
+        @result[:r] = 0
+        @result[:msg] = "'#{@epr.entity.name @epr.property.name}' failed to save."
       else
-        message = ""
-        child_results.each do |item|
-          if item[:result] == false
-            message += "'" + item[:property].name + "' not able to be added.\n"
-          end
-        end
-        flash.now[:danger] = message
+        @result[:r] = 1
+        @result[:msg] = "'#{@epr.entity.name @epr.property.name}' was saved."
+        #entities needs to be updated to get the latest addition
+        # @eprs = EntityPropertyRelationship.search(params[:epr_search]).order(epr_sort_column + ' ' + epr_sort_direction).paginate(page: params[:eprs_page], per_page: 10, order: 'created_at DESC')
       end
     else
-      flash.now[:danger] = "'" + @property.name + "' not Added " + @entity.name 
+      @result[:r] = 0
+      @result[:msg] = "Name: '#{@epr.entity.name @epr.property.name}' is already declared."
     end
-    redirect_to session.delete(:return_to)
-  end
 
-  def destroy
-    session[:return_to] ||= request.referer
-    @relation = EntityPropertyRelationship.find(params[:id])
-    @relation.destroy
-    flash[:success] = "'" + @relation.property.name + "' removed from '" + @relation.entity.name + "'"
-    redirect_to session.delete(:return_to)
-  end
-
-  private
-
-    def create_child_eprs(entity, property)
-      results = []
-      result = nil
-      property.descendants.each do |descendant|
-        relationship = EntityPropertyRelationship.new(entity_id: entity.id, property_id: descendant.id)
-        if relationship.save
-          result = true
-        else
-          result = false
-        end
-        r = {property: descendant, result: result}
-        results ||= r
-      end
+    respond_to do |format|
+      format.js
+      format.html {redirect_to entity_property_relationships_path }
     end
+  end
 
 end

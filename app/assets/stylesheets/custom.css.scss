@@ -1,5 +1,6 @@
 @import "bootstrap";
 @import "font-awesome";
+@import "bootstrap-editable";
 @import "webhostinghub-glyphs";
 
 /* mixins, variables, etc. */
@@ -32,6 +33,7 @@ textarea {
 
 .center {
   text-align: center;
+  margin: 0 auto;
   h1 {
     margin-bottom: 10px;
   }
@@ -215,8 +217,8 @@ aside {
 
 /* forms */
 
-input, textarea, select, .uneditable-input {
-  border: 1px solid #bbb;
+input, textarea, select, .uneditable-input, div.input-group, div.select2-container {
+  // border: 1px solid #bbb;
   width: 100%;
   margin-bottom: 15px;
   @include box_sizing;
@@ -519,7 +521,7 @@ div#add-selected-properties {
   }
 }
 
-div.group-order-action {
+div.group-position-action {
   background-repeat: no-repeat;  
   background-position: right center;
   float: right;
@@ -552,7 +554,7 @@ div.group-order-action {
   }
 }
 
-div.property-order-action {
+div.property-position-action {
   background-repeat: no-repeat;  
   background-position: right center;
   float: right;
@@ -593,19 +595,20 @@ i#clear-alerts {
   cursor: pointer;
 }
 
-span#selected-egr-order-actions {
+span#selected-egr-position-actions {
   background-repeat: no-repeat;  
   background-position: right center;
   float: right;
 }
 
-span#selected-gpr-order-actions {
+span#selected-gpr-position-actions {
   background-repeat: no-repeat;  
   background-position: right center;
   float: right;
 }
 
 div.alert {
+  margin: 15px 0px !important;
   p {
     font-size: 1em;
     line-height: 1em;
@@ -693,7 +696,7 @@ div.tab-pane {
 
 button.epr-ref-append {
   position: relative;
-  left: 90%;
+  left: calc(100% - 34px);
 }
 
 textarea.epr-value {
@@ -735,11 +738,37 @@ div.tooltip-inner {
 }
 
 td.hidden-value {
-  background-color: #A0E9FF; 
   padding: 0 !important; 
-  text-align: right;
 }
 
 div.trueValue {
   padding: 5px;
+}
+
+// textarea.edit-epr-value {
+//   padding: 2px !important;
+// }
+
+input#update-epr {
+  margin-top: 10px;
+}
+
+button.role-bool {
+  cursor: pointer;
+  // padding-bottom: 5px;
+}
+
+div.padding15-block {
+  height: 15px;
+}
+
+tr.role span.delete {
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+div.epr-math-calc {
+  padding: 20px;
+  clear: right;
 }

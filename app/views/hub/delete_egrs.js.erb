@@ -8,7 +8,7 @@ alert_html = ""
     <% @deleted_egrs.each do |deleted_egr| %>
         <% unless deleted_egr[:data].nil? %>
             alert_html += "<p style='padding-left: 10px'>- <%=deleted_egr[:data].group.name %> </p>";
-            toggleEGRselect(<%= deleted_egr[:data].id %>, <%= deleted_egr[:data].order %> + 1, false); 
+            toggleEGRselect(<%= deleted_egr[:data].id %>, <%= deleted_egr[:data].position %> + 1, false); 
         <% end %>
     <% end %>
 <% else %>
@@ -26,6 +26,6 @@ $('#groups').html("<%= j render partial: 'groups/groups', locals: { show_created
 
 persistStyling();
 
-window.selected_egr_max_order = <%= @selected_entity.groups.count %>;
+window.selected_egr_max_position = <%= @selected_entity.groups.count %>;
 
 validateEGRselection();

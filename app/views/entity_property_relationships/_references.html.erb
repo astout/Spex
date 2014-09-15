@@ -4,7 +4,7 @@
       Entity
     </button>
   </span>
-  <%= select_tag "entities", options_from_collection_for_select(@entities_all, "id", "name", entity || relation.entity.id), id: relation.id, class: "form-control epr-ref epr-ref-entity col-xs-12", include_blank: true %>
+  <%= select_tag "entities", options_from_collection_for_select(Entity.all, "id", "name", entity || relation.entity.id), id: relation.id, class: "form-control epr-ref epr-ref-entity col-xs-12", include_blank: true %>
 </div>
 <div class="input-group input-group-sm select2-bootstrap-prepend">
   <span class="input-group-btn">

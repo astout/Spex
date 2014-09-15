@@ -3,8 +3,11 @@
     $("body").addClass('<%= "#{model.pluralize}-index" %>');
 </script>
 <!-- Reload defaults -->
-<%= link_to "#{model.capitalize.pluralize}", send("#{model.pluralize}_path"), style: "color: #494A4A"%>
-
+<div style="margin-bottom: 10px">
+    <%= link_to "Home", root_path, style: "color: #494A4A" %>
+    <span class="glyphicon glyphicon-chevron-right", style="font-size: 12px;"></span>
+    <%= link_to "#{model.capitalize.pluralize}", send("#{model.pluralize}_path"), style: "color: #494A4A"%>
+</div>
 <h1><%= "All #{model.capitalize.pluralize}" %></h1>
 
 <!-- Link to Entity creation form -->

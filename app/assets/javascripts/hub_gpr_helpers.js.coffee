@@ -1,8 +1,8 @@
 #group property relationship functions
 
-window.selected_gpr_orders = [] #list of selected entity's groups order
+window.selected_gpr_positions = [] #list of selected entity's groups position
 window.selected_gprs = [] #list of selected group's properties
-window.selected_gpr_max_order = -1
+window.selected_gpr_max_position = -1
 
 $ ->
 
@@ -10,7 +10,7 @@ $ ->
         #On list element click
         $("body").on "click", '.table tr.gpr', (e) ->
             #get the group id
-            toggleGPRselect this.id, $(this).data().order, e.metaKey || e.ctrlKey
+            toggleGPRselect this.id, $(this).data().position, e.metaKey || e.ctrlKey
 
         #When the clear groups button is clicked
         $("body").on "click", "#clear-selected-gprs", (e) ->
@@ -78,7 +78,7 @@ createGPRs = (properties, group) ->
         type: 'POST'
 window.createGPRs = createGPRs  
 
-toggleGPRselect = (id, order, multiSelect) ->
+toggleGPRselect = (id, position, multiSelect) ->
     #if the clicked property is already selected
 
     id += "" #stringify
@@ -99,12 +99,12 @@ toggleGPRselect = (id, order, multiSelect) ->
         $("tr#"+id+".gpr").addClass "selected-gpr"
         window.selected_gprs.push(id)
 
-    order += "" #stringify
-    index = $.inArray order, window.selected_gpr_orders
+    position += "" #stringify
+    index = $.inArray position, window.selected_gpr_positions
     if index > -1
-        window.selected_gpr_orders.splice(index, 1)
+        window.selected_gpr_positions.splice(index, 1)
     else
-        window.selected_gpr_orders.push order
+        window.selected_gpr_positions.push position
 
     validateGroupsPropertySelection()
 window.toggleGPRselect = toggleGPRselect
@@ -125,7 +125,7 @@ window.getGPRs = getGPRs
 
 clearSelectedGPRs = () ->
     window.selected_gprs = []
-    window.selected_gpr_orders = []
+    window.selected_gpr_positions = []
     $("tr.selected-gpr").removeClass "selected-gpr"
     validateGroupsPropertySelection()
 window.clearSelectedGPRs = clearSelectedGPRs
@@ -201,16 +201,16 @@ validateGroupsPropertySelection = () ->
         $("#clear-selected-gprs").addClass("disabled")
         $("#delete-selected-gprs").addClass("disabled")
 
-    orders = window.selected_gpr_orders
+    positions = window.selected_gpr_positions
 
-    if orders.length < 1 || window.selected_groups.length > 1
-        $("div.property-order-action").removeClass "enabled"
-        $("div.property-order-action").addClass "disabled"
+    if positions.length < 1 || window.selected_groups.length > 1
+        $("div.property-position-action").removeClass "enabled"
+        $("div.property-position-action").addClass "disabled"
     else
-        valid = orders.length * ( orders.length + 1) / 2
+        valid = positions.length * ( positions.length + 1) / 2
         sum = 0
         try 
-            sum += eval(order) for order in orders
+            sum += eval(position) for position in positions
         catch e
             console.log e
         finally
@@ -218,8 +218,8 @@ validateGroupsPropertySelection = () ->
             $("div#up-selected-gprs").addClass "disabled"
             $("div#top-selected-gprs").removeClass "enabled"
             $("div#top-selected-gprs").addClass "disabled"
-        # index_first = $.inArray "1", orders
-        # if index_first > -1 && orders.length == 1
+        # index_first = $.inArray "1", positions
+        # if index_first > -1 && positions.length == 1
         if sum <= valid
             $("div#up-selected-gprs").removeClass "enabled"
             $("div#up-selected-gprs").addClass "disabled"
@@ -230,26 +230,26 @@ validateGroupsPropertySelection = () ->
             $("div#up-selected-gprs").addClass "enabled"
             $("div#top-selected-gprs").removeClass "disabled"
             $("div#top-selected-gprs").addClass "enabled"
-        # index_last = $.inArray maxOrder, orders
+        # index_last = $.inArray maxPosition, positions
         valid = false
-        index = $.inArray window.selected_gpr_max_order + "", orders
+        index = $.inArray window.selected_gpr_max_position + "", positions
         if index < 0
             valid = true
         else
-        # if orders.length == 1
+        # if positions.length == 1
         #     if index < 0
         #         valid = true
         # else
             try
-                orders.sort()
-                # for(i = 0; i < orders.length - 1; i++)
-                #     test = eval(orders[i]) + eval(orders[i+1])
+                positions.sort()
+                # for(i = 0; i < positions.length - 1; i++)
+                #     test = eval(positions[i]) + eval(positions[i+1])
                 #     if test > 1
                 #         valid = true
                 #         break
                 i = 0
-                while i < orders.length - 1
-                  test = eval(orders[i+1]) - eval(orders[i])
+                while i < positions.length - 1
+                  test = eval(positions[i+1]) - eval(positions[i])
                   if test > 1
                     valid = true
                     break

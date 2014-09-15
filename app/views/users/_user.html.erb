@@ -14,6 +14,13 @@
   <td>
     <%= link_to user.login, user %>
   </td>
+  <td>
+    <% if user.role.blank? %>
+      <span class="badge alert-danger">Not Assigned</span>
+    <% else %>
+      <%= link_to user.role.caps_name, edit_role_path(user.role) %>
+    <% end %>
+  </td>
   <% if current_user.admin? %>
     <td>
       <%= "#{user.created_at.strftime('%m/%d/%Y')}" %>

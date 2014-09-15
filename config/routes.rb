@@ -1,4 +1,9 @@
 Spex::Application.routes.draw do
+  get "roles/new"
+  get "roles/show"
+  get "roles/edit"
+  post "roles/delete_request"
+  post "roles/confirm_delete"
   post "hub/create_entity"
   post "hub/egrs"
   post "hub/gprs"
@@ -11,20 +16,23 @@ Spex::Application.routes.draw do
   post "hub/create_property"
   post "hub/create_egrs"
   post "hub/delete_gprs"
-  post "hub/top_egrs"
-  post "hub/bottom_egrs"
-  post "hub/up_egrs"
-  post "hub/down_egrs"
+  # post "hub/top_egrs"
+  # post "hub/bottom_egrs"
+  # post "hub/up_egrs"
+  # post "hub/down_egrs"
+  post "hub/move_egrs"
   post "hub/update_epr"
-  post "hub/top_eprs"
-  post "hub/up_eprs"
-  post "hub/down_eprs"
-  post "hub/bottom_eprs"
+  post "hub/move_eprs"
+  # post "hub/top_eprs"
+  # post "hub/up_eprs"
+  # post "hub/down_eprs"
+  # post "hub/bottom_eprs"
   post "hub/top_gprs"
   post "hub/up_gprs"
   post "hub/down_gprs"
   post "hub/bottom_gprs"
   post "hub/eprs"
+  post "entities/show"
   get "groups/new"
   get "hub/epr_ref_update"
   get "hub/epr_evaluate"
@@ -32,6 +40,7 @@ Spex::Application.routes.draw do
   get "properties/new"
   get "hub/selectize"
   resources :users
+  resources :roles
   resources :group_property_relationships
   resources :entity_group_relationships
   resources :entity_property_relationships
@@ -55,7 +64,7 @@ Spex::Application.routes.draw do
   end
 
   resources :sessions, only: [:new, :create, :destroy]
-  root 'static_pages#home'
+  root 'entity_property_relationships#query'
   # match '/hub/create_entity', to: 'hub#main',   via: 'get'
   # match '/hub/create_group',  to: 'hub#main',    via: 'get'
   # match '/hub/delete_entity', to: 'hub#main',   via: 'get'
@@ -71,6 +80,8 @@ Spex::Application.routes.draw do
   match '/signin',  to: 'sessions#new',         via: 'get'
   match '/signout', to: 'sessions#destroy',     via: 'delete'
   match '/help',    to: 'static_pages#help',    via: 'get'
+  match '/home',    to: 'static_pages#home',    via: 'get'
+  match '/query',   to: 'entity_property_relationships#query',    via: 'get'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

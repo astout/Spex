@@ -7,8 +7,11 @@ class Property < ActiveRecord::Base
   has_many :groups, 
     through: :group_property_relationships, 
     inverse_of: :properties
-  validates :name, 
-    presence: true
+  has_and_belongs_to_many :roles
+  VALID_NAME_REGEX = /\A[a-z0-9]+[a-z0-9\-\_]*[a-z0-9]+\z/i
+  validates :name,  presence: true, format: { with: VALID_NAME_REGEX }, 
+    length: { minimum: 2, maximum: 32 },
+    uniqueness: { case_sensitive: false }
 
   # # before_destroy { |property| GroupPropertyRelationship.destroy_all "property_id = #{property.id}" }
   # before_destroy do |property|
@@ -27,9 +30,9 @@ class Property < ActiveRecord::Base
     # end
   end
 
-  before_create do |p|
-    p.default_visibility = p.default_visibility.blank? ? 0 : p.default_visibility
-  end
+  # before_create do |p|
+  #   p.roles = p.roles.blank? ? [] : p.roles
+  # end
 
   # def do_delete
   #   result = {data: self, status: 1, msg: "Property '#{self.name}' deleted."}
@@ -144,7 +147,7 @@ class Property < ActiveRecord::Base
         #wrap each word in '%' to allow partial matches
         e = '%'+e+'%'
         #add the string to the binding elements 4 times (1 for each field)
-        elements.concat [e]*4
+        elements.concat [e]*7
       end
       #declare the where clause
       clause = ''
@@ -152,7 +155,7 @@ class Property < ActiveRecord::Base
       #for each word from the search string
       _elements.each do |element|
         #append to the clause the full query
-        clause += '(LOWER(name) LIKE ? OR LOWER(default_label) LIKE ? OR created_at::text LIKE ? OR updated_at::text LIKE ?) AND '
+        clause += '(LOWER(name) LIKE ? OR LOWER(default_label) LIKE ? OR LOWER(units) LIKE ? OR LOWER(units_short) LIKE ? OR LOWER(default_value) LIKE ? OR created_at::text LIKE ? OR updated_at::text LIKE ?) AND '
       end
       #remove the trailing 'AND' from the clause
       clause = clause.gsub(/(.*)( AND )(.*)/, '\1')

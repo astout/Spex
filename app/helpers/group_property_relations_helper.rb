@@ -43,7 +43,7 @@ module GroupPropertyRelationsHelper
 
     end #end each selected group
 
-    gprs = gprs.paginate(page: params[:gprs_page], per_page: 10, order: 'order ASC')
+    gprs = gprs.paginate(page: params[:gprs_page], per_page: 10, order: 'position ASC')
   end
 
   def get_gprs(selected_groups)
@@ -123,7 +123,7 @@ module GroupPropertyRelationsHelper
     moved_gprs = []
 
     #sort the relations by order
-    relations = selected_gprs.sort_by { |r| r[:order] }
+    relations = selected_gprs.sort_by { |r| r[:position] }
 
     #enumerate over the relations, get a 0-based index
     relations.to_enum.with_index(0).each do |relation, i|
@@ -140,16 +140,16 @@ module GroupPropertyRelationsHelper
     #data for what is moved
     moved_gprs = []
 
-    #sort the relations by order
-    relations = selected_gprs.sort_by { |r| r[:order] }
+    #sort the relations by position
+    relations = selected_gprs.sort_by { |r| r[:position] }
 
     #enumerate the relations and get a 0-based index
     relations.to_enum.with_index(0).each do |relation, i|
-      if relation.order == i #if order is the current index, doesn't need to move
+      if relation.position == i #if position is the current index, doesn't need to move
         moved_gprs.push({ data: relation, msg: "not moved", idx: i+1 })
       else #move it
         success = relation.group.up! relation.property
-        moved_gprs.push success ? { data: relation, msg: "moved", idx: relation.order } : { data: relation, msg: "not moved", idx: relation.order + 1 }
+        moved_gprs.push success ? { data: relation, msg: "moved", idx: relation.position } : { data: relation, msg: "not moved", idx: relation.position + 1 }
       end
     end
 
@@ -161,17 +161,17 @@ module GroupPropertyRelationsHelper
     #data for moved relations
     moved_gprs = []
 
-    #sort the relations by order
-    relations = selected_gprs.sort_by { |r| r[:order] }
+    #sort the relations by position
+    relations = selected_gprs.sort_by { |r| r[:position] }
 
-    #reverse the order, enumerate with 0-based index i
+    #reverse the position, enumerate with 0-based index i
     relations.reverse.to_enum.with_index(0).each do |relation, i|
-      #if the order is the inverse of the current index (indexing from high to low)
-      if relation.order == relation.group.properties.count - 1 - i 
+      #if the position is the inverse of the current index (indexing from high to low)
+      if relation.position == relation.group.properties.count - 1 - i 
         moved_gprs.push({ data: relation, msg: "not moved", idx: i+1 })
       else
         success = relation.group.down! relation.property
-        moved_gprs.push success ? { data: relation, msg: "moved", idx: relation.order + 2 } : { data: relation, msg: "not moved", idx: relation.order + 1 }
+        moved_gprs.push success ? { data: relation, msg: "moved", idx: relation.position + 2 } : { data: relation, msg: "not moved", idx: relation.position + 1 }
       end
     end
     return moved_gprs

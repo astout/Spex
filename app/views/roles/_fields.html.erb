@@ -1,0 +1,25 @@
+<span id="role_name" class="label label-default new-role-label">Name</span>
+<%= f.text_field :name, class: "input-sm", hide_label: true, maxlength: 20 %>
+<input id="role_default" name="default" type="hidden" value="false">
+<div class="col-xs-12" style="padding-bottom: 50px;">
+    <div class="col-xs-3 center">
+        <% if @role.default? %>
+            <div data-toggle="tooltip" data-placement="bottom" title="This is the default role.  To change the default, set another role to default.">
+                <button id="role_default" class="btn btn-default btn-sm new-role-label role-bool disabled" data-toggle="modal" data-target="#default-confirm">Default</button>
+            </div>
+        <% else %>
+            <div data-toggle="tooltip" data-placement="bottom" title="Sets this role to be the default role.  New users will be automatically assigned to the default role.  Once an account is created, an admin can change a users role.">
+                <button id="role_default" class="btn btn-default btn-sm new-role-label role-bool" >Default</button>
+            </div>
+        <% end %>
+        <input id="role_change_defaults" name="change_defaults" type="hidden" value="false">
+    </div>
+    <div class="col-xs-6 center">
+        <button id="role_change_view" class="btn btn-default btn-sm new-role-label role-bool" data-toggle="tooltip" data-placement="bottom" title="Allows the user to change the view of a any given report. If enabled, the user could then see any non-admin spec report they choose.">Can Change Report View</button>
+        <%= f.hidden_field :change_view, value: @role.change_view || false %>
+    </div>
+    <div class="col-xs-3 center">
+        <button id="role_admin" class="btn btn-default btn-sm new-role-label role-bool" data-toggle="tooltip" data-placement="bottom" title="Gives the user full control of everything.  They can create specs, destroy specs, destroy users, change roles, etc. Use with caution.">Admin</button>
+        <%= f.hidden_field :admin, value: @role.admin || false %>
+    </div>
+</div>

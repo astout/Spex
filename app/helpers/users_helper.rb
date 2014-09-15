@@ -8,7 +8,7 @@ module UsersHelper
   end
 
   def user_params
-    params.require(:user).permit(:first, :last, :login, :email)
+    params.require(:user).permit(:first, :last, :login, :email, :role_id, :password, :password_confirmation)
   end
 
   def user_sort_column
@@ -17,5 +17,13 @@ module UsersHelper
 
   def user_sort_direction
     %w[asc desc].include?(params[:user_direction]) ? params[:user_direction] : "desc"
+  end
+
+  def require_admin
+    unless current_user.nil?
+      redirect_to root_url unless current_user.admin?
+    else
+      redirect_to root_url
+    end
   end
 end

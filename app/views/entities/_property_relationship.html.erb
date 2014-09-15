@@ -7,17 +7,17 @@
   // console.log(text);
   // console.log("ogVal: <%= @_ogVal %>");
 </script>
-<tr id=<%= "#{property_relationship.id}" %> class="list-item epr" data-order=<%= property_relationship.order+1 %> >
+<tr id=<%= "#{property_relationship.id}" %> class="list-item epr" data-position=<%= property_relationship.position+1 %> >
     <td>
       <%= link_to property_relationship.property.name, property_relationship %>
     </td>
     <% if show_units %>
       <td>
-        <%= property_relationship.property.units %>
+        <%= property_relationship.units %>
       </td>
     <% end %>
     <td>
-      <%= link_to property_relationship.property.units_short || "", property_relationship %>
+      <%= property_relationship.units_short || "" %>
     </td>
     <% if show_created %>
       <td>
@@ -34,7 +34,7 @@
         <% end %>
     </td>
     <td>
-      <%= property_relationship.order+1 %>
+      <%= property_relationship.position+1 %>
     </td>
     <% if current_user.admin? && show_remove %>
       <td>

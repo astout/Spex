@@ -1,4 +1,4 @@
-$('#gprs').html("  <%= j render partial: 'groups/properties', locals: { show_units: false, show_created: false, show_remove: false, show_order: true } %>");
+$('#gprs').html("  <%= j render partial: 'groups/properties', locals: { show_units: false, show_created: false, show_remove: false, show_position: true } %>");
 
 clearSelectedProperties();
 
@@ -23,5 +23,5 @@ $('#groups').html("<%= j render partial: 'properties/properties', locals: { show
 
 hubAlert("#groups-properties-alert", alert_html);
 persistStyling();
-window.selected_gpr_max_order = <%= @selected_groups.first.properties.count %>
+window.selected_gpr_max_position = <%= @selected_groups.first.properties.count %>
 validateGroupsPropertySelection();

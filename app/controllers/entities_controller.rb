@@ -1,28 +1,22 @@
 class EntitiesController < ApplicationController
   include EntitiesHelper
+  include UsersHelper
   # helper_method :entity_sort_column, :entity_sort_direction, :group_sort_column, :group_sort_direction
   helper_method :egr_sort_column, :egr_sort_direction
 
-  before_action do
-    unless current_user.nil?
-      redirect_to root_url unless current_user.admin?
-    else
-      redirect_to root_url
-    end
-  end
-
   def index
-    @entities = Entity.search(params[:entity_search]).order(entity_sort_column + ' ' + entity_sort_direction).paginate(page: params[:entities_page].blank? ? 1 : params[:entities_page], per_page: 10)
+    @entities = entities_list
   end
 
   def new
+    require_admin
     @entity = Entity.new
   end
 
   def create
+    require_admin
     @entity = Entity.find_by(name: entity_params[:name])
     @result = {msg: "", r: -1}
-    @entities = Entity.search(params[:entity_search]).order(entity_sort_column + ' ' + entity_sort_direction).paginate(page: params[:entities_page], per_page: 10, order: 'created_at DESC')
 
     respond_to do |format|
       if @entity.nil?
@@ -34,7 +28,7 @@ class EntitiesController < ApplicationController
           @result[:r] = 1
           @result[:msg] = "'#{@entity.name}' was saved."
           #entities needs to be updated to get the latest addition
-          @entities = Entity.search(params[:entity_search]).order(entity_sort_column + ' ' + entity_sort_direction).paginate(page: params[:entities_page], per_page: 10, order: 'created_at DESC')
+          @entities = entities_list
         end
       else
         @result[:r] = 0
@@ -43,44 +37,35 @@ class EntitiesController < ApplicationController
       format.js
       format.html {redirect_to entities_path }
     end
-
-
-    # @entity = Entity.new(entity_params)
-    # @result = {msg: "", r: -1}
-
-    # respond_to do |format|
-    #   if !@entity.save
-    #     @result[:r] = 0
-    #     @result[:msg] = "'#{@entity.name}' failed to save."
-    #   else
-    #     @result[:r] = 1
-    #     @result[:msg] = "'#{@entity.name}' was saved."
-    #   end
-    #   format.js
-    # end
-    # if @entity.save
-    #   flash[:success] = "'" + @entity.name + "' created."
-    #   redirect_to @entity
-    # else
-    #   render 'new'
-    # end
   end
 
   def edit
+    require_admin
     @back ||= request.referer
     @entity = Entity.find(params[:id])
   end
 
   def show
     @entity = Entity.find(params[:id])
-  end
+    @role = Role.find_by(id: params[:view_id] || current_user.role_id).attributes
 
-  def employ
-    @property = Property.find(params[:id])
-    current_entity.employ!(@property)
+    @groups_all = @entity.groups
+    @properties_all = @entity.properties_via(@entity.groups.first)
+    @updated_property = params[:property]
+    # @view = { id: nil, name: nil }
+    # role = Role.find_by(id: params[:view_id] || current_user.role_id)
+    # unless role.blank?
+    #   @view[:id] = role.id
+    #   @view[:name] = role.name
+    # end
+    respond_to do |format|
+      format.js
+      format.html
+    end
   end
 
   def update
+    require_admin
     @entity = Entity.find(params[:id])
     if @entity.update_attributes(entity_params)
       flash[:success] = "'" + @entity.name + "' updated"
@@ -91,6 +76,7 @@ class EntitiesController < ApplicationController
   end
 
   def destroy
+    require_admin
     respond_to do |format|
       format.js { 
         redirect_to "/hub/delete_entity?id=#{params[:id]}"
@@ -109,6 +95,7 @@ class EntitiesController < ApplicationController
   end
 
   def groups
+    require_admin
     @fetched_entity = Entity.find(params[:id])
     @result = {msg: "", r: -1}
     @egrs = []
@@ -120,7 +107,7 @@ class EntitiesController < ApplicationController
       else
         @result[:r] = 1
         @result[:msg] = ""
-        @egrs = @fetched_entity.group_relations.paginate(page: params[:egrs_page], per_page: 10, order: 'order ASC')
+        @egrs = @fetched_entity.group_relations.paginate(page: params[:egrs_page], per_page: 10, order: 'position ASC')
       end
       format.js
       format.html { redirect_to hub_path }
@@ -129,16 +116,16 @@ class EntitiesController < ApplicationController
 
   private
 
-    def entity_params
-      params.require(:entity).permit(:name, :label, :img)
-    end
+    # def entity_params
+    #   params.require(:entity).permit(:name, :label, :img)
+    # end
 
-    def egr_sort_column
-      EntityGroupRelationship.column_names.include?(params[:egr_sort]) || Group.column_names.include?(params[:egr_sort]) ? params[:egr_sort] : "order"
-    end
+    # def egr_sort_column
+    #   EntityGroupRelationship.column_names.include?(params[:egr_sort]) || Group.column_names.include?(params[:egr_sort]) ? params[:egr_sort] : "position"
+    # end
 
-    def egr_sort_direction
-      %w[asc desc].include?(params[:egr_direction]) ? params[:egr_direction] : "desc"
-    end
+    # def egr_sort_direction
+    #   %w[asc desc].include?(params[:egr_direction]) ? params[:egr_direction] : "desc"
+    # end
 
 end

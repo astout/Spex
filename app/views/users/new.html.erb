@@ -1,4 +1,15 @@
+<script type="text/javascript">
+  $("body").addClass("signup");
+</script>
+
 <% provide(:title, 'Sign up') %>
+
+<div>
+    <%= link_to "Users", users_path, style: "color: #494A4A" %>
+    <span class="glyphicon glyphicon-chevron-right", style="font-size: 12px;"></span>
+    New
+</div>
+
 <h1>Sign up</h1>
 
 <% unless signed_in? %>

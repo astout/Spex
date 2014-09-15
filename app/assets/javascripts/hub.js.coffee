@@ -16,8 +16,7 @@ $ ->
 
 hub = () ->
     #disable autocomplete across all forms
-    $("input[type='text']").prop("autocomplete", "off")
-    
+        
     $("div[id^=accordion]").on('hidden.bs.collapse', toggleChevron)
     $("div[id^=accordion]").on('shown.bs.collapse', toggleChevron)
 

@@ -7,21 +7,32 @@
 
 <%= f.text_field :property, disabled: true, id: relation.id, class: "input-sm epr-pname", value: relation.property.name || "", autocomplete: "off" %>
 
-<%= f.number_field :order, disabled: true, id: relation.id, class: "input-sm epr-order", value: relation.order+1 || "", autocomplete: "off"%>
+<%= f.number_field :position, disabled: true, id: relation.id, class: "input-sm epr-position", value: relation.position+1 || "", autocomplete: "off"%>
 
 <%= f.text_field :label, id: relation.id, class: "input-sm epr-label", value: relation.label || "", autocomplete: "off" %>
 
-<%= render partial: 'entity_property_relationships/formula_forms', locals: { relation: relation } %>
+<div>
+    <%= render partial: 'entity_property_relationships/formula_forms', locals: { relation: relation } %>
+</div>
 
-<%= f.text_area :value, id: relation.id, class: "input-sm epr-value", label: "Actual Value", autocomplete: "off", style: "", value: relation.value || "" %>
+<label class="control-label" for="epr-value" style="margin-top: 30px">Actual Value</label>
+<%= f.text_area :value, id: relation.id, class: "input-sm epr-value", hide_label: true, autocomplete: "off", style: "", value: relation.value || "" %>
 
 <label class="control-label" for="epr-evaluated">Calculated Value</label>
 <div class="input-group input-group-sm"> 
-  <input class="form-control epr-evaluated-text" id=<%= relation.id %> name="epr-evaluated" type="text" autocomplete="off" readonly="readonly" value="<%= @_value_copy %>" >
+  <input class="form-control epr-evaluated-text" id="<%= relation.id %>" name="epr-evaluated" type="text" autocomplete="off" readonly="readonly" value="<%= @_value_copy %>" >
   <span class="input-group-btn">
-    <button class="btn btn-info epr-evaluate" id=<%= relation.id %> >Calculate</button>
+    <button class="btn btn-info epr-evaluate" id="<%= relation.id %>" >Calculate</button>
   </span>
 </div>
 
-<%= f.number_field :visibility, min: 0, id: relation.id, class: "input-sm epr-visibility", label: "Role Visibility", value: relation.visibility || "", autocomplete: "off" %>
+<%= f.text_field :units, id: relation.id, class: "input-sm epr-units" %>
+
+<%= f.text_field :units_short, id: relation.id, class: "input-sm epr-units-short" %>
+
+<label class="control-label" for="epr-roles">Viewers</label>
+<%= select_tag "role_ids", options_from_collection_for_select(Role.where(admin: false), "id", "name", relation.roles.select(:id).where(admin: false).pluck(:id)), id: relation.id, class: "form-control epr-roles input-sm col-xs-12", multiple: true %>
+<!--%= f.select :role_ids, Role.all.collect { |r| [r.name, r.id] }, {}, label: "viewers", multiple: true, id: relation.id, class: "epr-roles col-xs-12" %-->
+
+<!--%= f.number_field :visibility, min: 0, id: relation.id, class: "input-sm epr-visibility", label: "Role Visibility", value: relation.visibility || "", autocomplete: "off" %-->
 

@@ -63,8 +63,8 @@ class GroupsController < ApplicationController
 
   private
 
-    def group_params
-      params.require(:group).permit(:name, :default_label)
-    end
+    # def group_params
+    #   params.require(:group).permit(:name, :default_label)
+    # end
 
 end

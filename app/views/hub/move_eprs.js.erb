@@ -21,7 +21,7 @@ alert_html += "</div>"
 
 hubAlert("#groups-properties-alert", alert_html);
 
-$('#gprs').html("  <%= j render partial: 'groups/properties', locals: { show_units: false, show_created: false, show_remove: false, show_order: true } %>");
+$('#gprs').html("  <%= j render partial: 'groups/properties', locals: { show_units: false, show_created: false, show_remove: false, show_position: true } %>");
 
 persistStyling();
 

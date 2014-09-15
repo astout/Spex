@@ -2,10 +2,10 @@ $("#debug").html('<%= params %>');
 var alert_html = "";
 
 <% if @selected_groups.blank? %>
-    window.selected_gpr_max_order = -1;
+    window.selected_gpr_max_position = -1;
 <% else %>
     hubAlert("#groups-properties-alert", "");
-    window.selected_gpr_max_order = <%= @selected_groups.first.properties.count %>;
+    window.selected_gpr_max_position = <%= @selected_groups.first.properties.count %>;
     <% if @gprs.blank? %>
         alert_html += "<div class='alert alert-info small-font'>";
         alert_html += "<p><strong>No properties for <%= @selected_groups.first.name %>.</strong></p>";
@@ -21,9 +21,9 @@ var alert_html = "";
 <% end %>
 
 <% if @selected_egrs.blank? %>
-    window.selected_epr_max_order = -1;
+    window.selected_epr_max_position = -1;
 <% else %>
-    window.selected_epr_max_order = <%= @selected_egrs.first.group.properties.count %>;
+    window.selected_epr_max_position = <%= @selected_egrs.first.group.properties.count %>;
     if(!window.epr_update)
     {
         hubAlert("#groups-properties-alert", "");
@@ -55,7 +55,7 @@ var alert_html = "";
 
 $('#properties').html("<%= j render partial: 'properties/properties', locals: { show_units: false, show_created: false, show_remove: false } %>");
 
-$('#gprs').html("<%= j render partial: 'groups/properties', locals: { show_units: false, show_created: false, show_remove: false, show_order: true } %>");
+$('#gprs').html("<%= j render partial: 'groups/properties', locals: { show_units: false, show_created: false, show_remove: false, show_position: true } %>");
 
 persistStyling();
 $(".edit-epr-form").hide();

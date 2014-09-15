@@ -1,6 +1,13 @@
 <%= javascript_tag do %>
     $('body').addClass('hub');
 <% end %>
+<div style="margin-bottom: 10px">
+    <%= link_to "Home", root_path, style: "color: #494A4A" %>
+    <span class="glyphicon glyphicon-chevron-right", style="font-size: 12px;"></span>
+    <%= link_to "Hub", hub_path, style: "color: #494A4A" %>
+    <br>
+</div>
+
 <div id="hub-alert"></div>
 <i id="clear-alerts" class="fa fa-ban fa-lg"></i>
 <div class="row">
@@ -68,7 +75,7 @@
             <div id="groups-properties-alert"></div>
             <div style="padding-top: 10px"></div>
             <div id="gprs"> 
-                <%= render partial: 'groups/properties', locals: { show_units: false, show_created: false, show_order: true, show_remove: false } %>
+                <%= render partial: 'groups/properties', locals: { show_units: false, show_created: false, show_position: true, show_remove: false } %>
             </div>
         </row>
         <row>

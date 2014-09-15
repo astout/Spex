@@ -1,71 +1,112 @@
 <%= javascript_tag do %>
     $('body').addClass('report');
 <% end %>
+
+<% unless @entity.label.blank? %>
+  <% @label = "#{@entity.label.to_s}" %>
+<% else %>
+  <% unless @entity.name.blank? %>
+    <% @label = "#{@entity.name.to_s.capitalize}" %>
+  <% else %>
+    <% @label = "Entity id: #{@entity.id.to_s}" %>
+  <% end %>
+<% end %>
+
+<% @role = Role.find_by(id: @role['id']) %>
+
 <div class="panel panel-default report">
   <div class="panel-heading">
-    <% if !@entity.label.blank? %>
-      <h3 class="panel-title"><%= "#{@entity.label} Spec Report" %></h3>
-    <% elsif !@entity.name.blank? %>
-      <h3 class="panel-title"><%= "#{@entity.name} Spec Report" %></h3>
-    <% else %>
-      <h3 class="panel-title"><%= "[NameError] Spec Report" %></h3>
-    <% end %>
+    <h3 class="panel-title"><%= "#{@label} Spec Report" %></h3>
   </div>
   <div class="panel-body">
     <% if @entity.properties.any? %>
       <table class="table table-condensed spec-report">
-        <% @entity.group_relations.each do |egr| %>
-          <tr class="egr-row">
-            <td class="group-name" colspan="100%">
-              <strong>
-                <% found = false %>
-                <% if !egr.label.blank? && !found %>
-                  <%= egr.label %>
-                  <% found = true %>
-                <% elsif !egr.group.default_label.blank? && !found %>
-                  <%= egr.group.default_label %>
-                  <% found = true %>
-                <% else !egr.group.name.blank? && !found %>
-                  <%= egr.group.name %>
-                  <% found = true %>
-                <% end %>
-              </strong>
-            </td>
+        <% if @role.entity_viewables(@entity.id) < 1 %>
+          <tr>
+            <div class="center alert alert-info">
+              <p><i>There are no properties defined for '<%= @label %>'</i></p>
+            </div>
           </tr>
-          <% @entity.property_relations_via(egr.group).each do |epr| %>
-            <tr class="epr-row">
-              <td class="property-name" style="padding: 5px 0px 0px 20px">
-                <% found = false %>
-                <% if !epr.label.blank? && !found %>
-                  <%= epr.label %>
-                  <% found = true %>
-                <% elsif !epr.property.default_label.blank? && !found %>
-                  <%= epr.property.default_label %>
-                  <% found = true %>
-                <% else !epr.property.name.blank? && !found %>
-                  <%= epr.property.name %>
-                  <% found = true %>
-                <% end %>
-              </td>
-              <td id=<%= epr.id %> class="property-value" style="text-align: right">
-                <%= parse_value("#{epr.value}") %>
-              </td>
-            </tr>
-            <% if current_user.admin? %>
-              <tr>
-                <td colspan="100%" class="hidden-value">
-                  <div id=<%= epr.id %> class="trueValue light-font">
-                    <%= epr.value %>
-                  </div>
-                </td>
-              </tr>
+        <% else %>
+          <% @entity.group_relations.each do |egr| %>
+            <% unless @role.blank? %>
+              <% unless @role.egr_viewables(egr.entity_id, egr.group_id) < 1 %>
+                <tr class="egr-row">
+                  <td class="group-name" colspan="100%">
+                    <strong>
+                      <% found = false %>
+                      <% if !egr.label.blank? && !found %>
+                        <%= egr.label %>
+                        <% found = true %>
+                      <% elsif !egr.group.default_label.blank? && !found %>
+                        <%= egr.group.default_label %>
+                        <% found = true %>
+                      <% else !egr.group.name.blank? && !found %>
+                        <%= egr.group.name %>
+                        <% found = true %>
+                      <% end %>
+                    </strong>
+                  </td>
+                </tr>
+              <% end %>
+            <% end %>
+            <% @entity.property_relations_via(egr.group).each do |epr| %>
+              <% if epr.roles.pluck(:id).include?(@role['id'].to_i) || (current_user.admin? && @role['admin'] == true ) %>
+                <tr id="<%= epr.id %>"  class="epr-row">
+                  <td class="property-name" style="padding: 5px 0px 0px 20px">
+                    <% found = false %>
+                    <% final_label = "" %>
+                    <% if !epr.label.blank? && !found %>
+                      <% final_label = epr.label %>
+                      <% found = true %>
+                    <% elsif !epr.property.default_label.blank? && !found %>
+                      <% final_label = epr.property.default_label %>
+                      <% found = true %>
+                    <% else !epr.property.name.blank? && !found %>
+                      <% final_label =  epr.property.name %>
+                      <% found = true %>
+                    <% end %>
+                    <% if current_user.admin? && @role['admin'] == true %>
+                      <a href="#" id="<%= epr.id %>" class="trigger editable" style="color: #494A4A"> <%= final_label %> </a>
+                    <% else %>
+                      <%= final_label %>
+                    <% end %>
+                  </td>
+                  <td id=<%= epr.id %> class="property-value" style="text-align: right">
+                    <% if current_user.admin? && @role['admin'] == true %>
+                      <a href="#" id="<%= epr.id %>" class="trigger editable"> <%= parse_value("#{epr.value}") + epr.units_short %> </a>
+                    <% else %>
+                      <%= parse_value("#{epr.value}") + epr.units_short %>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+              <% if current_user.admin? %>
+                <tr>
+                  <td colspan="100%" class="hidden-value">
+                    <div id=<%= epr.id %> class="trueValue light-font">
+                      <div class="panel panel-default col-xs-8 col-xs-offset-2">
+                        <h6> Edit Entity Property Relationship </h6>
+                        <div style="border-bottom: 1px solid #ccc; margin: 5px"></div>
+                        <%= bootstrap_form_for(epr, url: { controller: "hub", action: "update_epr" }, method: :post, remote: true) do |f| %>
+                          <%= hidden_field_tag :page, 'report' %>
+                          <% @_value_copy = epr.value.dup %>
+                          <% @_value_copy = parse_value(@_value_copy) || "" %>
+                          <%= render partial: 'entity_property_relationships/fields', locals: { f: f, relation: epr } %>
+                          <%= f.submit "Update", class: "btn btn-sm btn-primary btn75", id: "update-epr" %>
+                        <% end %>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              <% end %>
             <% end %>
           <% end %>
         <% end %>
       </table>
     <% else %>
       <div class="alert alert-info">
-        <center><i><%= "'#{@entity.name}' contains no properties." %></i></center>
+        <center><i><%= "'#{@label}' contains no properties." %></i></center>
       </div>
     <% end %>
   </div>

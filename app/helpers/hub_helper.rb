@@ -78,7 +78,7 @@ module HubHelper
       @gprs[:data].sort_by { |r| r[:group_id] }
 
       #prepare the data for pagination
-      @gprs[:data] = @gprs[:data].paginate(page: params[:gprs_page].blank? ? 1 : params[:gprs_page], per_page: 10, order: 'order ASC')
+      @gprs[:data] = @gprs[:data].paginate(page: params[:gprs_page].blank? ? 1 : params[:gprs_page], per_page: 10, order: 'position ASC')
 
       #success status and no message
       @gprs[:status] = 1
@@ -95,7 +95,7 @@ module HubHelper
       @eprs[:data].sort_by { |r| r[:group_id] }
 
       #prepare the data for pagination
-      @eprs[:data] = @eprs[:data].paginate(page: params[:gprs_page].blank? ? 1 : params[:gprs_page], per_page: 10, order: 'order ASC')
+      @eprs[:data] = @eprs[:data].paginate(page: params[:gprs_page].blank? ? 1 : params[:gprs_page], per_page: 10, order: 'position ASC')
 
       #success status and no message
       @eprs[:status] = 1
@@ -123,7 +123,7 @@ module HubHelper
   #match each occurrence of enclosures of double brackets
   #\[\[([^]]+)\]\]
 
-  def parse_value(value)
+  def parse_value(value, epr=nil)
     return unless value.class == String
     result = value
     vars = []
@@ -136,7 +136,7 @@ module HubHelper
         puts "GETTING VALUE FOR: "
         puts scan.first
         #parse the reference, get the value
-        val = parse_reference(scan.first)
+        val = parse_reference(scan.first, epr)
         puts "VALUE RETRIEVED: "
         puts val
         val = piece if val == scan.first
@@ -183,7 +183,7 @@ module HubHelper
     pieces = formula.scan(/\{(.*?)\}/)
   end
 
-  def parse_reference(ref)
+  def parse_reference(ref, epr=nil)
     return ref unless ref.class == String
     pieces = ref.split "."
     return ref if pieces.empty?
@@ -192,8 +192,18 @@ module HubHelper
     gname = pieces[1].strip
     pname = pieces.last.strip
 
-    entity = Entity.find_by_name ename
-    group = Group.find_by_name gname
+    if ename == "*" && !epr.blank?
+      entity = epr.entity
+    else
+      entity = Entity.find_by_name ename
+    end
+    
+    if gname == "*" && !epr.blank?
+      group = epr.group
+    else
+      group = Group.find_by_name gname
+    end
+
     property = Property.find_by_name pname
 
     return ref if entity.nil? || group.nil? || property.nil?

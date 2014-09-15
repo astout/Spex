@@ -1,7 +1,6 @@
 class UsersController < ApplicationController
   include UsersHelper
-  before_action :signed_in_user, only: [:index, :edit, :update, :destroy,
-      :following, :followers]
+  before_action :signed_in_user, only: [:edit, :update]
   before_action :correct_user,   only: [:edit, :update]
   before_action :admin_user,     only: [:destroy, :index]
 
@@ -25,6 +24,7 @@ class UsersController < ApplicationController
       flash[:success] = "Welcome to Goal Zero Tech Specs!"
       redirect_to @user
     else
+      flash[:danger] = "There was an error creating the account.  The login you tried might be taken."
       render 'new'
     end
   end
@@ -34,7 +34,7 @@ class UsersController < ApplicationController
   end
 
   def update
-    if @user.update_attributes(user_params)
+    if @user.update_attributes(user_params.merge(params[:role_id]))
       flash[:success] = "Profile updated"
       redirect_to @user
     else
@@ -50,16 +50,18 @@ class UsersController < ApplicationController
 
   private
 
-    def user_params
-      params.require(:user).permit(:first, :last, :login, :email, :password,
-                                   :password_confirmation)
-    end
+    # def user_params
+    #   params.require(:user).permit(:first, :last, :login, :email, :password,
+    #                                :password_confirmation)
+    # end
 
     # Before filters
 
     def correct_user
       @user = User.find(params[:id])
-      redirect_to(root_url) unless current_user?(@user)
+      unless current_user?(@user) || current_user.admin?
+        redirect_to(root_url) 
+      end
     end
 
     def admin_user

@@ -1,0 +1,24 @@
+<table class="table table-condensed roles">
+    <th>
+        <%= role_sortable "name" %>
+    </th>
+    <th>
+        #Users
+    </th>
+    <th>
+        Default
+    </th>
+    <th>
+        Change Report View
+    </th>
+    <th>
+        Admin
+    </th>
+    <% if show_remove %>
+        <th>
+            Remove
+        </th>
+    <% end %>
+  <%= render partial: 'roles/role', collection: @roles, locals: { show_remove: show_remove }  %>
+</table>
+<%= will_paginate @roles, inner_window: 0, outer_window: 0, param_name: 'roles_page', params: { event: 'role' } %>

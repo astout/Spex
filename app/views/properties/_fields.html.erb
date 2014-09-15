@@ -15,5 +15,11 @@
 <span id="property_default_value" class="label label-default new-property-label">Value</span>
 <%= f.text_field :default_value, class: "input-sm", hide_label: true %>
 
-<span id="property_default_visibility" class="label label-default new-property-label">Visibility</span>
-<%= f.number_field :default_visibility, class: "input-sm", hide_label: true, value: "0" %>
+<span id="property_roles" class="label label-default new-property-label">Viewers</span>
+
+<%= select_tag "role_ids", options_from_collection_for_select(Role.where(admin: false), "id", "name", @property.roles.select(:id).where(admin: false).pluck(:id)), class: "form-control new-property-roles col-xs-12 input-sm", multiple: true %>
+
+<%= f.hidden_field :role_ids %>
+
+<!-- <span id="property_default_visibility" class="label label-default new-property-label">Visibility</span> -->
+<!--%= f.number_field :default_visibility, class: "input-sm", hide_label: true, value: "0" %-->

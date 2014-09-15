@@ -14,6 +14,8 @@
 //= require jquery.turbolinks
 //= require jquery_ujs
 //= require bootstrap
+//= require bootstrap-editable
+//= require bootstrap-editable-rails
 //= require select2
 //= require turbolinks
 //= require jquery.tokeninput
@@ -27,6 +29,11 @@ $(function()
         function() { $(this).addClass("fa-spin") },
         function() { $(this).removeClass("fa-spin") }
     )
+
+    if( !$("body").hasClass("signup") && !$("body").hasClass("signin") )
+    {
+      $("input[type='text']").prop("autocomplete", "off");
+    }
 });
 
 

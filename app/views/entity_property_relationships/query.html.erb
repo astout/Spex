@@ -1,0 +1,24 @@
+<% provide(:title, "Spex Query") %>
+<script type="text/javascript">
+    $("body").addClass('<%= "query" %>');
+</script>
+<!-- Reload defaults -->
+<div style="margin-bottom: 10px">
+    <%= link_to "Home", root_path, style: "color: #494A4A" %>
+    <span class="glyphicon glyphicon-chevron-right", style="font-size: 12px;"></span>
+    Spex Query
+</div>
+<h1>Spex Query</h1>
+
+<!-- Link to Entity creation form -->
+<%= link_to "Create New", hub_path, class: "btn btn-primary btn-sm", style: "float: right; margin-bottom: 10px"%>
+<br/>
+<br/>
+
+<!-- Search Form -->
+<%= render partial: 'search', locals: { path: entity_property_relationships_path, remote: true } %>
+
+<!-- List -->
+<div id="epr_list">
+    <%= render partial: "entity_property_relationships/eprs", locals: { show_remove: false } %>
+</div>

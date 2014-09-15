@@ -22,6 +22,13 @@ module ApplicationHelper
     link_to title, params.merge(property_sort: column, property_direction: direction, event: "property", page: nil), {class: css_class}  
   end
 
+  def epr_sortable(column, title = nil)  
+    title ||= column.titleize 
+    css_class = (column == epr_sort_column) ? "current #{epr_sort_direction}" : nil  
+    direction = (column == epr_sort_column && epr_sort_direction == "asc") ? "desc" : "asc"  
+    link_to title, params.merge(epr_sort: column, epr_direction: direction, event: "epr", page: nil), {class: css_class}  
+  end
+
   def user_sortable(column, title = nil)
     title ||= column.titleize 
     css_class = (column == user_sort_column) ? "current #{user_sort_direction}" : nil  
@@ -35,6 +42,14 @@ module ApplicationHelper
     direction = (column == egr_sort_column && egr_sort_direction == "asc") ? "desc" : "asc"  
     link_to title, params.merge(egr_sort: column, egr_direction: direction, entitys_group_event: true, page: nil), {class: css_class}  
   end
+
+  def role_sortable(column, title = nil)
+    title ||= column.titleize 
+    css_class = (column == role_sort_column) ? "current #{role_sort_direction}" : nil  
+    direction = (column == role_sort_column && role_sort_direction == "asc") ? "desc" : "asc"  
+    link_to title, params.merge(role_sort: column, role_direction: direction, event: "role", page: nil), {class: css_class}  
+  end
+
 
   # Returns the full title on a per-page basis.
   def full_title(page_title)

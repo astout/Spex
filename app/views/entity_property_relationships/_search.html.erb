@@ -1,0 +1,13 @@
+<%= form_tag path, method: 'get', remote: remote do %>
+    <%= hidden_field_tag :epr_direction, params[:epr_direction] %>
+    <%= hidden_field_tag :epr_sort, params[:epr_sort] %>
+    <%= hidden_field_tag :event, 'epr' %>
+    <%= hidden_field_tag :eprs_page, "1" %>
+    <%= hidden_field_tag :search, "epr" %>
+    <div class="input-group" style="margin-bottom: 15px">
+        <%= text_field_tag :epr_search, params[:epr_search], class: "form-control", id: "epr_search_field" %>
+        <span class="input-group-btn" >
+            <%= submit_tag "Search", name: nil, class: "btn btn-default" %>
+        </span>
+    </div>
+<% end %>

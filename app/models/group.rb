@@ -8,8 +8,10 @@ class Group < ActiveRecord::Base
   has_many :properties, 
     through: :group_property_relationships, 
     inverse_of: :groups
-  validates :name, 
-    presence: true
+  VALID_NAME_REGEX = /\A[a-z0-9]+[a-z0-9\-\_]*[a-z0-9]+\z/i
+  validates :name,  presence: true, format: { with: VALID_NAME_REGEX }, 
+    length: { minimum: 2, maximum: 32 },
+    uniqueness: { case_sensitive: false }
 
   # before_destroy { |group| GroupPropertyRelationship.destroy_all "group_id = #{group.id}" }
   # before_destroy { |group| EntityGroupRelationship.destroy_all "group_id = #{group.id}" }
@@ -85,7 +87,7 @@ class Group < ActiveRecord::Base
     return if property.nil?
     group = Group.find_by(id: self.id)
     return if group.nil?
-    GroupPropertyRelationship.create!(group_id: self.id, property_id: property.id, order: self.property_relations.count)
+    GroupPropertyRelationship.create!(group_id: self.id, property_id: property.id, position: self.property_relations.count)
   end
 
   #True if group is the direct group of the given property
@@ -107,10 +109,10 @@ class Group < ActiveRecord::Base
   end
 
   #returns an array of GroupPropertyRelationships associated with this group sorted
-  #by the order field
+  #by the position field
   def property_relations
     relations = GroupPropertyRelationship.where(group_id: self.id)
-    relations.sort_by { |r| r[:order] }
+    relations.sort_by { |r| r[:position] }
   end
 
   #returns the GroupPropertyRelationship associating this group to the given property
@@ -130,12 +132,12 @@ class Group < ActiveRecord::Base
     return if property.class != Property
     relationship = GroupPropertyRelationship.find_by(group_id: self.id, property_id: property.id)
     return if relationship.nil?
-    if relationship.order.nil?
+    if relationship.position.nil?
       return relationship.destroy
     end
-    index = relationship.order
+    index = relationship.position
     r = relationship.destroy
-    self.update_order(index)
+    self.update_position(index)
     return r
   end
 
@@ -152,117 +154,117 @@ class Group < ActiveRecord::Base
   # # # GROUP PROPERTY ORDER
   ##########################
 
-  #updats the order for each property after the given index
-  def update_order(index)
+  #updats the position for each property after the given index
+  def update_position(index)
     relationships = self.property_relations
     last = relationships.count 
     relationships.each do |r|
-      if r.order.nil?
-        r.update_attribute(:order, last -= 1)
+      if r.position.nil?
+        r.update_attribute(:position, last -= 1)
       else
-        if r.order > index
-          r.update_attribute(:order, r.order - 1)
+        if r.position > index
+          r.update_attribute(:position, r.position - 1)
         end
       end
     end
   end
 
-  #sets the given property to be the first in relationship order for this group
+  #sets the given property to be the first in relationship position for this group
   def first!(property)
     return if property.class != Property
     relationship = GroupPropertyRelationship.find_by(group_id: self.id, property_id: property.id)
     return if relationship.nil?
     relationships = self.property_relations
     last = relationships.count
-    return if relationship.order == 0
-    if relationship.order.nil?
+    return if relationship.position == 0
+    if relationship.position.nil?
       line = last - 1
     else
-      line = relationship.order
+      line = relationship.position
     end
     relationships.each do |r|
       next if r == relationship
-      if r.order.nil?
-        r.order = last -= 1
+      if r.position.nil?
+        r.position = last -= 1
         r.save
       else
-        if r.order < line
-          r.order += 1 
+        if r.position < line
+          r.position += 1 
           r.save
         end
       end
     end
-    relationship.order = 0
+    relationship.position = 0
     relationship.save
   end
 
-  #returns the property associated by the relationship that is first in order
+  #returns the property associated by the relationship that is first in position
   def first
-    first_order_relationship = self.property_relations.select { |property| property[:order] == 0 }[0]
-    return if first_order_relationship.nil?
-    Property.find_by(id: first_order_relationship.property_id)
+    first_position_relationship = self.property_relations.select { |property| property[:position] == 0 }[0]
+    return if first_position_relationship.nil?
+    Property.find_by(id: first_position_relationship.property_id)
   end
 
-  #moves the specified property up in order and moves the property above it down
+  #moves the specified property up in position and moves the property above it down
   def up!(property)
     return if property.class != Property
     relationship = self.relation_for(property)
     return if relationship.nil?
-    return if relationship.order == 0
-    r = self.property_relations[relationship.order - 1]
-    # r = self.relation_at(relationship.order - 1)
-    r.update_attribute(:order, relationship.order)
-    relationship.update_attribute(:order, relationship.order - 1)
+    return if relationship.position == 0
+    r = self.property_relations[relationship.position - 1]
+    # r = self.relation_at(relationship.position - 1)
+    r.update_attribute(:position, relationship.position)
+    relationship.update_attribute(:position, relationship.position - 1)
   end
 
-  #moves the specified property down in order and moves the property below it up
+  #moves the specified property down in position and moves the property below it up
   def down!(property)
     return if property.class != Property
     relationship = self.relation_for(property)
     return if relationship.nil?
     last = self.property_relations.count - 1
-    return if relationship.order == last
-    r = self.property_relations[relationship.order + 1]
-    r.update_attribute(:order, relationship.order)
-    relationship.update_attribute(:order, relationship.order + 1)
+    return if relationship.position == last
+    r = self.property_relations[relationship.position + 1]
+    r.update_attribute(:position, relationship.position)
+    relationship.update_attribute(:position, relationship.position + 1)
   end
 
-  #sets the given property to last in relationship order with this group
+  #sets the given property to last in relationship position with this group
   def last!(property)
     return if property.class != Property
     relationship = GroupPropertyRelationship.find_by(group_id: self.id, property_id: property.id)
     return if relationship.nil?
     relationships = self.property_relations
     last = relationships.count - 1 # - 1 because property will be set to last at the end
-    return if relationship.order == last
-    if relationship.order.nil?
+    return if relationship.position == last
+    if relationship.position.nil?
       line = 0
     else
-      line = relationship.order
+      line = relationship.position
     end
     relationships.each do |r|
       next if r == relationship
-      if r.order.nil?
-        r.order = last -= 1
+      if r.position.nil?
+        r.position = last -= 1
         r.save
       else
-        if r.order > line
-          r.order -= 1
+        if r.position > line
+          r.position -= 1
           r.save
         end
       end
     end
-    relationship.order = relationships.count - 1
+    relationship.position = relationships.count - 1
     relationship.save
   end
 
-  #returns the property associated by the relationship that is last in order
+  #returns the property associated by the relationship that is last in position
   def last
     relationships = self.property_relations
     last_index = relationships.count - 1
-    last_order_relationship = relationships.select { |property| property[:order] == last_index }[0]
-    return if last_order_relationship.nil?
-    Property.find_by(id: last_order_relationship.property_id)
+    last_position_relationship = relationships.select { |property| property[:position] == last_index }[0]
+    return if last_position_relationship.nil?
+    Property.find_by(id: last_position_relationship.property_id)
   end
 
   ##################

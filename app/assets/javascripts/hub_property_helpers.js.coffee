@@ -10,6 +10,12 @@ $ ->
     $("#new-property-collapse-heading").on "click", (e) ->
         e.preventDefault()
 
+    console.log("hub_property_helpers")
+    $("select#role_ids.new-property-roles").select2({
+          placeholder: "Roles that see this property...",
+        })
+    # $("input#create-property").css("margin-top", '15px')
+
     #on list element click
     $("body").on "click", '.table tr.property', (e) ->
         togglePropertySelect this.id, e.ctrlKey || e.metaKey

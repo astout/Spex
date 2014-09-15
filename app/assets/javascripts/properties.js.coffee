@@ -4,15 +4,20 @@
 
 $ ->
 
-    if $("form#new_property").length > 0
+    console.log("properties.js")
+
+    if $("form#new_property").length > 0 || $("form.edit_property").length > 0
         $("input#property_name, 
             input#property_default_label, 
             input#property_units,
             input#property_units_short,
-            input#property_default_value,
-            input#property_default_visibility").on "input", ->
+            input#property_default_value").on "input", ->
             NewPropertyValidation()
         NewPropertyValidation()
+
+        $("body").on "change", "select#role_ids", (e) ->
+            $("input#property_role_ids").val($(this).val())
+
 
 NewPropertyValidation = () ->
     name = $("input#property_name").val()
@@ -20,7 +25,8 @@ NewPropertyValidation = () ->
     units = $("input#property_units").val()
     units_short = $("input#property_units_short").val()
     value = $("input#property_default_value").val()
-    visibility = $("input#property_default_visibility").val()
+    roles = $("select#role_ids.new-property-roles").val()
+    # visibility = $("input#property_default_visibility").val()
 
     _valid = true
 
@@ -32,12 +38,12 @@ NewPropertyValidation = () ->
         _valid = false
 
     rx = /^\d+$/
-    if rx.test visibility.trim()
-        unless $("span#property_default_visibility").hasClass "valid"
-            $("span#property_default_visibility").addClass "valid"
-    else
-        $("span#property_default_visibility").removeClass "valid"
-        _valid = false
+    # if rx.test visibility.trim()
+    #     unless $("span#property_default_visibility").hasClass "valid"
+    #         $("span#property_default_visibility").addClass "valid"
+    # else
+    #     $("span#property_default_visibility").removeClass "valid"
+    #     _valid = false
 
     unless $("span#property_default_label").hasClass "valid"
         $("span#property_default_label").addClass "valid"
@@ -47,6 +53,8 @@ NewPropertyValidation = () ->
         $("span#property_units_short").addClass "valid"
     unless $("span#property_default_value").hasClass "valid"
         $("span#property_default_value").addClass "valid"
+    unless $("span#property_roles").hasClass "valid"
+        $("span#property_roles").addClass "valid"
 
     if _valid 
         valid()
@@ -59,8 +67,7 @@ valid = () ->
         span#property_units, 
         span#property_default_label, 
         span#property_default_value,
-        span#property_units_short,
-        span#property_default_visibility
+        span#property_units_short
         ").addClass "valid"
     $("input[type=submit]#create-property").removeClass 'disabled'
 

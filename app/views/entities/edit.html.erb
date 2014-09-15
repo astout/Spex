@@ -1,22 +1,31 @@
-<% provide(:title, "Edit entity") %>
-<small class="note">Update <%= link_to @entity.name, @entity, style: "color: gray" %></small>
+<% unless @entity.label.blank? %>
+  <% @label = "#{@entity.label.to_s}" %>
+<% else %>
+  <% unless @entity.name.blank? %>
+    <% @label = "#{@entity.name.to_s.capitalize}" %>
+  <% else %>
+    <% @label = "Entity id: #{@entity.id.to_s}" %>
+  <% end %>
+<% end %>
+
+<% provide(:title, "Edit #{@label}") %>
+<div>
+    <%= link_to "Home", root_path, style: "color: #494A4A" %>
+    <span class="glyphicon glyphicon-chevron-right", style="font-size: 12px;"></span>
+    <%= link_to "Entities", entities_path, style: "color: #494A4A" %>
+    <span class="glyphicon glyphicon-chevron-right", style="font-size: 12px;"></span>
+    <%= link_to @label, @entity, style: "color: #494A4A" %>
+    <span class="glyphicon glyphicon-chevron-right", style="font-size: 12px;"></span>
+    Edit
+</div>
+
+<h1>Edit Entity</h1>
 
 <div class="row">
-  <aside class="col-xs-4">
+  <div class="col-xs-6 col-xs-offset-3">
     <%= bootstrap_form_for(@entity, inline_errors: false) do |f| %>
-      <%= render 'fields', f: f %>
-      <%= f.submit "Save changes", class: "btn btn-sm btn-primary", style: "width: 100px; float: right"%>
+      <%= render 'entities/fields', f: f %>
+      <%= f.submit "Submit Changes", class: "btn btn-large btn-primary btn150"%>
     <% end %>
-    <small><a href="#add-properties">Add Properties</a></small>
-  </aside>
-  <div class="col-xs-8" id="entity_properties">
-    <%= render 'edit_properties' %>
   </div>
 </div>
-<!-- <div class="row" id="add-properties">
-  <hr/>
-  <h4>Add Properties</h4>
-  <span class="col-xs-10 col-xs-offset-1">
-      <%= render 'add_properties' %>
-  </span>
-</div> -->

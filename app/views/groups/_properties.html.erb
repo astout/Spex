@@ -18,9 +18,9 @@
                     Created
                 </th>
             <% end %>
-            <% if show_order %>
+            <% if show_position %>
                 <th>
-                    Order
+                    Position
                 </th>
             <% end %>
             <% if show_remove %>
@@ -28,7 +28,7 @@
                     Remove
                 </th>
             <% end %>
-            <%= render partial: 'groups/property_relationship', collection: @gprs[:data], locals: { show_units: show_units, show_created: show_created, show_remove: show_remove, show_order: show_order }  %>
+            <%= render partial: 'groups/property_relationship', collection: @gprs[:data], locals: { show_units: show_units, show_created: show_created, show_remove: show_remove, show_position: show_position }  %>
         </table>
         <%= will_paginate @gprs[:data], inner_window: 0, outer_window: 0, param_name: 'gprs_page', params: { groups_property_event: true } %>
     <% end %>
@@ -56,9 +56,9 @@
             <th>
                 Value
             </th>
-            <% if show_order %>
+            <% if show_position %>
                 <th>
-                    Order
+                    Position
                 </th>
             <% end %>
             <% if show_remove %>
@@ -66,7 +66,7 @@
                     Remove
                 </th>
             <% end %>
-            <%= render partial: 'entities/property_relationship', collection: @eprs[:data], locals: { show_units: show_units, show_created: show_created, show_remove: show_remove, show_order: show_order }  %>
+            <%= render partial: 'entities/property_relationship', collection: @eprs[:data], locals: { show_units: show_units, show_created: show_created, show_remove: show_remove, show_position: show_position }  %>
         </table>
         <%= will_paginate @eprs[:data], inner_window: 0, outer_window: 0, param_name: 'gprs_page', params: { groups_property_event: true } %>
     <% end %>

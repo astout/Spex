@@ -18,12 +18,10 @@ module GroupsHelper
   end
 
   def groups_list(selected_entity)
-    if selected_entity.nil?
-      groups = Group.search(params[:group_search]).order(group_sort_column + ' ' + group_sort_direction).paginate(page: params[:groups_page].blank? ? 1 : params[:groups_page], per_page: 10)
+    if selected_entity.blank?
+      groups = Group.index(params[:group_search], group_sort_column, group_sort_direction, params[:groups_page], 10, [], [])
     else
-      #store the entity's groups to eliminate repeated queries
-      reject_groups = selected_entity.groups
-      groups = Group.search(params[:group_search]).order(group_sort_column + ' ' + group_sort_direction).reject { |group| reject_groups.any? { |e_group| e_group[:id] == group[:id] } }.paginate(page: params[:groups_page].blank? ? 1 : params[:groups_page], per_page: 10)
+      groups = Group.index(params[:group_search], group_sort_column, group_sort_direction, params[:groups_page], 10, selected_entity.groups, [])
     end
     return groups
   end

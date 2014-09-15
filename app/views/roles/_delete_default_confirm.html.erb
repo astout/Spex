@@ -1,0 +1,26 @@
+<div class="modal fade" id="delete-confirm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <span id='<%= "#{@role.id}" %>' class="delete-role-id"></span>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close close-modal" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only"></span></button>
+        <h4 class="modal-title" id="myModalLabel">Delete Default Role</h4>
+      </div>
+      <div class="modal-body">
+        <p><span class="badge alert-info"><%= @default.blank? ? "" : @default['name'].capitalize %></span> is the current default role </p>
+        <p>There are currently <span class="badge alert-info"><%= @default.blank? ? 0 : User.where(role_id: @default['id']).count %></span> users assigned to this role. </p>
+        <p><i>One role must be the default.</i></p>
+        <p>Select the new default role. <i>All users assigned to the current default will be transferred to the new role. </i></p>
+        <label for="role_ids" class="control-label">New Defaut Role</label>
+        <%= select_tag "role_ids", options_from_collection_for_select(Role.all - [Role.default], "id", "name", (Role.all - [Role.default]).first), id: "new-default", class: "form-control default-select-roles col-xs-12"%>
+        <div class="center">The roles for the <span class="badge alert-info"><%= @default.blank? ? 0 : User.where(role_id: @default['id']).count %></span> users assigned to <span class="badge alert-info"><%= @default.blank? ? "" : @default.caps_name %></span> will be changed to <span id="new-default" class="badge alert-info"></span>.</div>
+        <br>
+        <h5 class="center">Click <span class="badge alert-info">Delete &amp; Change</span> to confirm.</h5>
+      </div>
+      <div class="modal-footer">
+        <button id="close-modal" type="button" class="btn btn-default close-modal" data-value="1" data-dismiss="modal">Cancel</button>
+        <button id="btn-delete-confirm" type="button" class="btn btn-primary close-modal confirm" data-value="0" data-dismiss="modal">Delete &amp; Change</button>
+      </div>
+    </div>
+  </div>
+</div>

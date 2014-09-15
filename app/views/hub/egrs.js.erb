@@ -40,9 +40,9 @@ if(selected_groups.length > 0 && selected_entity > -1)
 persistStyling();
 
 <% if @selected_entity.nil? %>
-    window.selected_egr_max_order = -1;
+    window.selected_egr_max_position = -1;
 <% else %>
-    window.selected_egr_max_order = <%= @selected_entity.groups.count %>;
+    window.selected_egr_max_position = <%= @selected_entity.groups.count %>;
 <% end %>
 
 $('#egrs').html("  <%= j render partial: 'entities/groups', locals: { show_created: false, show_remove: false } %>");

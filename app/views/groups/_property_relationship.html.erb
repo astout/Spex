@@ -1,4 +1,4 @@
-<tr id=<%= "#{property_relationship.id}" %> class="list-item gpr" data-order=<%= property_relationship.order+1 %> >
+<tr id=<%= "#{property_relationship.id}" %> class="list-item gpr" data-position=<%= property_relationship.position+1 %> >
     <td>
       <%= link_to property_relationship.property.name, property_relationship %>
     </td>
@@ -16,7 +16,7 @@
       </td>
     <% end %>
     <td>
-      <%= property_relationship.order+1 %>
+      <%= property_relationship.position+1 %>
     </td>
     <% if current_user.admin? && show_remove %>
       <td>

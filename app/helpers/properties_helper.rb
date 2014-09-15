@@ -38,23 +38,24 @@ module PropertiesHelper
         reject_properties |= relation.entity.properties_via(relation.group)
       end
     end
-    puts '-- REJECT RELATIONS --'
-    puts reject_properties
-    properties = Property.search(params[:property_search]).order(property_sort_column + ' ' + property_sort_direction).reject { |property| reject_properties.any? { |g_property| g_property[:id] == property[:id] } }.paginate(page: params[:properties_page].blank? ? 1 : params[:properties_page], per_page: 10)
+    properties = Property.index(params[:property_search], property_sort_column, property_sort_direction, params[:properties_page], 10, reject_properties, [])
   end
 
-  def property_create(params)
+  def property_create(prop_params)
     property = { status: -1, msg: "", data: nil }
-    property[:data] = Property.find_by(name: params[:name])
+    property[:data] = Property.find_by(name: prop_params[:name])
 
     #if property not found, clear to create
     if property[:data].nil?
-      property[:data] = Property.new(params)
+      property[:data] = Property.new(prop_params)
       #if save not successful, failed
       if !property[:data].save
         property[:status] = 0
         property[:msg] = "'#{property[:data].name}' failed to save."
       else #success
+        puts " -- ROLES PARAMS --"
+        puts params[:role_ids]
+        property[:data].role_ids = params[:role_ids]
         property[:status] = 1
         property[:msg] = "'#{property[:data].name}' was saved."
       end
@@ -74,7 +75,7 @@ module PropertiesHelper
   end
 
   def property_params
-    params.require(:property).permit(:name, :units, :units_short, :default_label, :default_value)
+    params.require(:property).permit(:name, :units, :units_short, :default_label, :default_value, role_ids: [])
   end
 
   def property_sort_column

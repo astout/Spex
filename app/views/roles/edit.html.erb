@@ -1,0 +1,59 @@
+<script type="text/javascript">
+  $("body").addClass("roles");
+  </script>
+<% provide(:title, "Edit Role") %>
+
+<div class="row" style="padding: 15px 0px">
+    <%= link_to "Home", root_path, style: "color: #494A4A" %>
+    <span class="glyphicon glyphicon-chevron-right", style="font-size: 12px;"></span>
+    <%= link_to "Roles", roles_path, style: "color: #494A4A" %>
+    <span class="glyphicon glyphicon-chevron-right", style="font-size: 12px;"></span>
+    <%= @role.name.capitalize %>
+    <span class="glyphicon glyphicon-chevron-right", style="font-size: 12px;"></span>
+    Edit
+</div>
+
+
+<div class="row">
+  <div class="col-xs-6 col-xs-offset-3">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">Edit Role</h4>
+      </div>
+      <div class="panel-body">
+        <%= bootstrap_form_for(@role, inline_errors: false) do |f| %>
+          <%= render 'roles/fields', f: f %>
+          <%= f.submit "Submit Changes", class: "btn btn-large btn-primary btn150"%>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div style="padding: 15px 0px">
+      <%= @role.name.capitalize %>
+      <span class="glyphicon glyphicon-chevron-right", style="font-size: 12px;"></span>
+      Users
+  </div>
+  <% unless @users.blank? %>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">Users</h4>
+      </div>
+        <div class="panel-body">
+          <%= render "users/users" %>
+        </div>
+    </div>
+  <% else %>
+    <div class="col-xs-6 col-xs-offset-3">
+      <div class="alert alert-info center">
+        <p>There are no users assigned to <span class="badge alert-success"><%=@role.caps_name%></span></p>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<%= render "roles/change_default_confirm" %>
+
+

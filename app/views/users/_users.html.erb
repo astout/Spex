@@ -14,6 +14,9 @@
     <th>
         <%= user_sortable "login" %>
     </th>
+    <th>
+        Role
+    </th>
     <% if current_user.admin? %>
         <th>
             <%= user_sortable "created_at", "Created" %>

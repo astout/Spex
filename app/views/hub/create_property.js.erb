@@ -11,7 +11,9 @@ var alert_html = "";
         alert_html += "    </div>";
         //clear the property form fields
         $('input[id^=property]').val('');
-        $('input#property_default_visibility').val('0');
+        $('select#role_ids.new-property-roles > option').prop("selected", "selected");
+        $('select#role_ids.new-property-roles > option').trigger("change");
+        // $('input#property_default_visibility').val('0');
     <% else %>
         alert_html += "    <div class='alert alert-danger small-font center'>";
         alert_html += "        <%= @property[:msg] %>";

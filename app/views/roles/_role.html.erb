@@ -1,0 +1,36 @@
+<tr id=<%= "#{role.id}" %> class="list-item role">
+    <td>
+      <%= link_to role.caps_name, edit_role_path(role) %>
+    </td>
+    <td>
+      <span class="badge alert-info">
+        <%= role.users.count %>
+      </span>
+    </td>
+    <td>
+      <% if role.default? %>
+        <%= link_to "", edit_role_path(role), class: "glyphicon glyphicon-check text-success" %>
+      <% end %>
+    </td>
+    <td>
+      <% if role.change_view? %>
+        <%= link_to "", edit_role_path(role), class: "glyphicon glyphicon-check text-success"  %>
+      <% end %>
+    </td>
+    <td>
+      <% if role.admin? %>
+        <%= link_to "", edit_role_path(role), class: "glyphicon glyphicon-check text-success"  %>
+      <% end %>
+    </td>
+      <% if current_user.admin? && show_remove %>
+        <td class="delete-role">
+          <% if role.default? %>
+            <% _default = "default" %>
+          <% else %>
+            <% _default = "" %>
+          <% end %>
+          <span id="<%= role.id %>"  class="glyphicon glyphicon-trash delete alert-danger <%= _default %>">
+          </span>
+        </td>
+      <% end %>
+</tr>

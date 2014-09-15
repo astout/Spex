@@ -1,5 +1,8 @@
 <% if defined? @egrs %>
     <% unless @egrs[:data].empty? %>
+        <script type="text/javascript">
+            console.log("doing it")
+        </script>
         <%= render partial: 'entities/group_relation_actions' %>
         <table class="table table-condensed egrs">
             <th>
@@ -12,7 +15,7 @@
                 Created
             <% end %>
             <th>
-                Order
+                Position
             </th>
             <% if show_remove %>
                 <th>
@@ -22,6 +25,10 @@
             <%= render partial: 'entities/group_relationship', collection: @egrs[:data], locals: { show_created: show_created, show_remove: show_remove }  %>
         </table>
         <%= will_paginate @egrs[:data], inner_window: 0, outer_window: 0, param_name: 'egrs_page', params: { entitys_group_event: true } %>
+    <% else %>
+        <script type="text/javascript">
+            console.log("no data")
+        </script>
     <% end %>
 <% else %>
     <div class='alert alert-info small-font center'>
