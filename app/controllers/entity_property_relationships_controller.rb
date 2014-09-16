@@ -1,7 +1,7 @@
 class EntityPropertyRelationshipsController < ApplicationController
   include EntityPropertyRelationsHelper
   before_action do
-    redirect_to root_url unless current_user.admin?
+    # redirect_to root_url unless current_user.admin?
   end
 
   def index
@@ -18,11 +18,14 @@ class EntityPropertyRelationshipsController < ApplicationController
   end
 
   def query
-    @eprs = eprs_index
-    puts "--NUMBER OF RESULTS--"
-    puts @eprs.count
 
-    @role = Role.find_by(id: params[:view_id] || current_user.role_id)
+    if signed_in?
+      @eprs = eprs_index
+      puts "--NUMBER OF RESULTS--"
+      puts @eprs.count
+
+      @role = Role.find_by(id: params[:view_id] || current_user.role_id)
+    end
 
     respond_to do |format|
       format.js
