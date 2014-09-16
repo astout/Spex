@@ -14,7 +14,7 @@ end
 Setting.destroy_all
 def_role = Role.find_by(name: "default") || Role.first || {}
 
-[{name: "default_role_id", value: def_role['id'] || "0" }].each do |setting|
+[{name: "default_role_id", value: def_role['id'].to_s || "0" }].each do |setting|
   Setting.find_or_create_by setting
 end
 
