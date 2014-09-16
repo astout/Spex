@@ -19,6 +19,6 @@ def_role = Role.find_by(name: "default") || Role.first || {}
 end
 
 User.destroy_all
-[{ first: "admin", last: "user", login: "gzadmin", email: "spexadmin@goalzero.com", password: "epsilon", password_confirmation: "epsilon", role_id: Role.admins.first.blank? ? 0 : Role.admins.first['id'] }].each do |user|
-  User.find_or_create_by user
-end
+# [{ first: "admin", last: "user", login: "gzadmin", email: "spexadmin@goalzero.com", password: "epsilon", password_confirmation: "epsilon", role_id: Role.admins.first.blank? ? 0 : Role.admins.first['id'] }].each do |user|
+#   User.find_or_create_by user
+# end
