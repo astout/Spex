@@ -4,7 +4,7 @@
     <%= hidden_field_tag :event, 'epr' %>
     <%= hidden_field_tag :eprs_page, "1" %>
     <%= hidden_field_tag :search, "epr" %>
-    <div class="input-group" style="margin-bottom: 15px">
+    <div class="input-group" id="search-field" style="margin-bottom: 15px">
         <%= text_field_tag :epr_search, params[:epr_search], class: "form-control", id: "epr_search_field" %>
         <span class="input-group-btn" >
             <%= submit_tag "Search", name: nil, class: "btn btn-default" %>

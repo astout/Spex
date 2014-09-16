@@ -1,11 +1,11 @@
 <!--%= render 'shared/error_messages', object: f.object %-->
 <%= f.hidden_field :id, id: relation.id, value: relation.id || "", autocomplete: "off" %>
 
-<%= f.text_field :entity, disabled: true, id: relation.id, class: "input-sm epr-ename", value: relation.entity.name || "", autocomplete: "off" %>
+<%= f.text_field :entity, disabled: true, id: relation.id, class: "input-sm epr-ename", value: relation.entity.name || "", autocomplete: "off", data: {entity_id: relation.entity.id} %>
 
-<%= f.text_field :group, disabled: true, id: relation.id, class: "input-sm epr-gname", value: relation.group.name || "", autocomplete: "off" %>
+<%= f.text_field :group, disabled: true, id: relation.id, class: "input-sm epr-gname", value: relation.group.name || "", autocomplete: "off", data: {group_id: relation.group.id} %>
 
-<%= f.text_field :property, disabled: true, id: relation.id, class: "input-sm epr-pname", value: relation.property.name || "", autocomplete: "off" %>
+<%= f.text_field :property, disabled: true, id: relation.id, class: "input-sm epr-pname", value: relation.property.name || "", autocomplete: "off", data: {property_id: relation.property.id} %>
 
 <%= f.number_field :position, disabled: true, id: relation.id, class: "input-sm epr-position", value: relation.position+1 || "", autocomplete: "off"%>
 

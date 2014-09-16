@@ -27,7 +27,7 @@
   </div>
 </div>
 
-<div class="popover-markup"> <a href="#" class="trigger editable"> <%= parse_value("#{epr.value}") + epr.property.units_short %> </a> 
+<div class="popover-markup"> <a href="#" class="trigger editable"> <%= parse_value("#{epr.value.dup}", epr) + epr.property.units_short %> </a> 
     <div class="head hide"><%= final_label %></div>
     <div class="content hide">
         <div class="form-group">

@@ -29,9 +29,15 @@ $ ->
             _text = _value + " "
           try
             _text += "{"
-            _text += $("select#"+this.id+".epr-ref-entity").select2("data").text
+            if $("select#"+this.id+".epr-ref-entity").val() == "" + $("input#"+this.id+".epr-ename").data().entityId
+              _text += "*"
+            else
+              _text += $("select#"+this.id+".epr-ref-entity").select2("data").text
             _text += "."
-            _text += $("select#"+this.id+".epr-ref-group").select2("data").text
+            if $("select#"+this.id+".epr-ref-group").val() == "" + $("input#"+this.id+".epr-gname").data().groupId
+              _text += "*"
+            else
+              _text += $("select#"+this.id+".epr-ref-group").select2("data").text
             _text += "."
             _text += $("select#"+this.id+".epr-ref-property").select2("data").text
             _text += "}"
@@ -47,7 +53,8 @@ $ ->
       _value = $("textarea#"+_id+".epr-value").val()
       console.log("EVALUATING: " + _value)
       params = $.param( {
-        value: _value
+        value: _value,
+        epr: _id
         })
       $.ajax
         url: '/hub/epr_evaluate?' + params

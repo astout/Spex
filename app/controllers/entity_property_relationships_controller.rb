@@ -22,6 +22,8 @@ class EntityPropertyRelationshipsController < ApplicationController
     puts "--NUMBER OF RESULTS--"
     puts @eprs.count
 
+    @role = Role.find_by(id: params[:view_id] || current_user.role_id)
+
     respond_to do |format|
       format.js
       format.html

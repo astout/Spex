@@ -128,10 +128,16 @@ module HubHelper
     result = value
     vars = []
     #split the string by variable references
-    pieces = value.split(/([{]\w*\s*\w+[.]\w*\s*\w+[.]\w*\s*\w+[}])/)
+    rx = /([{]\w*\s*\w+[.]\w*\s*\w+[.]\w*\s*\w+[}])|([{][\*][.]\w*\s*\w+[.]\w*\s*\w+[}])|([{][\*][.][\*][.]\w*\s*\w+[}])/
+    # pieces = value.split(/([{]\w*\s*\w+[.]\w*\s*\w+[.]\w*\s*\w+[}])/)
+    pieces = value.split(rx)
+    puts "--pieces--"
+    puts pieces
     pieces.each do |piece|
       #each sub-part, if it's a variable, get just the variable w/o curly braces
-      scan = piece.scan(/[{](\w*\s*\w+[.]\w*\s*\w+[.]\w*\s*\w+)[}]/).flatten
+      # scan = piece.scan(/[{](\w*\s*\w+[.]\w*\s*\w+[.]\w*\s*\w+)[}]/).flatten
+      rx = /[{](\w*\s*\w+[.]\w*\s*\w+[.]\w*\s*\w+)[}]|[{]([\*][.]\w*\s*\w+[.]\w*\s*\w+)[}]|[{]([\*][.][\*][.]\w*\s*\w+)[}]/
+      scan = piece.scan(rx).flatten.compact
       unless scan.empty?
         puts "GETTING VALUE FOR: "
         puts scan.first

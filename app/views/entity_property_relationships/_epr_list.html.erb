@@ -1,0 +1,22 @@
+
+<% unless @role.viewables.count < 1 %>
+    <script type="text/javascript">
+        $("div#search-field").show();
+    </script>
+    <!-- List -->
+    <%= render partial: "entity_property_relationships/eprs", locals: { show_remove: false } %>
+<% else %>
+    <script type="text/javascript">
+        $("div#search-field").hide();
+    </script>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="alert alert-info center">
+                <i>There is no data to display.</i>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12" style="padding: 25px 0px;"></div>
+    </div>
+<% end %>

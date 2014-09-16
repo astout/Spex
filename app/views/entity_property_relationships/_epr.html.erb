@@ -1,37 +1,39 @@
-<tr id=<%= "#{epr.id}" %> class="list-item epr">
-    <td>
-      <%= link_to epr.entity.name.capitalize, epr.entity %>
-    </td>
-    <td>
-      <%= link_to epr.group.name.capitalize, epr.group %>
-    </td>
-    <td>
-      <%= link_to epr.property.name, epr.property %>
-    </td>
-    <td>
-      <%= epr.label %>
-    </td>
-    <td>
-      <%= parse_value(epr.value.dup) %>
-    </td>
-    <td>
-      <%= epr.units %>
-    </td>
-    <td>
-      <%= epr.units_short %>
-    </td>
-    <td>
-      <%= "#{epr.updated_at.strftime('%m/%d/%Y %H:%M')}" %>
-    </td>
-    <% if current_user.admin? && show_remove %>
-      <td class="delete-epr">
-        <% if epr.default? %>
-          <% _default = "default" %>
-        <% else %>
-          <% _default = "" %>
-        <% end %>
-        <span id="<%= epr.id %>"  class="glyphicon glyphicon-trash delete alert-danger <%= _default %>">
-        </span>
+<% if @role.viewables.pluck(:id).include? epr.id %>
+  <tr id=<%= "#{epr.id}" %> class="list-item epr">
+      <td>
+        <%= link_to epr.entity.name.capitalize, epr.entity %>
       </td>
-    <% end %>
-</tr>
+      <td>
+        <%= link_to epr.group.name.capitalize, epr.group %>
+      </td>
+      <td>
+        <%= link_to epr.property.name, epr.property %>
+      </td>
+      <td>
+        <%= epr.label %>
+      </td>
+      <td>
+        <%= parse_value(epr.value.dup, epr) %>
+      </td>
+      <td>
+        <%= epr.units %>
+      </td>
+      <td>
+        <%= epr.units_short %>
+      </td>
+      <td>
+        <%= "#{epr.updated_at.strftime('%m/%d/%Y %H:%M')}" %>
+      </td>
+      <% if current_user.admin? && show_remove %>
+        <td class="delete-epr">
+          <% if epr.default? %>
+            <% _default = "default" %>
+          <% else %>
+            <% _default = "" %>
+          <% end %>
+          <span id="<%= epr.id %>"  class="glyphicon glyphicon-trash delete alert-danger <%= _default %>">
+          </span>
+        </td>
+      <% end %>
+  </tr>
+<% end %>

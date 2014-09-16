@@ -10,15 +10,28 @@
 </div>
 <h1>Spex Query</h1>
 
-<!-- Link to Entity creation form -->
-<%= link_to "Create New", hub_path, class: "btn btn-primary btn-sm", style: "float: right; margin-bottom: 10px"%>
-<br/>
-<br/>
+<div class="row">
+    <div class="col-xs-4" id="role-select">
+      <input type="hidden" id="epr-r" value=<%= @role['id'] %>>
+      <% if current_user.role.change_view? %>
+        <% if current_user.admin? %>
+          <%= select_tag "role_ids", options_from_collection_for_select(Role.all, "id", "name", @role['id'] || current_user.role_id), id: "select-role", data: {}, class: "form-control roles col-xs-12"%>
+        <% else %>
+          <%= select_tag "role_ids", options_from_collection_for_select(Role.where(admin: false), "id", "name", @role['id'] || current_user.role_id), id: "select-role", data: {}, class: "form-control roles col-xs-12"%>
+        <% end %>
+        <div style="padding-bottom: 50px;"></div>
+      <% end %>
+    </div>
+    <div class="col-xs-2 col-xs-offset-6">
+        <% if current_user.admin? %>
+            <%= link_to "Create New", hub_path, class: "btn btn-primary btn-sm", style: "float: right; margin-bottom: 10px"%>
+        <% end %>
+    </div>
+</div>
 
 <!-- Search Form -->
 <%= render partial: 'search', locals: { path: entity_property_relationships_path, remote: true } %>
 
-<!-- List -->
-<div id="epr_list">
-    <%= render partial: "entity_property_relationships/eprs", locals: { show_remove: false } %>
+<div id="epr_list" class="row">
+    <%= render partial: 'entity_property_relationships/epr_list' %>
 </div>

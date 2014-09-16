@@ -74,7 +74,7 @@
                   </td>
                   <td id=<%= epr.id %> class="property-value" style="text-align: right">
                     <% if current_user.admin? && @role['admin'] == true %>
-                      <a href="#" id="<%= epr.id %>" class="trigger editable"> <%= parse_value("#{epr.value}") + epr.units_short %> </a>
+                      <a href="#" id="<%= epr.id %>" class="trigger editable"> <%= parse_value("#{epr.value.dup}", epr) + epr.units_short %> </a>
                     <% else %>
                       <%= parse_value("#{epr.value}") + epr.units_short %>
                     <% end %>

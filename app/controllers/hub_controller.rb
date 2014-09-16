@@ -66,8 +66,8 @@ class HubController < ApplicationController
 
   def epr_evaluate
     puts "value: #{params[:value]}"
-    value = params[:value]
-    result = parse_value(value)
+    epr = EntityPropertyRelationship.find_by(id: params[:epr] )
+    result = parse_value(params[:value], epr)
     puts "RESULT CLASS: #{result.class}"
     respond_to do |format|
       format.json { render json: result.to_json }

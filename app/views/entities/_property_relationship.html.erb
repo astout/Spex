@@ -26,7 +26,7 @@
     <% end %>
     <td>
         <% @_value_copy = property_relationship.value.dup %>
-        <% @_value_copy = parse_value(@_value_copy) || "" %>
+        <% @_value_copy = parse_value(@_value_copy, property_relationship) || "" %>
         <% if @_value_copy.to_s.length > 10 %>
             <span class="fa fa-ellipsis-h"></span>
         <% else %>
