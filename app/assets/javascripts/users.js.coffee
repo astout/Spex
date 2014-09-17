@@ -19,7 +19,7 @@ $ ->
 
   if $("body").hasClass("users-index")
     #Every character change in Search field, submit query
-      $("body").on "input", "input#user_search_field", (e) ->
+      $("body").on "input", "input#user_search", (e) ->
           console.log $(this).val()
           params = get_user_params()
           #send the request
@@ -28,7 +28,7 @@ $ ->
 
 get_user_params = () ->
     params = $.param( {
-        user_search: $("input#user_search_field").val(), 
+        user_search: $("input#user_search").val(), 
         users_page: "1",
         event: "user"
     })

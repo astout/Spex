@@ -78,7 +78,7 @@ class User < ActiveRecord::Base
         #wrap each word in '%' to allow partial matches
         e = '%'+e+'%'
         #add the string to the binding elements 4 times (1 for each field)
-        elements.concat [e]*6
+        elements.concat [e]*7
       end
       #declare the where clause
       clause = ''
@@ -86,13 +86,17 @@ class User < ActiveRecord::Base
       #for each word from the search string
       _elements.each do |element|
         #append to the clause the full query
-        clause += '(LOWER(first) LIKE ? OR LOWER(last) LIKE ? OR LOWER(email) LIKE ? OR LOWER(login) LIKE ? OR created_at::text LIKE ? OR updated_at::text LIKE ?) AND '
+        clause += '(LOWER(first) LIKE ? OR LOWER(last) LIKE ? OR LOWER(email) LIKE ? OR LOWER(login) LIKE ? OR LOWER(roles.name) LIKE ? OR users.created_at::text LIKE ? OR users.updated_at::text LIKE ?) AND '
       end
       #remove the trailing 'AND' from the clause
       clause = clause.gsub(/(.*)( AND )(.*)/, '\1')
 
+      full_join = User.joins(:role)
+
+      full_join.where clause, *elements
+
       #call the query using the clause and each binding element
-      where clause, *elements
+      # where clause, *elements
     else
       all # if _elements.empty?
     end
