@@ -17,6 +17,23 @@ $ ->
 
         $("body").on "change", "select#role_ids", (e) ->
             $("input#property_role_ids").val($(this).val())
+    
+    if $("body").hasClass("properties-index")
+      #Every character change in Search field, submit query
+      $("body").on "input", "input#property_search", (e) ->
+          console.log $(this).val()
+          params = get_property_params()
+          #send the request
+          $.get "properties?" + params
+          false
+
+get_property_params = () ->
+    params = $.param( {
+        property_search: $("input#property_search").val(), 
+        properties_page: "1",
+        event: "property"
+    })
+    return params
 
 
 NewPropertyValidation = () ->

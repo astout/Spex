@@ -1,6 +1,6 @@
 module RolesHelper
-  def get_collection(params)
-    @roles = Role.search(params[:role_search]).order(role_sort_column + ' ' + role_sort_direction).paginate(page: params[:roles_page])
+  def roles_list(params)
+    Role.search(params[:role_search]).order(role_sort_column + ' ' + role_sort_direction).paginate(page: params[:roles_page])
   end
 
   def role_params

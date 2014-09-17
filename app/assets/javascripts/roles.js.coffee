@@ -112,6 +112,21 @@ $ ->
                 url: "/roles/confirm_delete?" + params
                 type: 'POST'
 
+        #Every character change in Search field, submit query
+        $("body").on "input", "input#role_search", (e) ->
+            console.log $(this).val()
+            params = get_role_params()
+            #send the request
+            $.get "roles?" + params
+            false
+
+get_role_params = () ->
+    params = $.param( {
+        role_search: $("input#role_search").val(), 
+        roles_page: "1",
+        event: "role"
+    })
+    return params
 
 deleteModal = (_id) ->
     if _id.length < 1

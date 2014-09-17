@@ -26,6 +26,11 @@ module SessionsHelper
     @current_user ||= User.find_by(remember_token: remember_token)
   end
 
+  def admin_user?
+    return false if !signed_in?
+    current_user.admin?
+  end
+
   def current_user?(user)
     user == current_user
   end

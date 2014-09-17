@@ -9,6 +9,23 @@ $ ->
             NewGroupValidation()
         NewGroupValidation()
 
+    if $("body").hasClass("groups-index")
+      #Every character change in Search field, submit query
+      $("body").on "input", "input#group_search", (e) ->
+          console.log $(this).val()
+          params = get_group_params()
+          #send the request
+          $.get "groups?" + params
+          false
+
+get_group_params = () ->
+    params = $.param( {
+        group_search: $("input#group_search").val(), 
+        groups_page: "1",
+        event: "group"
+    })
+    return params
+
 NewGroupValidation = () ->
     name = $("input#group_name").val()
     label = $("input#group_label").val()

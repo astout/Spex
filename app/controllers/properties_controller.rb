@@ -5,8 +5,13 @@ class PropertiesController < ApplicationController
   end
 
   def index
-    # @properties = Property.paginate(page: params[:page])
-    @properties = Property.search(params[:property_search]).order(property_sort_column + ' ' + property_sort_direction).paginate(page: params[:properties_page])
+    @properties = properties_list(nil, nil)
+    # @properties = Property.search(params[:property_search]).order(property_sort_column + ' ' + property_sort_direction).paginate(page: params[:properties_page])
+
+    respond_to do |format|
+      format.js
+      format.html
+    end
   end
 
   def show

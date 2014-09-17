@@ -13,7 +13,12 @@ class RolesController < ApplicationController
 
   def index
     @default = Role.default
-    get_collection(params)
+    @roles = roles_list(params)
+
+    respond_to do |format|
+      format.js
+      format.html
+    end
   end
 
   def new

@@ -1,5 +1,11 @@
 <% provide(:title, 'Help') %>
-<h1>Help</h1>
-<p>
-  Need Help? You're in the right place...
-</p>
+<div class="row">
+  <div class="col-xs-4" style="margin-bottom: 10px;">
+      <%= link_to "Home", root_path, style: "color: #494A4A" %>
+      <span class="glyphicon glyphicon-chevron-right", style="font-size: 12px;"></span>
+      <%= link_to "Help", help_path, style: "color: #494A4A" %>
+  </div>
+</div>
+<!-- <h1>Help</h1> -->
+<%= render 'layouts/under_construction' %> 
+

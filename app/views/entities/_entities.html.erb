@@ -13,7 +13,7 @@
     <th>
         <%= entity_sortable "updated_at", "Updated" %>
     </th>
-    <% if show_remove %>
+    <% if show_remove && admin_user? %>
         <th>
             Remove
         </th>

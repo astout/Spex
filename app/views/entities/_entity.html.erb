@@ -1,26 +1,28 @@
-<tr id=<%= "#{entity.id}" %> class="list-item entity">
-    <td>
-      <%= link_to entity.name, entity %>
-    </td>
-    <td>
-      <%= link_to entity.label || "", entity %>
-    </td>
-    <% if show_created %>
+<% unless entity.properties.blank? && !admin_user? %>
+  <tr id=<%= "#{entity.id}" %> class="list-item entity">
       <td>
-        <%= "#{entity.created_at.strftime('%m/%d/%Y')}" %>
+        <%= link_to entity.name, entity %>
       </td>
-    <% end %>
-    <td>
-      <%= "#{entity.updated_at.strftime('%m/%d/%Y %H:%M')}" %>
-    </td>
-      <% if current_user.admin? && show_remove %>
-        <td class="delete-entity">
-          <%= link_to "", entity, method: :delete, 
-                data: { confirm: "You sure?" },
-                title: "delete #{entity.name}?", 
-                class: "glyphicon glyphicon-trash xs",
-                style: "margin-left: 5px; color: #FF4F4D"
-          %>
+      <td>
+        <%= link_to entity.label || "", entity %>
+      </td>
+      <% if show_created %>
+        <td>
+          <%= "#{entity.created_at.strftime('%m/%d/%Y')}" %>
         </td>
       <% end %>
-</tr>
+      <td>
+        <%= "#{entity.updated_at.strftime('%m/%d/%Y %H:%M')}" %>
+      </td>
+        <% if admin_user? && show_remove %>
+          <td class="delete-entity">
+            <%= link_to "", entity, method: :delete, 
+                  data: { confirm: "You sure?" },
+                  title: "delete #{entity.name}?", 
+                  class: "glyphicon glyphicon-trash xs",
+                  style: "margin-left: 5px; color: #FF4F4D"
+            %>
+          </td>
+        <% end %>
+  </tr>
+<% end %>

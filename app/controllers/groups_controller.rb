@@ -3,7 +3,13 @@ class GroupsController < ApplicationController
   helper_method :group_sort_column, :group_sort_direction
 
   def index
-    @groups = Group.search(params[:group_search]).order(group_sort_column + ' ' + group_sort_direction).paginate(page: params[:groups_page])
+    @groups = groups_list(nil)
+
+    respond_to do |format|
+      format.js
+      format.html
+    end
+    # @groups = Group.search(params[:group_search]).order(group_sort_column + ' ' + group_sort_direction).paginate(page: params[:groups_page])
     # @groups = Group.paginate(page: params[:groups_page], order: 'created_at DESC')
   end
 
