@@ -16,3 +16,20 @@ $ ->
       _val = $(this).val()
       console.log("value: " + _val)
       $("input#role_id").val(_val)
+
+  if $("body").hasClass("users-index")
+    #Every character change in Search field, submit query
+      $("body").on "input", "input#user_search_field", (e) ->
+          console.log $(this).val()
+          params = get_user_params()
+          #send the request
+          $.get "users?" + params
+          false
+
+get_user_params = () ->
+    params = $.param( {
+        user_search: $("input#user_search_field").val(), 
+        users_page: "1",
+        event: "user"
+    })
+    return params

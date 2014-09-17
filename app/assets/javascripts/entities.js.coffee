@@ -7,6 +7,15 @@
 
 $ ->
 
+    if $("body").hasClass "entities-index"
+      #Every character change in Search field, submit query
+      $("body").on "input", "input#entity_search_field", (e) ->
+          console.log $(this).val()
+          params = get_entity_params()
+          #send the request
+          $.get "entities?" + params
+          false
+
     if $("body").hasClass "report"
 
       selectize_all()
@@ -51,6 +60,14 @@ $ ->
       $("input#entity_name, input#entity_label, input#entity_img").on "input", ->
           NewEntityValidation()
       NewEntityValidation()
+
+get_entity_params = () ->
+    params = $.param( {
+        entity_search: $("input#entity_search_field").val(), 
+        entities_page: "1",
+        event: "entity"
+    })
+    return params
 
 openTrueValue = (element) ->
   openForm = $(element).hasClass('openForm')

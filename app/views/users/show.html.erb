@@ -1,4 +1,15 @@
 <% provide(:title, @user.first) %>
+<% if current_user.admin? %>
+    <div class="row">
+        <div class="col-xs-4" style="margin-bottom: 10px;">
+            <%= link_to "Home", root_path, style: "color: #494A4A" %>
+            <span class="glyphicon glyphicon-chevron-right", style="font-size: 12px;"></span>
+            <%= link_to "Users", users_path, style: "color: #494A4A" %>
+            <span class="glyphicon glyphicon-chevron-right", style="font-size: 12px;"></span>
+            <%= link_to @user.login, @user, style: "color: #494A4A" %>
+        </div>
+    </div>
+<% end %>
 <div class="row">
     <aside class="col-xs-4">
         <section>

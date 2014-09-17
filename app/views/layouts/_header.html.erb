@@ -5,9 +5,24 @@
       <div id="navigation-group">
         <div id="nav-btn-group" class="btn-group btn-sm">
           <%= link_to "Home",    root_path, class: "btn btn-sm btn-default" %>
+          <%= link_to "Reports", entities_path, class: "btn btn-sm btn-default" %>
           <%= link_to "Help",    help_path, class: "btn btn-sm btn-default" %>
           <% if signed_in? && current_user.admin? %>
-            <%= link_to "Users", users_path, class: "btn btn-sm btn-default" %>
+            <div class="btn-group">
+              <a href="#" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
+                Admin <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu">
+                <li><%= link_to "Hub", hub_path %></li>
+                <li><%= link_to "Entities", entities_path %></li>
+                <li><%= link_to "Groups", groups_path %></li>
+                <li><%= link_to "Property Definitions", properties_path %></li>
+                <li><%= link_to "Property Declarations", query_path %></li>
+                <li class="divider"></li>
+                <li><%= link_to "Users", users_path %></li>
+                <li><%= link_to "Roles", roles_path %></li>
+              </ul>
+            </div>
           <% end %>
           <% unless signed_in? %>
             <%= link_to "Sign in", signin_path, class: "btn btn-sm btn-default" %>

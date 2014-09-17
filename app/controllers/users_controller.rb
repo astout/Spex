@@ -6,7 +6,13 @@ class UsersController < ApplicationController
 
   def index
     # @users = User.paginate(page: params[:page])
-    @users = User.search(params[:user_search]).order(user_sort_column + ' ' + user_sort_direction).paginate(page: params[:users_page])
+    # @users = User.search(params[:user_search]).order(user_sort_column + ' ' + user_sort_direction).paginate(page: params[:users_page])
+    @users = User.index(params[:user_search], user_sort_column, user_sort_direction, params[:users_page], 10, [], [])
+
+    respond_to do |format|
+      format.js
+      format.html
+    end
   end
 
   def show

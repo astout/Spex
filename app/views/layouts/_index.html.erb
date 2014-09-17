@@ -8,7 +8,11 @@
     <span class="glyphicon glyphicon-chevron-right", style="font-size: 12px;"></span>
     <%= link_to "#{model.capitalize.pluralize}", send("#{model.pluralize}_path"), style: "color: #494A4A"%>
 </div>
-<h1><%= "All #{model.capitalize.pluralize}" %></h1>
+<% if alt_title.blank? %>
+    <h1><%= "All #{model.capitalize.pluralize}" %></h1>
+<% else %>
+    <h1><%= "#{alt_title}" %></h1>
+<% end %>
 
 <!-- Link to Entity creation form -->
 <%= link_to "Create New", send("new_#{model}_path"), class: "btn btn-primary btn-sm", style: "float: right; margin-bottom: 10px"%>
@@ -16,7 +20,9 @@
 <br/>
 
 <!-- Search Form -->
-<%= render partial: 'search', locals: { path: send("#{model.pluralize}_path"), remote: false } %>
+<%= render partial: 'search', locals: { path: send("#{model.pluralize}_path"), remote: true } %>
 
 <!-- List -->
-<%= render partial: "#{model.pluralize}/#{model.pluralize}", locals: locale %>
+<div id="list">
+    <%= render partial: "#{model.pluralize}/#{model.pluralize}", locals: locale %>
+</div>

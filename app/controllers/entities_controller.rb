@@ -6,6 +6,11 @@ class EntitiesController < ApplicationController
 
   def index
     @entities = entities_list
+
+    respond_to do |format|
+      format.js
+      format.html
+    end
   end
 
   def new
