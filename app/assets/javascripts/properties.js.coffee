@@ -71,14 +71,15 @@ NewPropertyValidation = () ->
 
     _valid = true
 
-    if name.length > 0
+    rx = /^[A-Za-z0-9]+[A-Za-z0-9\-\_]*[A-Za-z0-9]+$/
+
+    if name.length > 1 && rx.test(name)
         unless $("span#property_name").hasClass "valid"
             $("span#property_name").addClass "valid"
     else
         $("span#property_name").removeClass "valid"
         _valid = false
 
-    rx = /^\d+$/
     # if rx.test visibility.trim()
     #     unless $("span#property_default_visibility").hasClass "valid"
     #         $("span#property_default_visibility").addClass "valid"

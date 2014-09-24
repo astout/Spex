@@ -140,6 +140,39 @@ class EntitiesController < ApplicationController
     end
   end
 
+  def print_request
+    puts params
+    @entity = Entity.find_by(id: params[:id])
+    @role = Role.find_by(id: params[:id])
+    @role = Role.default if @role.blank?
+
+    respond_to do |format|
+      format.js { redirect_to print }
+    end
+  end
+
+  def print
+    @entity = Entity.find_by(id: params[:e])
+    @role = Role.find_by(id: params[:v])
+    @role = Role.default if @role.blank?
+
+    @label = ''
+    unless @entity.label.blank?
+      @label = @entity.label.dup
+    else
+      unless @entity.name.blank?
+        @label = @entity.name.dup.capitalize
+      else
+        @label = "Entity id: #{@entity.id.to_s}"
+      end
+    end
+
+    puts @entity
+    puts @label
+    render layout: false
+    puts params
+  end
+
   private
 
     # def entity_params

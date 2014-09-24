@@ -16,7 +16,12 @@
 
 <div class="panel panel-default report">
   <div class="panel-heading">
-    <h3 class="panel-title"><%= "#{@label} Spec Report" %></h3>
+    <div class="row">
+      <h3 class="panel-title col-xs-10"><%= "#{@label} Spec Report" %></h3>
+      <span class="col-xs-2">
+        <span id="print_view" class="btn btn-xs btn-primary" style="float: right" data-view='<%= @role.blank? ? Role.default.id : @role.id %>', data-entity='<%= @entity.id %>' >Print View</span>
+      </span>
+    </div>
   </div>
   <div class="panel-body">
     <% if @entity.properties.any? %>
@@ -74,9 +79,9 @@
                   </td>
                   <td id=<%= epr.id %> class="property-value" style="text-align: right">
                     <% if admin_user? && @role['admin'] == true %>
-                      <a href="#" id="<%= epr.id %>" class="trigger editable"> <%= parse_value("#{epr.value.dup}", epr) + epr.units_short %> </a>
+                      <a href="#" id="<%= epr.id %>" class="trigger editable"> <%= parse_value("#{epr.value.to_s}", epr).to_s + epr.units_short.to_s %> </a>
                     <% else %>
-                      <%= parse_value("#{epr.value}") + epr.units_short %>
+                      <%= parse_value("#{epr.value}", epr).to_s + epr.units_short.to_s %>
                     <% end %>
                   </td>
                 </tr>

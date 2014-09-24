@@ -772,3 +772,7 @@ div.epr-math-calc {
   padding: 20px;
   clear: right;
 }
+
+.btn-group:hover > .dropdown-menu {
+  display: block;
+}

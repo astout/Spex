@@ -69,6 +69,17 @@ $ ->
           url: "/entities/show?" + params
           type: 'POST'
 
+      $("body").on "click", "span#print_view", (e) ->
+        params = $.param( {
+          e: $(this).data().entity,
+          v: $(this).data().view
+          } )
+        url = "print?" + params
+        print = window.open(url, '_blank');
+        # $.ajax
+        #   url: "print?" + params
+        #   type: 'GET'
+
     if $("form.new_entity").length > 0 || $("form.edit_entity").length > 0
       $("input#entity_name, input#entity_label, input#entity_img").on "input", ->
           NewEntityValidation()

@@ -128,7 +128,9 @@ module HubHelper
     result = value
     vars = []
     #split the string by variable references
-    rx = /([{]\w*\s*\w+[.]\w*\s*\w+[.]\w*\s*\w+[}])|([{][\*][.]\w*\s*\w+[.]\w*\s*\w+[}])|([{][\*][.][\*][.]\w*\s*\w+[}])/
+    # rx = /([{]\w*\s*\w+[.]\w*\s*\w+[.]\w*\s*\w+[}])|([{][\*][.]\w*\s*\w+[.]\w*\s*\w+[}])|([{][\*][.][\*][.]\w*\s*\w+[}])/
+    rx = /([{]\w*\s*\w+[.]\w*\s*\w+[.]\w*\s*\w+[}])|([{][\*][.]\w*\s*\w+[.]\w*\s*\w+[}])|([{][\*][.][\*][.]\w*\s*\w+[}])|
+      ([{]\w*\s*\w+[.]\w*\s*\w+[}])|([{][\*][.]\w*\s*\w+[}])|([{]\w*\s*\w+[}])/
     # pieces = value.split(/([{]\w*\s*\w+[.]\w*\s*\w+[.]\w*\s*\w+[}])/)
     pieces = value.split(rx)
     puts "--pieces--"
@@ -136,7 +138,8 @@ module HubHelper
     pieces.each do |piece|
       #each sub-part, if it's a variable, get just the variable w/o curly braces
       # scan = piece.scan(/[{](\w*\s*\w+[.]\w*\s*\w+[.]\w*\s*\w+)[}]/).flatten
-      rx = /[{](\w*\s*\w+[.]\w*\s*\w+[.]\w*\s*\w+)[}]|[{]([\*][.]\w*\s*\w+[.]\w*\s*\w+)[}]|[{]([\*][.][\*][.]\w*\s*\w+)[}]/
+      rx = /[{](\w*\s*\w+[.]\w*\s*\w+[.]\w*\s*\w+)[}]|[{]([\*][.]\w*\s*\w+[.]\w*\s*\w+)[}]|[{]([\*][.][\*][.]\w*\s*\w+)[}]|
+        [{](\w*\s*\w+[.]\w*\s*\w+)[}]|[{]([\*][.]\w*\s*\w+)[}]|[{](\w*\s*\w+)[}]/
       scan = piece.scan(rx).flatten.compact
       unless scan.empty?
         puts "GETTING VALUE FOR: "
@@ -194,20 +197,41 @@ module HubHelper
     pieces = ref.split "."
     return ref if pieces.empty?
 
-    ename = pieces.first.strip
-    gname = pieces[1].strip
-    pname = pieces.last.strip
-
-    if ename == "*" && !epr.blank?
+    if pieces.length == 1
+      return ref if epr.blank?
       entity = epr.entity
-    else
-      entity = Entity.find_by_name ename
-    end
-    
-    if gname == "*" && !epr.blank?
       group = epr.group
+      pname = pieces.last.strip
+    elsif pieces.length == 2
+      return ref if epr.blank?
+      entity = epr.entity
+      gname = pieces.first.strip
+      pname = pieces.last.strip
+      if gname == "*"
+        group = epr.group
+      else
+        group = Group.find_by_name gname
+      end
+    elsif pieces.length == 3
+      ename = pieces.first.strip
+      gname = pieces[1].strip
+      pname = pieces.last.strip
+
+      if ename == "*"
+        return ref if epr.blank?
+        entity = epr.entity
+      else
+        entity = Entity.find_by_name ename
+      end
+      
+      if gname == "*"
+        return ref if epr.blank?
+        group = epr.group
+      else
+        group = Group.find_by_name gname
+      end
     else
-      group = Group.find_by_name gname
+      return ref
     end
 
     property = Property.find_by_name pname
@@ -216,7 +240,8 @@ module HubHelper
 
     relationship = EntityPropertyRelationship.find_by entity_id: entity.id, group_id: group.id, property_id: property.id
 
-    relationship.value
+    value = parse_value(relationship.value.to_s, epr)
+    return value.to_s
   end
 
 end
