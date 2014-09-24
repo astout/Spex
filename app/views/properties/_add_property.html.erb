@@ -3,7 +3,7 @@
         <span class="user">
           <%= link_to add_property.name, add_property %>
         </span>
-      <% if current_user.admin?  %>
+      <% if admin_user?  %>
         |
         <%= link_to "Add Parent", property_associations_path(parent: add_property, child: current_property, added_property: add_property), class: "link_to_add_property_association", method: :post %>    
         |

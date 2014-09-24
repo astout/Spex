@@ -21,7 +21,7 @@ module UsersHelper
 
   def require_admin
     unless current_user.nil?
-      redirect_to root_url unless current_user.admin?
+      redirect_to root_url unless admin_user?
     else
       redirect_to root_url
     end

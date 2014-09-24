@@ -16,7 +16,7 @@
 <!-- <%= f.label :password_confirmation, "Confirm Password" %> -->
 <%= f.password_field :password_confirmation, label: "Confirmation"  %>
 
-<% if current_user.admin? %>
+<% if admin_user? %>
     <label class="control-label" for="role_id">Role</label>
     <%= select_tag "set_role_id", options_from_collection_for_select(Role.all, :id, :caps_name, @user['role_id'] ), id: "set_role", class: "form-control select-role col-xs-12"%>
     <div style="padding:15px"></div>

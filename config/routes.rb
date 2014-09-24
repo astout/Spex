@@ -37,6 +37,12 @@ Spex::Application.routes.draw do
   get "hub/epr_ref_update"
   get "hub/epr_evaluate"
   get "entities/new"
+  post "properties/confirm_delete"
+  post "properties/delete_request"
+  post "entities/confirm_delete"
+  post "entities/delete_request"
+  post "groups/confirm_delete"
+  post "groups/delete_request"
   get "properties/new"
   get "hub/selectize"
   resources :users

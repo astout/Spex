@@ -4,7 +4,7 @@
     <a href="http://www.goalzero.com">Goal Zero</a>
     &copy; 2014
   </small>
-  <% if signed_in? && current_user.admin? %>
+  <% if signed_in? && admin_user? %>
     <pre class="debug_dump">
       <span id="debug">
       </span>

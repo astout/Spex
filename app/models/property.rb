@@ -106,7 +106,7 @@ class Property < ActiveRecord::Base
   def entities
     result = []
     self.entity_relations.each do |epr|
-      result.push epr.entity
+      result |= [epr.entity]
     end
     result
   end

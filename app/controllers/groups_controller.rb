@@ -1,6 +1,9 @@
 class GroupsController < ApplicationController
   include GroupsHelper
   helper_method :group_sort_column, :group_sort_direction
+  before_action do
+    redirect_to root_path unless admin_user?
+  end
 
   def index
     @groups = groups_list(nil)
@@ -47,6 +50,27 @@ class GroupsController < ApplicationController
   end
 
   def show
+  end
+
+  def delete_request
+    @group = Group.find_by(id: params[:id])
+    respond_to do |format|
+      format.js 
+    end
+  end
+
+  def confirm_delete
+    @group = Group.find(params[:id])
+    if @group.blank?
+      flash[:danger] = "The group couldn't be found."
+    elsif @group.destroy
+      flash[:success] = "#{@group.name} successfully destroyed."
+    else
+      flash[:danger] = "There was an error destroying the specified group. Notify the administrator."
+    end
+    respond_to do |format|
+      format.js { render :js => "window.location.href='"+groups_path+"'" }
+    end
   end
 
   def destroy

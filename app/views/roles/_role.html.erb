@@ -22,15 +22,15 @@
         <%= link_to "", edit_role_path(role), class: "glyphicon glyphicon-check text-success"  %>
       <% end %>
     </td>
-      <% if current_user.admin? && show_remove %>
-        <td class="delete-role">
-          <% if role.default? %>
-            <% _default = "default" %>
-          <% else %>
-            <% _default = "" %>
-          <% end %>
-          <span id="<%= role.id %>"  class="glyphicon glyphicon-trash delete alert-danger <%= _default %>">
-          </span>
-        </td>
-      <% end %>
+    <% if admin_user? && show_remove %>
+      <td class="delete-role">
+        <% if role.default? %>
+          <% _default = "default" %>
+        <% else %>
+          <% _default = "" %>
+        <% end %>
+        <span id="<%= role.id %>"  class="glyphicon glyphicon-trash delete alert-danger <%= _default %>">
+        </span>
+      </td>
+    <% end %>
 </tr>

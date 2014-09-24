@@ -1,7 +1,7 @@
 <div class="panel panel-default" id="<%= parent_item.parent_id %>">
     <div class="panel-heading">
         <%= link_to parent_item.parent.name, parent_item.parent %>
-        <% if current_user.admin? %>
+        <% if admin_user? %>
           | <%= link_to "remove", parent_item, method: :delete,
                                            data: { confirm: "You sure?" },
                                            title: parent_item.parent.name %>

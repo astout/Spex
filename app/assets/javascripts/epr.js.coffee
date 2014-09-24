@@ -8,28 +8,28 @@ $ ->
 
     if $('body').hasClass "query"
 
-        window.epr_page = "1"
-        window.epr_direction = "desc"
-        window.epr_sort = "updated_at"
-        window.epr_search = ""
-        window.view_id = $("input#epr-r").val()
+      window.epr_page = "1"
+      window.epr_direction = "desc"
+      window.epr_sort = "updated_at"
+      window.epr_search = ""
+      window.view_id = $("input#epr-r").val()
 
-        #Every character change in Search field, submit query
-        $("body").on 'input', "input#epr_search_field", (e) ->
-            window.epr_page = "1"
-            params = get_epr_params()
-            #send the request
-            $.get "/query?" + params
-            false
-        $("select.roles").select2({
-          placeholder: "View As...",
-        })
-
-        $("select.roles").on "change", (e) ->
-          console.log("role: " + $(this).val())
-          window.view_id = $(this).val()
+      #Every character change in Search field, submit query
+      $("body").on 'input', "input#epr_search_field", (e) ->
+          window.epr_page = "1"
           params = get_epr_params()
+          #send the request
           $.get "/query?" + params
+          false
+      $("select.roles").select2({
+        placeholder: "View As...",
+      })
+
+      $("select.roles").on "change", (e) ->
+        console.log("role: " + $(this).val())
+        window.view_id = $(this).val()
+        params = get_epr_params()
+        $.get "/query?" + params
 
 get_epr_params = () ->
     params = $.param( {

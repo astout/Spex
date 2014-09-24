@@ -50,7 +50,7 @@ class Group < ActiveRecord::Base
     relations = self.entity_relations
     relations.each do |relationship|
       entity = Entity.find_by(id: relationship.entity_id)
-      entities.push(entity)
+      entities |= [entity]
     end
     entities
   end

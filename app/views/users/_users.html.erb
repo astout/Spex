@@ -17,12 +17,12 @@
     <th>
         Role
     </th>
-    <% if current_user.admin? %>
+    <% if admin_user? %>
         <th>
             <%= user_sortable "created_at", "Created" %>
         </th>
     <% end %>
-    <% if current_user.admin? %>
+    <% if admin_user? %>
         <th>
             Remove
         </th>

@@ -38,6 +38,7 @@ module PropertiesHelper
         reject_properties |= relation.entity.properties_via(relation.group)
       end
     end
+    # puts reject_properties
     properties = Property.index(params[:property_search], property_sort_column, property_sort_direction, params[:properties_page], 10, reject_properties, [])
   end
 

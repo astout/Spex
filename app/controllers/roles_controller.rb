@@ -5,7 +5,7 @@ class RolesController < ApplicationController
   #must be admin
   before_action do
     unless current_user.nil?
-      redirect_to root_url unless current_user.admin?
+      redirect_to root_url unless admin_user?
     else
       redirect_to root_url
     end

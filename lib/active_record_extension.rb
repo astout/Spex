@@ -16,18 +16,18 @@ module ActiveRecordExtension
       sort_direction = "desc" if sort_direction.blank?
 
       if self.respond_to?(:search)
-        if exclude.nil? && !select.nil?
+        if exclude.blank? && !select.blank?
           self.search(search).order(sort_column + ' ' + sort_direction).select { |item| select.any? { |in_item| in_item[:id] == item[:id] } }.paginate(page: page.blank? ? 1 : page, per_page: per_page)
-        elsif select.nil?  && !exclude.nil?
+        elsif select.blank?  && !exclude.blank?
           self.search(search).order(sort_column + ' ' + sort_direction).reject { |item| exclude.any? { |ex_item| ex_item[:id] == item[:id] } }.paginate(page: page.blank? ? 1 : page, per_page: per_page)
         else
           self.search(search).order(sort_column + ' ' + sort_direction).paginate(page: page.blank? ? 1 : page, per_page: per_page)
         end
       #otherwise, skip the searching
       else
-        if exclude.nil? && !select.nil?
+        if exclude.blank? && !select.blank?
           self.all.order(sort_column + ' ' + sort_direction).select { |item| select.any? { |in_item| in_item[:id] == item[:id] } }.paginate(page: page.blank? ? 1 : page, per_page: per_page)
-        elsif select.nil?  && !exclude.nil?
+        elsif select.blank?  && !exclude.blank?
           self.all.order(sort_column + ' ' + sort_direction).reject { |item| exclude.any? { |ex_item| ex_item[:id] == item[:id] } }.paginate(page: page.blank? ? 1 : page, per_page: per_page)
         else
           self.all.order(sort_column + ' ' + sort_direction).paginate(page: page.blank? ? 1 : page, per_page: per_page)

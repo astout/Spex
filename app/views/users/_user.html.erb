@@ -21,12 +21,12 @@
       <%= link_to user.role.caps_name, edit_role_path(user.role) %>
     <% end %>
   </td>
-  <% if current_user.admin? %>
+  <% if admin_user? %>
     <td>
       <%= "#{user.created_at.strftime('%m/%d/%Y')}" %>
     </td>
   <% end %>
-  <% if current_user.admin? && !current_user?(user) %>
+  <% if admin_user? && !current_user?(user) %>
     <td class="delete-user">
       <%= link_to "", user, method: :delete, 
         data: { confirm: "You sure?" },

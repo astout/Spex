@@ -13,14 +13,10 @@
     <td>
       <%= "#{group.updated_at.strftime('%m/%d/%Y %H:%M')}" %>
     </td>
-      <% if current_user.admin? && show_remove %>
-        <td class="delete-group">
-          <%= link_to "", group, method: :delete, 
-                data: { confirm: "You sure?" },
-                title: "delete #{group.name}?", 
-                class: "glyphicon glyphicon-trash xs",
-                style: "margin-left: 5px; color: #FF4F4D"
-          %>
-        </td>
-      <% end %>
+    <% if admin_user? && show_remove %>
+      <td class="delete-group">
+        <span id="<%= group.id %>"  class="glyphicon glyphicon-trash delete alert-danger">
+        </span>
+      </td>
+    <% end %>
 </tr>

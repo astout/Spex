@@ -7,7 +7,7 @@
       <section>
         <%= render 'shared/user_info' %>
       </section>
-      <% if current_user.admin? %>
+      <% if admin_user? %>
         <section>
           <div class="panel panel-default">
               <h5 class="panel title">Administration</h5>

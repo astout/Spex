@@ -36,7 +36,7 @@
     <td>
       <%= property_relationship.position+1 %>
     </td>
-    <% if current_user.admin? && show_remove %>
+    <% if admin_user? && show_remove %>
       <td>
         <%= link_to "", property_relationship, method: :delete, 
                data: { confirm: "You sure?" },

@@ -3,7 +3,7 @@
   $("body").addClass("edit-user");
 </script>
 
-<% if current_user.admin? %>
+<% if admin_user? %>
     <h1>Update User Profile</h1>
 <% else %>
     <h1>Update Your Profile</h1>

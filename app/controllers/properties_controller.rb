@@ -1,7 +1,7 @@
 class PropertiesController < ApplicationController
   include PropertiesHelper
   before_action do
-    redirect_to root_url unless current_user.admin?
+    redirect_to root_url unless admin_user?
   end
 
   def index
@@ -54,6 +54,27 @@ class PropertiesController < ApplicationController
       redirect_to @property
     else
       render 'edit'
+    end
+  end
+
+  def delete_request
+    @property = Property.find_by(id: params[:id])
+    respond_to do |format|
+      format.js 
+    end
+  end
+
+  def confirm_delete
+    @property = Property.find(params[:id])
+    if @property.blank?
+      flash[:danger] = "The property couldn't be found."
+    elsif @property.destroy
+      flash[:success] = "#{@property.name} successfully destroyed."
+    else
+      flash[:danger] = "There was an error destroying the specified property. Notify the administrator."
+    end
+    respond_to do |format|
+      format.js { render :js => "window.location.href='"+properties_path+"'" }
     end
   end
 

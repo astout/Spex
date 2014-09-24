@@ -24,16 +24,11 @@
       <td>
         <%= "#{epr.updated_at.strftime('%m/%d/%Y %H:%M')}" %>
       </td>
-      <% if current_user.admin? && show_remove %>
-        <td class="delete-epr">
-          <% if epr.default? %>
-            <% _default = "default" %>
-          <% else %>
-            <% _default = "" %>
-          <% end %>
-          <span id="<%= epr.id %>"  class="glyphicon glyphicon-trash delete alert-danger <%= _default %>">
-          </span>
-        </td>
+      <% if admin_user? && show_remove %>
+          <td class="delete-epr">
+            <span id="<%= epr.id %>"  class="glyphicon glyphicon-trash delete alert-danger">
+            </span>
+          </td>
       <% end %>
   </tr>
 <% end %>

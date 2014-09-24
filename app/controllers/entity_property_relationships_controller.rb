@@ -1,8 +1,8 @@
 class EntityPropertyRelationshipsController < ApplicationController
   include EntityPropertyRelationsHelper
-  before_action do
-    # redirect_to root_url unless current_user.admin?
-  end
+  before_action :admin_user,  only: [:new, :create]
+     # redirect_to root_url unless current_user.admin?
+  # end
 
   def index
     @entities_all = Entity.search(params[:q])
@@ -18,11 +18,8 @@ class EntityPropertyRelationshipsController < ApplicationController
   end
 
   def query
-
     if signed_in?
       @eprs = eprs_index
-      puts "--NUMBER OF RESULTS--"
-      puts @eprs.count
 
       @role = Role.find_by(id: params[:view_id] || current_user.role_id)
     end
@@ -34,12 +31,12 @@ class EntityPropertyRelationshipsController < ApplicationController
   end
 
   def new
-    require_admin
+    # require_admin
     @epr = EntityPropertyRelationship.new
   end
 
   def create
-    require_admin
+    # require_admin
     match_params = {entity_id: epr_params[:entity_id], group_id: epr_params[:group_id], property_id: epr_params[:property_id]}
     @epr = EntityPropertyRelationship.find_by(match_params)
     @result = {msg: "", r: -1}

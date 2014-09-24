@@ -3,16 +3,17 @@ module GroupsHelper
   def selected_groups
     @selected_groups = []
     selected_group_ids = params[:selected_groups]
-    unless selected_group_ids.nil?
+    unless selected_group_ids.blank?
       if selected_group_ids.class == String
         selected_group_ids = selected_group_ids.split(",")
       end
-      selected_group_ids.each do |id|
-        group = Group.find_by(id: id)
-        unless group.nil? 
-          @selected_groups.push group
-        end
-      end
+      @selected_groups = Group.where(id: selected_group_ids)
+      # selected_group_ids.each do |id|
+      #   group = Group.find_by(id: id)
+      #   unless group.nil? 
+      #     @selected_groups.push group
+      #   end
+      # end
     end
     @selected_groups
   end

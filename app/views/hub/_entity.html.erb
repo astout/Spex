@@ -13,7 +13,7 @@
     <td>
       <%= "#{entity.updated_at.strftime('%m/%d/%Y %H:%M')}" %>
     </td>
-      <% if current_user.admin? %>
+      <% if admin_user? %>
         <td>
           <%= link_to "", entity, method: :delete, 
                 data: { confirm: "You sure?" },

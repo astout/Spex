@@ -17,7 +17,7 @@
             </div>
             <div class="row">
                 <div class="col-xs-4" id="role-select">
-                    <% if current_user.admin? %>
+                    <% if admin_user? %>
                       <%= select_tag "role_ids", options_from_collection_for_select(Role.all, "id", "name", @role['id'] || current_user.role_id), id: "select-role", data: {}, class: "form-control roles col-xs-12"%>
                     <% else %>
                       <%= select_tag "role_ids", options_from_collection_for_select(Role.where(admin: false), "id", "name", @role['id'] || current_user.role_id), id: "select-role", data: {}, class: "form-control roles col-xs-12"%>
@@ -25,7 +25,7 @@
                     <div style="padding-bottom: 50px;"></div>
                 </div>
                 <div class="col-xs-2 col-xs-offset-6">
-                    <% if current_user.admin? %>
+                    <% if admin_user? %>
                         <%= link_to "Create New", hub_path, class: "btn btn-primary btn-sm", style: "float: right; margin-bottom: 10px"%>
                     <% end %>
                 </div>

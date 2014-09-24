@@ -18,6 +18,30 @@ $ ->
           $.get "groups?" + params
           false
 
+      $("body").on "click", "span.delete", (e) ->
+          deleteModal(this.id)
+          # $("#delete-confirm").modal("show");
+          console.log "delete clicked"
+
+      $("body").on "click", "button#btn-delete-confirm", (e) ->
+          console.log "confirm delete"
+          params = $.param( {
+              id: $("span.delete-group-id")[0].id
+              })
+          $.ajax
+              url: "/groups/confirm_delete?" + params
+              type: 'POST'
+
+deleteModal = (_id) ->
+    if _id.length < 1
+        return false
+    params = $.param( { 
+      id: _id,
+      } )
+    $.ajax 
+      url: "/groups/delete_request?" + params
+      type: 'POST' 
+
 get_group_params = () ->
     params = $.param( {
         group_search: $("input#group_search").val(), 

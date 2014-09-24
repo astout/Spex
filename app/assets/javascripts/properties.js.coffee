@@ -27,6 +27,30 @@ $ ->
           $.get "properties?" + params
           false
 
+      $("body").on "click", "span.delete", (e) ->
+          deleteModal(this.id)
+          # $("#delete-confirm").modal("show");
+          console.log "delete clicked"
+
+      $("body").on "click", "button#btn-delete-confirm", (e) ->
+          console.log "confirm delete"
+          params = $.param( {
+              id: $("span.delete-property-id")[0].id
+              })
+          $.ajax
+              url: "/properties/confirm_delete?" + params
+              type: 'POST'
+
+deleteModal = (_id) ->
+    if _id.length < 1
+        return false
+    params = $.param( { 
+      id: _id,
+      } )
+    $.ajax 
+      url: "/properties/delete_request?" + params
+      type: 'POST' 
+
 get_property_params = () ->
     params = $.param( {
         property_search: $("input#property_search").val(), 

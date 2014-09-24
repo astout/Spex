@@ -3,7 +3,7 @@
         <span class="user">
           <%= link_to add_property.name, add_property %>
         </span>
-      <% if current_user.admin?  %>
+      <% if admin_user?  %>
         <%= link_to "", entity_property_relationships_path(entity: current_entity, property: add_property), class: "link_to_add_entity_property_relationship glyphicon glyphicon-plus-sign", method: :post %>
       <% end %>
     </li>

@@ -1,5 +1,5 @@
 <% provide(:title, @user.first) %>
-<% if current_user.admin? %>
+<% if admin_user? %>
     <div class="row">
         <div class="col-xs-4" style="margin-bottom: 10px;">
             <%= link_to "Home", root_path, style: "color: #494A4A" %>
@@ -27,7 +27,7 @@
             <a href="<%= edit_user_path(@user) %>" class="btn btn75 btn-primary btn-sm" data-toggle="tooltip" data-placement="bottom" title="Edit Fields" style="float: right">Edit</a>
         </section>
     </aside>
-    <% if current_user.admin? %>
+    <% if admin_user? %>
         <aside class="col-xs-8">
             <div class="panel panel-default">
                 <div class="panel-heading">

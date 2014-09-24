@@ -58,9 +58,19 @@ class Role < ActiveRecord::Base
     self.viewables.select { |v| v[:group_id] == group_id.to_i && v[:entity_id] == entity_id.to_i }.count
   end
 
-  def entity_viewables(entity_id)
-    return 0 if entity_id.blank?
-    self.viewables.select { |v| v[:entity_id] == entity_id.to_i }.count
+  def entity_viewables(entity)
+    return 0 if entity.blank?
+    puts "entity param"
+    puts entity
+    puts "entity class"
+    puts entity.class.name
+    if entity.class.name == "String" || entity.class.name == "Fixnum"
+      return self.viewables.select { |v| v[:entity_id] == entity.to_i }.count
+    elsif entity.class.name == "Entity"
+      return self.viewables.select { |v| v[:entity_id] == entity.id }.count
+    else
+      return 0
+    end
   end
 
   def delete(new_role_id = nil)

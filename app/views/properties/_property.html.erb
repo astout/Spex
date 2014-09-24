@@ -13,14 +13,10 @@
     <td>
       <%= "#{property.updated_at.strftime('%m/%d/%Y %H:%M')}" %>
     </td>
-      <% if current_user.admin? && show_remove %>
-        <td class="delete-property">
-          <%= link_to "", property, method: :delete, 
-                data: { confirm: "You sure?" },
-                title: "delete #{property.name}?", 
-                class: "glyphicon glyphicon-trash xs",
-                style: "margin-left: 5px; color: #FF4F4D"
-          %>
-        </td>
-      <% end %>
+    <% if admin_user? && show_remove %>
+      <td class="delete-property">
+        <span id="<%= property.id %>"  class="glyphicon glyphicon-trash delete alert-danger">
+        </span>
+      </td>
+    <% end %>
 </tr>

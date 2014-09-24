@@ -80,6 +80,27 @@ class EntitiesController < ApplicationController
     end
   end
 
+  def delete_request
+    @entity = Entity.find_by(id: params[:id])
+    respond_to do |format|
+      format.js 
+    end
+  end
+
+  def confirm_delete
+    @entity = Entity.find_by(id: params[:id])
+    if @entity.blank?
+      flash[:danger] = "The specified relationship couldn't be found."
+    elsif @entity.destroy
+      flash[:success] = "The entity '#{@entity.name}' was successfully destroyed."
+    else
+      flash[:danger] = "There was an error destroying the specified entity."
+    end
+    respond_to do |format|
+      format.js { render :js => "window.location.href='"+entities_path+"'" }
+    end
+  end
+
   def destroy
     require_admin
     respond_to do |format|

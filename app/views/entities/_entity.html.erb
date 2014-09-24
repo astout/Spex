@@ -14,15 +14,11 @@
       <td>
         <%= "#{entity.updated_at.strftime('%m/%d/%Y %H:%M')}" %>
       </td>
-        <% if admin_user? && show_remove %>
-          <td class="delete-entity">
-            <%= link_to "", entity, method: :delete, 
-                  data: { confirm: "You sure?" },
-                  title: "delete #{entity.name}?", 
-                  class: "glyphicon glyphicon-trash xs",
-                  style: "margin-left: 5px; color: #FF4F4D"
-            %>
-          </td>
-        <% end %>
+      <% if admin_user? && show_remove %>
+        <td class="delete-entity">
+          <span id="<%= entity.id %>"  class="glyphicon glyphicon-trash delete alert-danger">
+          </span>
+        </td>
+      <% end %>
   </tr>
 <% end %>

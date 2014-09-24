@@ -16,7 +16,7 @@ class HubController < ApplicationController
   #users of the hub must be admin
   before_action do
     unless current_user.nil?
-      redirect_to root_url unless current_user.admin?
+      redirect_to root_url unless admin_user?
     else
       redirect_to root_url
     end
@@ -240,10 +240,10 @@ class HubController < ApplicationController
   def gprs
     #get the group property relationships list
     # groups_property_relations
-    @gprs = get_gprs(selected_groups)
+    @gprs = get_gprs(selected_groups())
 
     #update the properties list
-    @properties = properties_list(selected_egrs, selected_groups)
+    @properties = properties_list(selected_egrs, @selected_groups)
 
     respond_to do |format|
       format.js

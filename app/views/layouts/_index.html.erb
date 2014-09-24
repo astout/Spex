@@ -1,4 +1,5 @@
 <% provide(:title, "All #{model.capitalize.pluralize}") %>
+<div id="notice"></div>
 <script type="text/javascript">
     $("body").addClass('<%= "#{model.pluralize}-index" %>');
 </script>
@@ -25,4 +26,7 @@
 <!-- List -->
 <div id="list">
     <%= render partial: "#{model.pluralize}/#{model.pluralize}", locals: locale %>
+</div>
+
+<div id="delete-modal">
 </div>

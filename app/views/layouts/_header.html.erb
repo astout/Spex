@@ -7,7 +7,7 @@
           <%= link_to "Home",    root_path, class: "btn btn-sm btn-default" %>
           <%= link_to "Reports", entities_path, class: "btn btn-sm btn-default" %>
           <%= link_to "Help",    help_path, class: "btn btn-sm btn-default" %>
-          <% if signed_in? && current_user.admin? %>
+          <% if signed_in? && admin_user? %>
             <div class="btn-group">
               <a href="#" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
                 Admin <span class="caret"></span>

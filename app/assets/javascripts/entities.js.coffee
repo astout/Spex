@@ -16,6 +16,19 @@ $ ->
           $.get "entities?" + params
           false
 
+      $("body").on "click", "span.delete", (e) ->
+          deleteModal(this.id)
+          console.log "delete clicked"
+
+      $("body").on "click", "button#btn-delete-confirm", (e) ->
+          console.log "confirm delete"
+          params = $.param( {
+              id: $("span.delete-entity-id")[0].id
+              })
+          $.ajax
+              url: "/entities/confirm_delete?" + params
+              type: 'POST'
+
     if $("body").hasClass "report"
 
       selectize_all()
@@ -60,6 +73,18 @@ $ ->
       $("input#entity_name, input#entity_label, input#entity_img").on "input", ->
           NewEntityValidation()
       NewEntityValidation()
+
+      
+
+deleteModal = (_id) ->
+    if _id.length < 1
+        return false
+    params = $.param( { 
+      id: _id,
+      } )
+    $.ajax 
+      url: "/entities/delete_request?" + params
+      type: 'POST'
 
 get_entity_params = () ->
     params = $.param( {
@@ -121,7 +146,6 @@ window.registerHiddenRows = registerHiddenRows
 NewEntityValidation = () ->
     name = $("input#entity_name").val()
     label = $("input#entity_label").val()
-    image = $("input#entity_img").val()
 
     if name.length > 0
         unless $("span#entity_name").hasClass "valid"
@@ -133,12 +157,10 @@ NewEntityValidation = () ->
 
     unless $("span#entity_label").hasClass "valid"
         $("span#entity_label").addClass "valid"
-    unless $("span#entity_img").hasClass "valid"
-        $("span#entity_img").addClass "valid"
 window.NewEntityValidation = NewEntityValidation
 
 valid = () ->
-    $("span#entity_name, span#entity_img, span#entity_label").addClass "valid"
+    $("span#entity_name, span#entity_label").addClass "valid"
     $("input[type=submit]").removeClass 'disabled'
 
 invalid = () ->
