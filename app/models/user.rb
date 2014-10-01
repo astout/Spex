@@ -11,7 +11,7 @@ class User < ActiveRecord::Base
     :create_remember_token
   end
   before_destroy do
-    if User.admins.count < 2
+    if User.admins.count < 2 && self.admin?
       puts "\n - - - Can't delete the last admin user. - - - \n"
       return false
     end
@@ -23,8 +23,7 @@ class User < ActiveRecord::Base
       length: { minimum: 3, maximum: 32 },
       uniqueness: { case_sensitive: false }
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
-    validates :email, format: { with: VALID_EMAIL_REGEX }, allow_blank: true,
-      uniqueness: { case_sensitive: false }
+    validates :email, format: { with: VALID_EMAIL_REGEX }, allow_blank: true
   has_secure_password
   validates :password, 
     length: { minimum: 6 },

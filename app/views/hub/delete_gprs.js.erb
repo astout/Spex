@@ -2,7 +2,7 @@ $("#debug").html('<%= params %>');
 var alert_html = "";
 
 <% unless @deleted_gprs.nil? %>
-    alert_html += "<div class='alert alert-success small-font'>";
+    alert_html += "<div class='alert notice alert-success small-font'>";
     alert_html += "<p><strong>Properties Removed from '<%= @selected_groups.first.name %>':</strong></p>";
     <% @deleted_gprs.each do |deleted_gpr| %>
         <% unless deleted_gpr[:data].nil? %>
@@ -11,7 +11,7 @@ var alert_html = "";
         <% end %>
     <% end %>
 <% else %>
-    alert_html += "<div class='alert alert-danger small-font'>";
+    alert_html += "<div class='alert notice alert-danger small-font'>";
     alert_html += "<p><strong>Nothing Deleted:</strong></p>";
     alert_html += "<p style='padding-left: 10px'><i>The server returned no results.</i></p>";
 <% end %>

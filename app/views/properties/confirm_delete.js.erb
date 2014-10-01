@@ -1,0 +1,14 @@
+console.log("delete confirm");
+$("#debug").html('<%= params %>');
+<% unless @property.blank? %>
+    _html = '<%= sanitize(@property[:notification]) %>';
+    console.log(_html);
+    $("div#notice").html("" + _html + " ");
+    console.log("delete confirmed for <%= @property[:data].name %>");
+<% else %>
+    $("div#notice").html("<div class='alert notice alert-danger center'>There was an error with the request.</div> ");
+<% end %>
+
+$("div#list").html("<%= j render partial: 'properties/properties', locals: { show_units: true, show_created: true, show_remove: true, show_position: true }  %>");
+
+

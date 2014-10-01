@@ -22,4 +22,4 @@
   </span>
   <%= select_tag "properties", options_from_collection_for_select(@properties_all.reject {|p| p.id == relation.property.id }, "id", "name"), id: relation.id, class: "form-control epr-ref epr-ref-property col-xs-12", include_blank: true %>
 </div>
-<button id=<%= relation.id %>  class="btn btn-success btn-sm epr-ref-append disabled"><span class="glyphicon glyphicon-plus"></span></button>
+<button id=<%= relation.id %>  class="btn btn-success btn-sm epr ref-append disabled"><span class="glyphicon glyphicon-plus"></span></button>

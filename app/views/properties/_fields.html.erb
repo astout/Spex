@@ -1,25 +1,29 @@
 <!--%= render 'shared/error_messages', object: f.object %-->
 
-<span id="property_name" class="label label-default new-property-label">Name</span>
-<%= f.text_field :name, class: "input-sm", hide_label: true %>
+<% _id = @property.id || "new" %>
 
-<span id="property_default_label" class="label label-default new-property-label">Label</span>
-<%= f.text_field :default_label, class: "input-sm", hide_label: true %>
+<%= hidden_field_tag :property_id, @property.id || "new" %>
 
-<span id="property_default_value" class="label label-default new-property-label">Value</span>
-<%= f.text_field :default_value, class: "input-sm", hide_label: true %>
+<span id="<%= _id %>" class="label label-default property name new-property-label">Name</span>
+<%= f.text_field :name, id: _id, class: "input-sm property name", hide_label: true %>
 
-<span id="property_units" class="label label-default new-property-label">Units</span>
-<%= f.text_field :units, class: "input-sm", hide_label: true %>
+<span id='<%= _id %>' class="label label-default property default_label new-property-label">Default Label</span>
+<%= f.text_field :default_label, id: _id, class: "property default_label input-sm", hide_label: true %>
 
-<span id="property_units_short" class="label label-default new-property-label">Units Short</span>
-<%= f.text_field :units_short, class: "input-sm", hide_label: true %>
+<div>
+    <%= render partial: 'properties/formula_forms', locals: { property: @property } %>
+</div>
 
-<span id="property_roles" class="label label-default new-property-label">Viewers</span>
+<span id='<%= _id %>' class="label label-default property default_value new-property-label"> Default Value</span>
+<%= f.text_field :default_value, id: _id, class: "input-sm property default_value", hide_label: true %>
 
-<%= select_tag "role_ids", options_from_collection_for_select(Role.where(admin: false), "id", "name", @property.roles.select(:id).where(admin: false).pluck(:id)), class: "form-control new-property-roles col-xs-12 input-sm", multiple: true %>
+<span id='<%= _id %>' class="label label-default property units new-property-label">Default Units</span>
+<%= f.text_field :units, id: _id, class: "property units input-sm", hide_label: true %>
 
-<%= f.hidden_field :role_ids %>
+<span id='<%= _id %>' class="label label-default property units_short new-property-label">Default Units Short</span>
+<%= f.text_field :units_short, id: _id, class: "property units_short input-sm", hide_label: true %>
 
-<!-- <span id="property_default_visibility" class="label label-default new-property-label">Visibility</span> -->
-<!--%= f.number_field :default_visibility, class: "input-sm", hide_label: true, value: "0" %-->
+<span id='<%= _id %>' class="label label-default property role_ids new-property-label">Default Viewers</span>
+
+<%= select_tag :role_ids, options_from_collection_for_select(Role.where(admin: false), "id", "name", @property.roles.select(:id).where(admin: false).pluck(:id)), id: _id, class: "form-control property role_ids col-xs-12 input-sm", multiple: true %>
+

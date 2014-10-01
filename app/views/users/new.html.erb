@@ -12,11 +12,11 @@
 
 <h1>Sign up</h1>
 
-<% unless signed_in? %>
+<% if admin_user? || !signed_in? %>
 
 	<div class="row">
 	  <div class="col-xs-6 col-xs-offset-3">
-	    <%= bootstrap_form_for(@user, inline_errors: false) do |f| %>
+	    <%= bootstrap_form_for(@user, inline_errors: true) do |f| %>
 	      <%= render 'users/fields', f: f %>
 	      <%= f.submit "Create my account", class: "btn btn-large btn-primary btn150"%>
 	    <% end %>

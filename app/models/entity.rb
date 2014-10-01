@@ -12,6 +12,10 @@ class Entity < ActiveRecord::Base
     length: { minimum: 2, maximum: 32 },
     uniqueness: { case_sensitive: false }
 
+  before_save do |entity|
+    entity.name.downcase!
+  end
+
   # before_destroy { |entity| EntityPropertyRelationship.destroy_all "entity_id = #{entity.id}" }
   before_destroy do |entity|
     EntityPropertyRelationship.destroy_all :entity_id => entity.id

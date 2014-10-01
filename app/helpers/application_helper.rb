@@ -61,6 +61,12 @@ module ApplicationHelper
     end
   end
 
+  def notification(type, msg, classes)
+    html = "<div class='alert notice alert-#{type} #{classes.join(' ')}'>"
+    html += msg
+    html += "</div>"
+  end
+
   # File actionpack/lib/action_view/helpers/asset_tag_helper.rb, line 166
   # def favicon_link_tag(source='favicon.ico', options={})
   #   tag('link', {

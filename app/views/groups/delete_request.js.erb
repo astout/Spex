@@ -3,7 +3,7 @@ $("#debug").html('<%= params %>');
     $("div#delete-modal").html("<%= j render partial: 'groups/confirm_delete' %>");
     $("#delete-confirm").modal("show");
 <% else %>
-    $("div#notice").html("<div class='alert alert-danger center'>There was an error with the request.</div> ")
+    $("div#notice").html("<div class='alert notice alert-danger center'>There was an error with the request.</div> ")
 <% end %>
 
 console.log("delete requested for <%= @group.name %>");

@@ -13,6 +13,10 @@ class Group < ActiveRecord::Base
     length: { minimum: 2, maximum: 32 },
     uniqueness: { case_sensitive: false }
 
+  before_save do |group|
+    group.name.downcase!
+  end
+
   # before_destroy { |group| GroupPropertyRelationship.destroy_all "group_id = #{group.id}" }
   # before_destroy { |group| EntityGroupRelationship.destroy_all "group_id = #{group.id}" }
 
@@ -26,6 +30,10 @@ class Group < ActiveRecord::Base
     entities.each do |entity|
       group.flee! entity
     end
+  end
+
+  def label
+    self.default_label
   end
 
   #####################

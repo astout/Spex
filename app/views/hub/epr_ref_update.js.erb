@@ -1,5 +1,4 @@
 $("#debug").html('<%= params %>');
-var alert_html = "";
 
 $('div#ref-<%= params[:current_epr] %>.tab-pane').html("<%= j render partial: 'entity_property_relationships/references', locals: { relation: @current_epr, entity: @epr_ref_entity, group: @epr_ref_group } %>");
 

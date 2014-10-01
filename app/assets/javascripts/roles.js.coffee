@@ -165,15 +165,24 @@ confirmDefault = () ->
 validateName = (input) ->
     label = $("span#role_name")
     submit = $("input[type=submit]")
-    if input.length > 0 && label.hasClass("label-default")
+    rx = /^[A-Za-z0-9]+[A-Za-z0-9\-\_]*[A-Za-z0-9]+$/
+    if input.length > 0 && rx.test(input) && label.hasClass("label-default")
         label.removeClass("label-default")
         label.addClass("label-success")
         submit.removeClass("disabled")
-    if input.length < 1 && label.hasClass("label-success")
+        $("body").on "keydown", "input.role", (e) ->
+          console.log "enter valid"
+          if e.keyCode == 13
+            $("form").submit()
+    if (input.length < 1 || !rx.test(input)) && label.hasClass("label-success")
         label.removeClass("label-success")
         label.addClass("label-default")
         submit.addClass("disabled")
-
+        $("body").on "keydown", "input.role", (e) ->
+          console.log "enter valid"
+          if e.keyCode == 13
+            e.preventDefault()
+            return false
     # if default_val == "true"
 
 

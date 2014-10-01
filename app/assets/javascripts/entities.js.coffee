@@ -8,6 +8,12 @@
 $ ->
 
     if $("body").hasClass "entities-index"
+
+      #if there's an alert on the page, make it fade out
+      # delay 3000, -> 
+      #   $("div.alert").fadeOut(1500)
+
+
       #Every character change in Search field, submit query
       $("body").on "input", "input#entity_search_field", (e) ->
           console.log $(this).val()
@@ -49,10 +55,6 @@ $ ->
           
       })
 
-      $("body").on("click", "button#submit", (e) ->
-        alert("submitted")
-      )
-      
       $("select.roles").select2({
         placeholder: "View As...",
       })
@@ -85,7 +87,8 @@ $ ->
           NewEntityValidation()
       NewEntityValidation()
 
-      
+delay = (ms, func) ->
+  setTimeout func, ms
 
 deleteModal = (_id) ->
     if _id.length < 1
@@ -158,7 +161,9 @@ NewEntityValidation = () ->
     name = $("input#entity_name").val()
     label = $("input#entity_label").val()
 
-    if name.length > 0
+    rx = /^[A-Za-z0-9]+[A-Za-z0-9\-\_]*[A-Za-z0-9]+$/
+
+    if name.length > 0 && rx.test(name)
         unless $("span#entity_name").hasClass "valid"
             $("span#entity_name").addClass "valid"
         valid()
@@ -173,6 +178,15 @@ window.NewEntityValidation = NewEntityValidation
 valid = () ->
     $("span#entity_name, span#entity_label").addClass "valid"
     $("input[type=submit]").removeClass 'disabled'
+    $("body").on "keydown", "input.entity", (e) ->
+      console.log "enter valid"
+      if e.keyCode == 13
+        $("form#new_entity").submit()
 
 invalid = () ->
     $("input[type=submit]").addClass 'disabled'
+    $("body").on "keydown", "input.entity", (e) ->
+      console.log "enter invalid"
+      if e.keyCode == 13
+        e.preventDefault()
+        return false

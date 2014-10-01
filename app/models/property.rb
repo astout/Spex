@@ -13,13 +13,9 @@ class Property < ActiveRecord::Base
     length: { minimum: 2, maximum: 32 },
     uniqueness: { case_sensitive: false }
 
-  # # before_destroy { |property| GroupPropertyRelationship.destroy_all "property_id = #{property.id}" }
-  # before_destroy do |property|
-  #   puts " -- DESTROYING PROPERTY: NAME => #{property.name}, ID => #{property.id} -- " 
-  #   #puts "test"
-  #   return false
-  #   # self.flee_all!
-  # end
+  before_save do |property|
+    property.name.downcase!
+  end
 
   before_destroy do |property|
     GroupPropertyRelationship.destroy_all "property_id = #{property.id}"
@@ -30,24 +26,9 @@ class Property < ActiveRecord::Base
     # end
   end
 
-  # before_create do |p|
-  #   p.roles = p.roles.blank? ? [] : p.roles
-  # end
-
-  # def do_delete
-  #   result = {data: self, status: 1, msg: "Property '#{self.name}' deleted."}
-  #   self.flee_all! 
-  #   self.entities.each do |e|
-  #     self.flee_entity!(e)
-  #   end
-  #   self.delete
-  #   r = Property.find_by_id(self.id)
-  #   unless r.blank?
-  #     result[:status] = 0
-  #     result[:msg] = "failed to delete property: '#{self.name}'"
-  #   end
-  #   result    
-  # end
+  def label
+    self.default_label
+  end
 
   #######################
   # # # PROPERTY TO GROUP

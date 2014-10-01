@@ -1,2 +1,35 @@
-<h1>Groups#show</h1>
-<p>Find me in app/views/groups/show.html.erb</p>
+<% unless @group.label.blank? %>
+  <% @label = "#{@group.label.to_s}" %>
+<% else %>
+  <% unless @group.name.blank? %>
+    <% @label = "#{@group.name.to_s.capitalize}" %>
+  <% else %>
+    <% @label = "Group id: #{@group.id.to_s}" %>
+  <% end %>
+<% end %>
+
+<% provide(:title, @label) %>
+<div id="alert-banner"></div>
+
+<div style="margin-bottom: 10px;">
+    <%= link_to "Home", root_path, style: "color: #494A4A" %>
+    <span class="glyphicon glyphicon-chevron-right", style="font-size: 12px;"></span>
+    <%= link_to "Groups", groups_path, style: "color: #494A4A" %>
+    <span class="glyphicon glyphicon-chevron-right", style="font-size: 12px;"></span>
+    <%= link_to @label, @group, style: "color: #494A4A" %>
+</div>
+
+<div class="row">
+  <aside class="col-xs-4">
+    <section>
+      <h1>
+        <%= @label %>
+      </h1>
+      <div style="float: right">
+      <% if admin_user? %>
+        <a href="<%= edit_group_path(@group) %>" class="btn btn75 btn-primary btn-sm" data-toggle="tooltip" data-placement="bottom" title="Edit attributes &amp; properties">Edit</a>
+      <% end %>
+      </div>
+    </section>
+  </aside>
+</div>

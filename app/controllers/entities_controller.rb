@@ -1,6 +1,7 @@
 class EntitiesController < ApplicationController
   include EntitiesHelper
   include UsersHelper
+  include ApplicationHelper
   # helper_method :entity_sort_column, :entity_sort_direction, :group_sort_column, :group_sort_direction
   helper_method :egr_sort_column, :egr_sort_direction
 
@@ -19,30 +20,75 @@ class EntitiesController < ApplicationController
   end
 
   def create
-    require_admin
-    @entity = Entity.find_by(name: entity_params[:name])
-    @result = {msg: "", r: -1}
-
-    respond_to do |format|
-      if @entity.nil?
-        @entity = Entity.new(entity_params)
-        if !@entity.save
-          @result[:r] = 0
-          @result[:msg] = "'#{@entity.name}' failed to save."
-        else
-          @result[:r] = 1
-          @result[:msg] = "'#{@entity.name}' was saved."
-          #entities needs to be updated to get the latest addition
-          @entities = entities_list
-        end
-      else
-        @result[:r] = 0
-        @result[:msg] = "Name: '#{@entity.name}' is already taken."
-      end
-      format.js
-      format.html {redirect_to entities_path }
+    @entity = Entity.new entity_params
+    if @entity.save
+      flash[:success] = "Entity created"
+      redirect_to entities_path
+    else
+      flash[:danger] = "The entity couldn't be created"
+      render 'new'
     end
   end
+
+  # def create
+  #   # @property = Property.new(property_params)
+
+  #   e = Entity.find_by name: entity_params[:name]
+  #   if e.blank?
+  #     @entity = entity_create(entity_params)
+  #     # if @property.save
+  #     success = @entity[:status] == 1 ? true : false
+  #     @entity = @entity[:data]
+  #     @entities = entities_list()
+  #     puts @entity.attributes
+  #     if success
+  #       flash[:success] = "Entity Created."
+  #       redirect_to entities_path
+  #     else
+  #       render 'new'
+  #     end
+  #   else
+  #     @entity = e
+  #     flash[:info] = "An entity with that name already exists"
+  #     pre_show(e)
+  #     render 'show'
+  #   end
+  # end
+
+  # def create
+  #   require_admin
+  #   @entity = Entity.find_by(name: entity_params[:name])
+  #   @result = {msg: "", r: -1}
+
+  #   r = -1
+  #   msg = ""
+  #   entity = Entity.find_by name: entity_params[:name]
+
+  #   if entity.blank?
+
+  #   else
+  #     r = 0
+  #   end
+  #   respond_to do |format|
+  #     if @entity.nil?
+  #       @entity = Entity.new(entity_params)
+  #       if !@entity.save
+  #         @result[:r] = 0
+  #         @result[:msg] = "'#{@entity.name}' failed to save."
+  #       else
+  #         @result[:r] = 1
+  #         @result[:msg] = "'#{@entity.name}' was saved."
+  #         #entities needs to be updated to get the latest addition
+  #         @entities = entities_list
+  #       end
+  #     else
+  #       @result[:r] = 0
+  #       @result[:msg] = "Name: '#{@entity.name}' is already taken."
+  #     end
+  #     format.js
+  #     format.html {redirect_to entities_path }
+  #   end
+  # end
 
   def edit
     require_admin
@@ -50,13 +96,27 @@ class EntitiesController < ApplicationController
     @entity = Entity.find(params[:id])
   end
 
-  def show
-    @entity = Entity.find(params[:id])
+  def pre_show(e=nil)
+    if e.blank?
+      @entity = Entity.find_by(id: params[:id])
+    end
     @role = Role.find_by(id: params[:view_id] || current_user.role_id).attributes
 
     @groups_all = @entity.groups
     @properties_all = @entity.properties_via(@entity.groups.first)
     @updated_property = params[:property]
+  end
+
+  def show
+    # if @entity.blank?
+    #   @entity = Entity.find_by(id: params[:id])
+    # end
+    # @role = Role.find_by(id: params[:view_id] || current_user.role_id).attributes
+
+    # @groups_all = @entity.groups
+    # @properties_all = @entity.properties_via(@entity.groups.first)
+    # @updated_property = params[:property]
+    pre_show(nil)
     # @view = { id: nil, name: nil }
     # role = Role.find_by(id: params[:view_id] || current_user.role_id)
     # unless role.blank?
@@ -76,6 +136,7 @@ class EntitiesController < ApplicationController
       flash[:success] = "'" + @entity.name + "' updated"
       redirect_to @entity
     else
+      flash[:danger] = "The entity couldn't be updated"
       render 'edit'
     end
   end
@@ -87,17 +148,40 @@ class EntitiesController < ApplicationController
     end
   end
 
+  # def confirm_delete
+  #   @entity = Entity.find_by(id: params[:id])
+  #   if @entity.blank?
+  #     flash[:danger] = "The specified relationship couldn't be found."
+  #   elsif @entity.destroy
+  #     flash[:success] = "The entity '#{@entity.name}' was successfully destroyed."
+  #   else
+  #     flash[:danger] = "There was an error destroying the specified entity."
+  #   end
+  #   respond_to do |format|
+  #     format.js { render :js => "window.location.href='"+entities_path+"'" }
+  #   end
+  # end
+
   def confirm_delete
-    @entity = Entity.find_by(id: params[:id])
-    if @entity.blank?
-      flash[:danger] = "The specified relationship couldn't be found."
-    elsif @entity.destroy
-      flash[:success] = "The entity '#{@entity.name}' was successfully destroyed."
+    entity = Entity.find(params[:id])
+    msg = ""
+    type = "info"
+    if entity.blank?
+      msg = "The entity couldn't be found."
+      type = "danger"
+    elsif entity.destroy
+      msg = "#{entity.name} successfully removed."
+      type = "success"
     else
-      flash[:danger] = "There was an error destroying the specified entity."
+      msg = "There was an error destroying the specified entity."
+      type = "danger"
     end
+    @entity = {notification: notification(type, msg, []), data: entity}
+    puts @entity
+    @entities = entities_list
     respond_to do |format|
-      format.js { render :js => "window.location.href='"+entities_path+"'" }
+      format.js
+      format.html
     end
   end
 

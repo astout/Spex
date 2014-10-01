@@ -4,7 +4,8 @@
 
 $ ->
 
-    if $("form#new_group").length > 0
+    if $("form#new_group").length > 0 || $("form[id^=edit_group]").length > 0
+        console.log("edit")
         $("input#group_name, input#group_label").on "input", ->
             NewGroupValidation()
         NewGroupValidation()
@@ -44,31 +45,48 @@ deleteModal = (_id) ->
 
 get_group_params = () ->
     params = $.param( {
-        group_search: $("input#group_search").val(), 
-        groups_page: "1",
-        event: "group"
+      group_search: $("input#group_search").val(), 
+      groups_page: "1",
+      event: "group"
     })
     return params
 
 NewGroupValidation = () ->
+    console.log("validating")
     name = $("input#group_name").val()
     label = $("input#group_label").val()
 
-    if name.length > 0
-        unless $("span#group_name").hasClass "valid"
-            $("span#group_name").addClass "valid"
-        valid()
+    rx = /^[A-Za-z0-9]+[A-Za-z0-9\-\_]*[A-Za-z0-9]+$/
+
+    if name.length > 0 && rx.test(name)
+      unless $("span#group_name").hasClass "valid"
+        $("span#group_name").addClass "valid"
+      valid()
     else
-        $("span#group_name").removeClass "valid"
-        invalid()
+      $("span#group_name").removeClass "valid"
+      invalid()
 
     unless $("span#group_label").hasClass "valid"
-        $("span#group_label").addClass "valid"
+      $("span#group_label").addClass "valid"
 window.NewGroupValidation = NewGroupValidation
 
 valid = () ->
     $("span#group_name, span#group_label").addClass "valid"
-    $("input[type=submit]#create-group").removeClass 'disabled'
+    $("input[type=submit].group").removeClass 'disabled'
+    #explicitly submit the new group form on enter key press
+    $("body").on "keydown", "input.group", (e) ->
+      console.log("valid input")
+      if e.keyCode == 13
+        console.log("enter preseed")
+        $("form#new_group").submit()
+        $("form[id^=edit_group]").submit()
+        return false
 
 invalid = () ->
-    $("input[type=submit]#create-group").addClass 'disabled'
+    $("input[type=submit].group").addClass 'disabled'
+    $("body").on "keydown", "input.group", (e) ->
+      console.log("invalid input")
+      if e.keyCode == 13
+        console.log("enter preseed")
+        e.preventDefault()
+        return false

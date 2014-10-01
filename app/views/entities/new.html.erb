@@ -1,9 +1,18 @@
 <% provide(:title, 'New Entity') %>
+
+<div style="margin-bottom: 10px;">
+    <%= link_to "Home", root_path, style: "color: #494A4A" %>
+    <span class="glyphicon glyphicon-chevron-right", style="font-size: 12px;"></span>
+    <%= link_to "Entities", entities_path, style: "color: #494A4A" %>
+    <span class="glyphicon glyphicon-chevron-right", style="font-size: 12px;"></span>
+    New
+</div>
+
 <h1>New Entity</h1>
 
 <div class="row">
   <div class="col-xs-6 col-xs-offset-3">
-    <%= bootstrap_form_for(@entity, inline_errors: false) do |f| %>
+    <%= bootstrap_form_for(@entity, inline_errors: true) do |f| %>
       <%= render 'entities/fields', f: f %>
       <%= f.submit "Create Entity", class: "btn btn-large btn-primary btn150"%>
     <% end %>

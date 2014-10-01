@@ -13,7 +13,9 @@
     <div class="container">
         <div class="inner-padding15">
             <% flash.each do |key, value| %>
-                <div class="alert alert-<%= key %>"><%= value %></div>
+                <div id="flash">
+                  <div class="alert notice alert-<%= key %>"><%= value %></div>
+                </div>
             <% end %>
             <%= yield %>
             <%= render 'layouts/footer' %>

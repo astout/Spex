@@ -2,7 +2,7 @@ $("#debug").html('<%= params %>');
 var alert_html = "";
 
 <% unless @moved_eprs.blank? %>
-    alert_html += "<div class='alert alert-success small-font'>";
+    alert_html += "<div class='alert notice alert-success small-font'>";
     alert_html += "<p><strong>Properties Reordered for '<%= @selected_egrs.first.group.name %>':</strong></p>";
     <% @moved_eprs.reverse.each do |result| %>
         <% unless result[:data].blank? %>
@@ -13,7 +13,7 @@ var alert_html = "";
         <% end %>
     <% end %>
 <% else %>
-    alert_html += "<div class='alert alert-danger small-font'>";
+    alert_html += "<div class='alert notice alert-danger small-font'>";
     alert_html += "<p><strong>Groups not reordered.</strong></p>";
     alert_html += "<p style='padding-left: 10px'><i>The server returned no results.</i></p>";
 <% end %>

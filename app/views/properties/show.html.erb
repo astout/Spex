@@ -1,9 +1,25 @@
-<% provide(:title, @property.name) %>
+<% unless @property.default_label.blank? %>
+  <% @label = "#{@property.default_label.to_s}" %>
+<% else %>
+  <% unless @property.name.blank? %>
+    <% @label = "#{@property.name.to_s.capitalize}" %>
+  <% else %>
+    <% @label = "Property id: #{@property.id.to_s}" %>
+  <% end %>
+<% end %>
+<% provide(:title, @label) %>
+<div style="margin-bottom: 10px;">
+    <%= link_to "Home", root_path, style: "color: #494A4A" %>
+    <span class="glyphicon glyphicon-chevron-right", style="font-size: 12px;"></span>
+    <%= link_to "Properties", properties_path, style: "color: #494A4A" %>
+    <span class="glyphicon glyphicon-chevron-right", style="font-size: 12px;"></span>
+    <%= link_to @label, @property, style: "color: #494A4A" %>
+</div>
 <div class="row">
-    <aside class="col-xs-2">
+    <aside class="col-xs-4">
         <section>
             <h1>
-                <%= @property.name %> Definition
+                <%= @label %>
             </h1>
             <small class="note"><%= @property.default_label %></small>
             <div style="float: right">
@@ -12,23 +28,62 @@
         </section>
     </aside>
 </div>
-<div class="row">
-    <div class="col-xs-8">
+<div class="row col-xs-12">
     <hr/>
     <h5>Relationships</h5>
-        <div class="panel panel-default" id="entity-employers">
-            <div class="panel-heading">
-                <h3 class="panel-title">Entities</h3>
-            </div>
-            <div class="panel-body">
-            </div>
+</div>
+<div class="row col-xs-12 col-md-4">
+    <div class="panel panel-default" id="entity-employers" style="width: 100%">
+        <div class="panel-heading">
+            <h3 class="panel-title">Entities</h3>
         </div>
-        <div class="panel panel-default" id="property-associations">
-            <div class="panel-heading">
-                <h3 class="panel-title">Properties</h3>
-            </div>
-            <div class="panel-body">
-            </div>
+        <div class="panel-body">
+            <table class="table">
+                <% @property.entities.each do |e| %>
+                <tr>
+                    <td>
+                        <%= link_to e.name.capitalize, e %>
+                    </td>
+                </tr>
+                <% end %>
+            </table>
         </div>
     </div>
 </div>
+<div class="row col-xs-12 col-md-4">
+    <div class="panel panel-default" id="group-associations">
+        <div class="panel-heading">
+            <h3 class="panel-title">Groups</h3>
+        </div>
+        <div class="panel-body">
+            <table class="table">
+                <% @property.groups.each do |g| %>
+                <tr>
+                    <td>
+                        <%= link_to g.name.capitalize, g %>
+                    </td>
+                </tr>
+                <% end %>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="row col-xs-12 col-md-4">
+    <div class="panel panel-default" id="role-associations">
+        <div class="panel-heading">
+            <h3 class="panel-title">Viewers</h3>
+        </div>
+        <div class="panel-body">
+            <table class="table">
+                <% @property.roles.each do |r| %>
+                <tr>
+                    <td>
+                        <%= link_to r.name.capitalize, r %>
+                    </td>
+                </tr>
+                <% end %>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="row" style="padding: 50px"></div>

@@ -79,7 +79,7 @@
                   </td>
                   <td id=<%= epr.id %> class="property-value" style="text-align: right">
                     <% if admin_user? && @role['admin'] == true %>
-                      <a href="#" id="<%= epr.id %>" class="trigger editable"> <%= parse_value("#{epr.value.to_s}", epr).to_s + epr.units_short.to_s %> </a>
+                      <a href="#" id="<%= epr.id %>" class="trigger editable"> <%= parse_value("#{epr.value.dup}", epr).to_s + epr.units_short.to_s %> </a>
                     <% else %>
                       <%= parse_value("#{epr.value}", epr).to_s + epr.units_short.to_s %>
                     <% end %>
@@ -96,7 +96,7 @@
                         <%= bootstrap_form_for(epr, url: { controller: "hub", action: "update_epr" }, method: :post, remote: true) do |f| %>
                           <%= hidden_field_tag :page, 'report' %>
                           <% @_value_copy = epr.value.dup %>
-                          <% @_value_copy = parse_value(@_value_copy) || "" %>
+                          <% @_value_copy = parse_value(@_value_copy, epr) || "" %>
                           <%= render partial: 'entity_property_relationships/fields', locals: { f: f, relation: epr } %>
                           <%= f.submit "Update", class: "btn btn-sm btn-primary btn75", id: "update-epr" %>
                         <% end %>

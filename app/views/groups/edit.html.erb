@@ -1,2 +1,31 @@
-<h1>Groups#edit</h1>
-<p>Find me in app/views/groups/edit.html.erb</p>
+<% unless @group.label.blank? %>
+  <% @label = "#{@group.label.to_s}" %>
+<% else %>
+  <% unless @group.name.blank? %>
+    <% @label = "#{@group.name.to_s.capitalize}" %>
+  <% else %>
+    <% @label = "Group id: #{@group.id.to_s}" %>
+  <% end %>
+<% end %>
+
+<% provide(:title, "Edit #{@label}") %>
+<div>
+    <%= link_to "Home", root_path, style: "color: #494A4A" %>
+    <span class="glyphicon glyphicon-chevron-right", style="font-size: 12px;"></span>
+    <%= link_to "Groups", groups_path, style: "color: #494A4A" %>
+    <span class="glyphicon glyphicon-chevron-right", style="font-size: 12px;"></span>
+    <%= link_to @label, @group, style: "color: #494A4A" %>
+    <span class="glyphicon glyphicon-chevron-right", style="font-size: 12px;"></span>
+    Edit
+</div>
+
+<h1>Edit Group</h1>
+
+<div class="row">
+  <div class="col-xs-6 col-xs-offset-3">
+    <%= bootstrap_form_for(@group, inline_errors: true) do |f| %>
+      <%= render 'groups/fields', f: f %>
+      <%= f.submit "Submit Changes", class: "btn btn-large btn-primary group btn150"%>
+    <% end %>
+  </div>
+</div>

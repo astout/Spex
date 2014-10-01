@@ -1,0 +1,17 @@
+console.log("delete confirm");
+$("#debug").html('<%= params %>');
+console.log("<%= @role %>");
+<% unless @role.blank? %>
+    var _html = '<%= sanitize @role[:notification].to_s %>';
+    $("div#flash").html("");
+    $("div#notice").html(_html);
+    console.log("delete confirmed for <%= @role[:data].name %>");
+<% else %>
+    console.log("blank");
+    $("div#notice").html("<div class='alert notice alert-danger center'>There was an error with the request.</div> ");
+<% end %>
+console.log("render new list")
+
+$("div#list").html("<%= j render partial: 'roles/roles', locals: { show_remove: true }  %>");
+
+

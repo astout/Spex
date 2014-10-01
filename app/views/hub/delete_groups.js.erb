@@ -6,7 +6,7 @@ validateGroupSelection();
 
 alert_html = "" 
 <% unless @deleted_groups.nil? || @deleted_groups.empty? %>
-    alert_html += "<div class='alert alert-success small-font'>";
+    alert_html += "<div class='alert notice alert-success small-font'>";
     alert_html += "<p><strong>Groups Deleted:</strong></p>";
     <% @deleted_groups.each do |deleted_group| %>
         <% unless deleted_group[:data].nil? %>
@@ -15,7 +15,7 @@ alert_html = ""
         <% end %>
     <% end %>
 <% else %>
-    alert_html += "<div class='alert alert-danger small-font'>";
+    alert_html += "<div class='alert notice alert-danger small-font'>";
     alert_html += "<p><strong>Nothing Deleted:</strong></p>";
     alert_html += "<p style='padding-left: 10px'><i>The server returned no results.</i></p>";
 <% end %>

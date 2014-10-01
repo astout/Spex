@@ -3,12 +3,12 @@ class Role < ActiveRecord::Base
   has_and_belongs_to_many :entity_property_relationships, join_table: "eprs_roles", association_foreign_key: "epr_id"
   has_many :users
 
-  before_save do
-    self.name = name.downcase
+  before_save do |role|
+    role.name.downcase!
   end
 
-  VALID_ROLE_NAME = /([a-z0-9]+\s?[a-z0-9\-\_]*\s?[a-z0-9]+\z)/i
-  validates :name, presence: true, format: { with: VALID_ROLE_NAME },
+  VALID_NAME_REGEX = /\A[a-z0-9]+\s?[a-z0-9\-\_]*\s?[a-z0-9]+\z/i
+  validates :name,  presence: true, format: { with: VALID_NAME_REGEX }, 
     length: { minimum: 2, maximum: 20 },
     uniqueness: { case_sensitive: false }
 

@@ -1,12 +1,21 @@
 <% provide(:title, 'New Property') %>
+
+<div style="margin-bottom: 10px;">
+    <%= link_to "Home", root_path, style: "color: #494A4A" %>
+    <span class="glyphicon glyphicon-chevron-right", style="font-size: 12px;"></span>
+    <%= link_to "Properties", properties_path, style: "color: #494A4A" %>
+    <span class="glyphicon glyphicon-chevron-right", style="font-size: 12px;"></span>
+    New
+</div>
+
 <h1>New Property</h1>
 
 <div class="row">
   <div class="col-xs-6 col-xs-offset-3">
-  
-    <%= bootstrap_form_for(@property, inline_errors: false) do |f| %>
+    <%= bootstrap_form_for(@property, inline_errors: true) do |f| %>
       <%= render 'properties/fields', f: f %>
-      <%= f.submit "Create Property", id: "create-property", class: "btn btn-large btn-primary btn150"%>
+      <div style="padding-top: 50px"></div>
+      <%= f.submit "Create Property", id: "new", class: "btn btn-large btn-primary property submit btn150"%>
     <% end %>
   </div>
 </div>

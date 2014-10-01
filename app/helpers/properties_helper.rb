@@ -48,15 +48,16 @@ module PropertiesHelper
 
     #if property not found, clear to create
     if property[:data].nil?
+      #set the role_ids from the params to a property parameter
+      prop_params[:role_ids] = params[:role_ids]
+      #create a new property from the prop_params
       property[:data] = Property.new(prop_params)
-      #if save not successful, failed
+
+      #attempt to save
       if !property[:data].save
         property[:status] = 0
         property[:msg] = "'#{property[:data].name}' failed to save."
       else #success
-        puts " -- ROLES PARAMS --"
-        puts params[:role_ids]
-        property[:data].role_ids = params[:role_ids]
         property[:status] = 1
         property[:msg] = "'#{property[:data].name}' was saved."
       end
@@ -64,7 +65,7 @@ module PropertiesHelper
       property[:status] = 0
       property[:msg] = "Name: '#{property[:data].name}' is already taken."
     end
-    property
+    return property
   end
 
   def properties_delete(properties)

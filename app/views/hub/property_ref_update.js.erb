@@ -1,0 +1,6 @@
+$("#debug").html('<%= params %>');
+var alert_html = "";
+
+$('div#ref-<%= params[:current_property] %>.tab-pane').html("<%= j render partial: 'properties/references', locals: { property: @property, entity: @property_ref_entity, group: @property_ref_group } %>");
+
+properties_selectize_all();

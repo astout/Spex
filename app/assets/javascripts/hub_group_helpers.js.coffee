@@ -10,6 +10,12 @@ $ ->
         $("#new-group-collapse-heading").on "click", (e) ->
             e.preventDefault()
 
+        #explicitly submit the new group form on enter key press
+        $("body").on "keydown", "input.group", (e) ->
+            if e.keyCode == 13
+                $("form#new_group").submit()
+                return false
+
         #on group list element click
         $("body").on "click", '.table tr.group', (e) ->
             toggleGroupSelect this.id, e.ctrlKey || e.metaKey

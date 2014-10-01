@@ -1,5 +1,6 @@
 class GroupsController < ApplicationController
   include GroupsHelper
+  include ApplicationHelper
   helper_method :group_sort_column, :group_sort_direction
   before_action do
     redirect_to root_path unless admin_user?
@@ -21,35 +22,59 @@ class GroupsController < ApplicationController
   end
 
   def create
-    @group = Group.find_by(name: group_params[:name])
-    @result = {msg: "", r: -1}
-    @groups = Group.paginate(page: params[:groups_page], per_page: 10, order: 'created_at DESC')
-
-    respond_to do |format|
-      if @group.nil?
-        @group = Group.new(group_params)
-        if !@group.save
-          @result[:r] = 0
-          @result[:msg] = "'#{@group.name}' failed to save."
-        else
-          @result[:r] = 1
-          @result[:msg] = "'#{@group.name}' was saved."
-          #groups needs to be updated to get the latest addition
-          @groups = Group.paginate(page: params[:groups_page], per_page: 10, order: 'created_at DESC')
-        end
-      else
-        @result[:r] = 0
-        @result[:msg] = "Name: '#{@group.name}' is already taken."
-      end
-      format.js
-      format.html { redirect_to groups_path }
+    @group = Group.new group_params
+    if @group.save
+      flash[:success] = "Group created"
+      redirect_to groups_path
+    else
+      flash[:danger] = "The group couldn't be created"
+      render 'new'
     end
   end
 
+  # def create
+  #   @group = Group.find_by(name: group_params[:name])
+  #   @result = {msg: "", r: -1}
+  #   @groups = Group.paginate(page: params[:groups_page], per_page: 10, order: 'created_at DESC')
+
+  #   respond_to do |format|
+  #     if @group.nil?
+  #       @group = Group.new(group_params)
+  #       if !@group.save
+  #         @result[:r] = 0
+  #         @result[:msg] = "'#{@group.name}' failed to save."
+  #       else
+  #         @result[:r] = 1
+  #         @result[:msg] = "'#{@group.name}' was saved."
+  #         #groups needs to be updated to get the latest addition
+  #         @groups = Group.paginate(page: params[:groups_page], per_page: 10, order: 'created_at DESC')
+  #       end
+  #     else
+  #       @result[:r] = 0
+  #       @result[:msg] = "Name: '#{@group.name}' is already taken."
+  #     end
+  #     format.js
+  #     format.html { redirect_to groups_path }
+  #   end
+  # end
+
   def edit
+    @group = Group.find(params[:id])
   end
 
   def show
+    @group = Group.find(params[:id])
+  end
+
+  def update
+    @group = Group.find(params[:id])
+    if @group.update_attributes(group_params)
+      flash[:success] = "'" + @group.name + "' updated"
+      redirect_to @group
+    else
+      flash[:danger] = "The group couldn't be updated"
+      render 'edit'
+    end
   end
 
   def delete_request
@@ -59,17 +84,41 @@ class GroupsController < ApplicationController
     end
   end
 
+  # def confirm_delete
+  #   @group = Group.find(params[:id])
+  #   if @group.blank?
+  #     flash[:danger] = "The group couldn't be found."
+  #   elsif @group.destroy
+  #     flash[:success] = "#{@group.name} successfully destroyed."
+  #   else
+  #     flash[:danger] = "There was an error destroying the specified group. Notify the administrator."
+  #   end
+  #   respond_to do |format|
+  #     format.js { render :js => "window.location.href='"+groups_path+"'" }
+  #   end
+  # end
+
   def confirm_delete
-    @group = Group.find(params[:id])
-    if @group.blank?
-      flash[:danger] = "The group couldn't be found."
-    elsif @group.destroy
-      flash[:success] = "#{@group.name} successfully destroyed."
+    group = Group.find(params[:id])
+    msg = ""
+    type = "info"
+    if group.blank?
+      msg = "The group couldn't be found."
+      type = "danger"
+    elsif group.destroy
+      msg = "#{group.name} successfully removed."
+      type = "success"
     else
-      flash[:danger] = "There was an error destroying the specified group. Notify the administrator."
+      msg = "There was an error destroying the specified group."
+      type = "danger"
     end
+    @group = {notification: notification(type, msg, []), data: group}
+    @groups = groups_list(nil)
+    puts "finishing"
+    puts @group
     respond_to do |format|
-      format.js { render :js => "window.location.href='"+groups_path+"'" }
+      format.js
+      format.html
     end
   end
 

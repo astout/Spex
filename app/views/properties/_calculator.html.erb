@@ -1,0 +1,29 @@
+<% _id = @property.id || "new" %>
+<div class="property-calculator">
+  <div class="property calculator row">
+    <button type="button" id='<%= _id %>' class="btn btn-sm calculator property bracket col-xs-6" data-toggle="tooltip" data-placement="left" title="start equation" value="[[">[[</button>
+    <button type="button" id='<%= _id %>' class="btn btn-sm calculator property bracket col-xs-6" data-toggle="tooltip" data-placement="right" title="end equation" value="]]">]]</button>
+  </div>
+  <div class="property calculator row">
+    <button type="button" id='<%= _id %>' class="btn btn-sm btn-default calculator property digit col-xs-3" value="7">7</button>
+    <button type="button" id='<%= _id %>' class="btn btn-sm btn-default calculator property digit col-xs-3" value="8">8</button>
+    <button type="button" id='<%= _id %>' class="btn btn-sm btn-default calculator property digit col-xs-3" value="9">9</button>
+    <button type="button" id='<%= _id %>' class="btn btn-sm btn-default calculator property operator col-xs-3" value="/">&#247;</button>
+  </div>
+  <div class="property calculator row">
+    <button type="button" id='<%= _id %>' class="btn btn-sm btn-default calculator property digit col-xs-3" value="4">4</button>
+    <button type="button" id='<%= _id %>' class="btn btn-sm btn-default calculator property digit col-xs-3" value="5">5</button>
+    <button type="button" id='<%= _id %>' class="btn btn-sm btn-default calculator property digit col-xs-3" value="6">6</button>
+    <button type="button" id='<%= _id %>' class="btn btn-sm btn-default calculator property operator col-xs-3" value="*">&#215;</button>
+  </div>
+  <div class="property calculator row">
+    <button type="button" id='<%= _id %>' class="btn btn-sm btn-default calculator property digit col-xs-3" value="1">1</button>
+    <button type="button" id='<%= _id %>' class="btn btn-sm btn-default calculator property digit col-xs-3" value="2">2</button>
+    <button type="button" id='<%= _id %>' class="btn btn-sm btn-default calculator property digit col-xs-3" value="3">3</button>
+    <button type="button" id='<%= _id %>' class="btn btn-sm btn-default calculator property operator col-xs-3" value="-">&#45;</button>
+  </div>
+  <div class="property calculator row">
+    <button type="button" id='<%= _id %>' class="btn btn-sm btn-default calculator property digit col-xs-9" value="0">0</button>
+    <button type="button" id='<%= _id %>' class="btn btn-sm btn-default calculator property operator col-xs-3" value="+">&#43;</button>
+  </div>
+</div>

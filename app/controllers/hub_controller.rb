@@ -74,6 +74,52 @@ class HubController < ApplicationController
     end
   end
 
+  def property_ref_update
+    @property_ref_entity = params[:property_ref_entity]
+    @property_ref_group = params[:property_ref_group]
+    @property = Property.find_by(id: params[:current_property])
+
+    @property = Property.new if @property.blank?
+
+
+    # @entities_all = Entity.all
+    e = Entity.find_by id: @property_ref_entity
+    @groups_all = e.nil? ? Group.all : e.groups
+
+    g = Group.find_by id: @property_ref_group
+    # @groups_all = Group.all
+
+    if e.nil? && g.nil?
+      puts "-- entity and group not selected --"
+      @properties_all = Property.all
+    elsif g.nil?
+      puts "-- just entity selected --"
+      @properties_all = []
+    else
+      puts "-- just group selected --"
+      @properties_all = g.properties
+    end
+
+    # @properties_all = g.nil? ? Property.all : g.properties
+
+    # puts "PROPS BEFORE"
+    # puts @properties_all
+
+
+    # @properties_all = @properties_all.reject { |p| p.id == @property.property_id }
+
+    # @ref_propertys = EntityPropertyRelationship.where(entity_id: @property_ref_entity, group_id: @property_ref_group)
+
+    puts "ALL MODEL COLLECTIONS:"
+    # puts @entities_all
+    puts @groups_all
+    puts @properties_all
+
+    respond_to do |format|
+      format.js
+    end
+  end
+
   #request to create entity
   def create_entity
     #call entities_helper to create entity

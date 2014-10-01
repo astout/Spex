@@ -26,14 +26,10 @@
       <%= "#{user.created_at.strftime('%m/%d/%Y')}" %>
     </td>
   <% end %>
-  <% if admin_user? && !current_user?(user) %>
-    <td class="delete-user">
-      <%= link_to "", user, method: :delete, 
-        data: { confirm: "You sure?" },
-        title: "delete #{user.login}?", 
-        class: "glyphicon glyphicon-trash xs",
-        style: "margin-left: 5px; color: #FF4F4D"
-      %>
-    </td>
-  <% end %>
+   <% if admin_user? %>
+      <td class="delete-user">
+        <span id="<%= user.id %>"  class="glyphicon glyphicon-trash delete alert-danger">
+        </span>
+      </td>
+    <% end %>
 </tr>

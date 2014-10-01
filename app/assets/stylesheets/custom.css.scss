@@ -694,7 +694,7 @@ div.tab-pane {
   }
 }
 
-button.epr-ref-append {
+button.epr.ref-append, button.property.ref-append {
   position: relative;
   left: calc(100% - 34px);
 }
@@ -707,31 +707,40 @@ input.epr-evaluated-text {
   background-color: white !important;
 }
 
-button.epr-math {
+button.calculator {
   font-weight: bold;
   font-size: 20px;
-}
-
-button.epr-digit {
-  background-color: #E8E8D1;
-  &:hover {
-    background-color: #CFCFBA;
+  &.digit {
+    background-color: #E8E8D1;
+    &:hover {
+      background-color: #CFCFBA;
+    }
+  }
+  &.bracket {
+    background-color: #FCEA7B;
+    &:hover {
+      background-color: #E8D771;
+    }
+  }
+  &.operator {
+    background-color: #FFBB3F;
+    &:hover {
+      background-color: #D69D35;
+    }
   }
 }
 
-button.epr-bracket {
-  background-color: #FCEA7B;
-  &:hover {
-    background-color: #E8D771;
-  }
-}
+// button.digit {
+  
+// }
 
-button.epr-operator {
-  background-color: #FFBB3F;
-  &:hover {
-    background-color: #D69D35;
-  }
-}
+// button.calculbracket {
+  
+// }
+
+// button.epr-operator {
+  
+// }
 
 div.tooltip-inner {
   white-space: pre-wrap;
@@ -768,11 +777,7 @@ tr.role span.delete {
   }
 }
 
-div.epr-math-calc {
+div.epr-calculator, div.property-calculator {
   padding: 20px;
   clear: right;
-}
-
-.btn-group:hover > .dropdown-menu {
-  display: block;
 }

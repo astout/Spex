@@ -1,0 +1,25 @@
+<% _id = @property.id || "new" %>
+<label class="control-label" for="property-formula">Value Formula Helper</label>
+<div id='<%= _id %>' class="property-formula panel panel-default">
+  <ul id='<%= _id %>' class="nav nav-tabs sm nav-justified" role="tablist">
+    <li class="active"><a href='<%= "\#text-#{_id}" %>' role="tab" data-toggle="tab">Text</a></li>
+    <li class=""><a href='<%= "\#ref-#{_id}" %>' role="tab" data-toggle="tab">Reference</a></li>
+    <li class=""><a href='<%= "\#math-#{_id}" %>' role="tab" data-toggle="tab">Math</a></li>
+  </ul>
+  <div id='<%= "formulaTabContent-#{_id}" %>' class="tab-content">
+    <div class="tab-pane fade active in" id='<%= "text-#{_id}" %>' >
+      <div class="input-group input-group-sm"> 
+        <input class="form-control property-formula-text" id="<%= _id %>" name="property-formula" type="text" autocomplete="off">
+        <span class="input-group-btn">
+          <button type="button" class="btn btn-success disabled property-text-append" id="<%= _id %>" ><span class="glyphicon glyphicon-plus"></span></button>
+        </span>
+      </div>
+    </div>
+    <div class="tab-pane fade" id='<%= "ref-#{_id}" %>' >
+      <%= render partial: 'properties/references', locals: { property: property, entity: nil, group: nil, properties: nil } %>
+    </div>
+    <div class="tab-pane fade col-xs-12 col-md-12" id='<%= "math-#{_id}" %>' >
+      <%= render partial: 'properties/calculator', locals: { property: property } %>
+    </div>
+  </div>
+</div>

@@ -6,18 +6,18 @@ var alert_html = "";
 
 <% unless @entity.nil? %>
     <% if @entity[:status] == 1 %>
-        alert_html += "    <div class='alert alert-success small-font center'>";
+        alert_html += "    <div class='alert notice alert-success small-font center'>";
         alert_html += "    <%= @entity[:msg] %>";
         alert_html += "    </div>";
         //clear the entity form fields
         $('input[id^=entity]').val('');
     <% else %>
-        alert_html += "    <div class='alert alert-danger small-font center'>";
+        alert_html += "    <div class='alert notice alert-danger small-font center'>";
         alert_html += "        <%= @entity[:msg] %>";
         alert_html += "    </div>";
     <% end %>
 <% else %>
-    alert_html += "    <div class='alert alert-danger small-font center'>";
+    alert_html += "    <div class='alert notice alert-danger small-font center'>";
     alert_html += "        There was an error saving #{@entity[:data].name}";
     alert_html += "    </div>";
 <% end %>

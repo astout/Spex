@@ -2,21 +2,32 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
+#= require property_edit
+
 $ ->
 
     console.log("properties.js")
 
     if $("form#new_property").length > 0 || $("form.edit_property").length > 0
-        $("input#property_name, 
-            input#property_default_label, 
-            input#property_units,
-            input#property_units_short,
-            input#property_default_value").on "input", ->
-            NewPropertyValidation()
-        NewPropertyValidation()
+        $("input.property.name, 
+            input.property.default_label, 
+            input.property.units,
+            input.property.units_short,
+            input.property.default_value").on "input", ->
+            NewPropertyValidation(this.id)
 
-        $("body").on "change", "select#role_ids", (e) ->
-            $("input#property_role_ids").val($(this).val())
+        window.properties_selectize_all()
+        NewPropertyValidation($("input.property.name")[0].id)
+
+        # $("body").on "change", "select.property.role_ids", (e) ->
+        #     _id = "" + this.id
+        #     $("input#"+_id+".property.role_ids").data().roleIds = $(this).select2("val")
+        #     $("input#"+_id+".property.role_ids").val($(this).select2("val"))
+        
+
+        $("form").on "keypress", (e) ->
+          if e.keyCode == 13 && $("input.submit").hasClass("disabled")
+            return false
     
     if $("body").hasClass("properties-index")
       #Every character change in Search field, submit query
@@ -28,6 +39,7 @@ $ ->
           false
 
       $("body").on "click", "span.delete", (e) ->
+          console.log("delete clicked")
           deleteModal(this.id)
           # $("#delete-confirm").modal("show");
           console.log "delete clicked"
@@ -60,13 +72,13 @@ get_property_params = () ->
     return params
 
 
-NewPropertyValidation = () ->
-    name = $("input#property_name").val()
-    label = $("input#property_default_label").val()
-    units = $("input#property_units").val()
-    units_short = $("input#property_units_short").val()
-    value = $("input#property_default_value").val()
-    roles = $("select#role_ids.new-property-roles").val()
+NewPropertyValidation = (_id) ->
+    name = $("input#"+_id+".property.name").val()
+    label = $("input#"+_id+".property.default_label").val()
+    units = $("input#"+_id+".property.units").val()
+    units_short = $("input#"+_id+".property.units_short").val()
+    value = $("input#"+_id+".property.default_value").val()
+    roles = $("select#"+_id+".property.role_ids").val()
     # visibility = $("input#property_default_visibility").val()
 
     _valid = true
@@ -74,10 +86,10 @@ NewPropertyValidation = () ->
     rx = /^[A-Za-z0-9]+[A-Za-z0-9\-\_]*[A-Za-z0-9]+$/
 
     if name.length > 1 && rx.test(name)
-        unless $("span#property_name").hasClass "valid"
-            $("span#property_name").addClass "valid"
+        unless $("span#"+_id+".property.name").hasClass "valid"
+            $("span#"+_id+".property.name").addClass "valid"
     else
-        $("span#property_name").removeClass "valid"
+        $("span#"+_id+".property.name").removeClass "valid"
         _valid = false
 
     # if rx.test visibility.trim()
@@ -87,31 +99,31 @@ NewPropertyValidation = () ->
     #     $("span#property_default_visibility").removeClass "valid"
     #     _valid = false
 
-    unless $("span#property_default_label").hasClass "valid"
-        $("span#property_default_label").addClass "valid"
-    unless $("span#property_units").hasClass "valid"
-        $("span#property_units").addClass "valid"
-    unless $("span#property_units_short").hasClass "valid"
-        $("span#property_units_short").addClass "valid"
-    unless $("span#property_default_value").hasClass "valid"
-        $("span#property_default_value").addClass "valid"
-    unless $("span#property_roles").hasClass "valid"
-        $("span#property_roles").addClass "valid"
+    unless $("span#"+_id+".property.default_label").hasClass "valid"
+        $("span#"+_id+".property.default_label").addClass "valid"
+    unless $("span#"+_id+".property.units").hasClass "valid"
+        $("span#"+_id+".property.units").addClass "valid"
+    unless $("span#"+_id+".property.units_short").hasClass "valid"
+        $("span#"+_id+".property.units_short").addClass "valid"
+    unless $("span#"+_id+".property.default_value").hasClass "valid"
+        $("span#"+_id+".property.default_value").addClass "valid"
+    unless $("span#"+_id+".property.role_ids").hasClass "valid"
+        $("span#"+_id+".property.role_ids").addClass "valid"
 
     if _valid 
-        valid()
+        valid(_id)
     else 
-        invalid()
+        invalid(_id)
 window.NewPropertyValidation = NewPropertyValidation
 
-valid = () ->
-    $("span#property_name, 
-        span#property_units, 
-        span#property_default_label, 
-        span#property_default_value,
-        span#property_units_short
+valid = (_id) ->
+    $("span#"+_id+".property.name, 
+        span#"+_id+".property.units, 
+        span#"+_id+".property.default_label, 
+        span#"+_id+".property.default_value,
+        span#"+_id+".property.units_short
         ").addClass "valid"
-    $("input[type=submit]#create-property").removeClass 'disabled'
+    $("input#"+_id+".submit.property").removeClass 'disabled'
 
-invalid = () ->
-    $("input[type=submit]#create-property").addClass 'disabled'
+invalid = (_id) ->
+    $("input#"+_id+".property.submit").addClass 'disabled'

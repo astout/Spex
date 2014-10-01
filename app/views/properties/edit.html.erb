@@ -1,10 +1,32 @@
+<% unless @property.label.blank? %>
+  <% @label = "#{@property.label.to_s}" %>
+<% else %>
+  <% unless @property.name.blank? %>
+    <% @label = "#{@property.name.to_s.capitalize}" %>
+  <% else %>
+    <% @label = "Entity id: #{@property.id.to_s}" %>
+  <% end %>
+<% end %>
+
 <% provide(:title, "Edit property") %>
+
+<div>
+    <%= link_to "Home", root_path, style: "color: #494A4A" %>
+    <span class="glyphicon glyphicon-chevron-right", style="font-size: 12px;"></span>
+    <%= link_to "Properties", properties_path, style: "color: #494A4A" %>
+    <span class="glyphicon glyphicon-chevron-right", style="font-size: 12px;"></span>
+    <%= link_to @label, @property, style: "color: #494A4A" %>
+    <span class="glyphicon glyphicon-chevron-right", style="font-size: 12px;"></span>
+    Edit
+</div>
+
 <h1>Update Property Definition</h1>
 <div class="row">
   <div class="col-xs-6 col-xs-offset-3">
-    <%= bootstrap_form_for(@property, inline_errors: false) do |f| %>
+    <%= bootstrap_form_for(@property, inline_errors: true) do |f| %>
       <%= render 'fields', f: f %>
-      <%= f.submit "Save changes", class: "btn btn-large btn-primary btn150" %>
+      <div style="padding-top: 50px"></div>
+      <%= f.submit "Save changes", class: "btn btn-large property submit btn-primary btn150", id: @property.id %>
     <% end %>
   </div>
 </div>

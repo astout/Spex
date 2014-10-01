@@ -1,6 +1,8 @@
 class RolesController < ApplicationController
   include RolesHelper
   include UsersHelper
+  include ApplicationHelper
+
 
   #must be admin
   before_action do
@@ -27,32 +29,36 @@ class RolesController < ApplicationController
   end
 
   def create 
-    @role = Role.find_by(name: role_params[:name])
-    if @role.blank?
+    role = Role.find_by(name: role_params[:name])
+    if role.blank?
       #create new role ignoring default for now
-      @role = Role.new(name: role_params[:name], admin: role_params[:admin], change_view: role_params[:change_view])
-      if @role.save
+      role = Role.new(name: role_params[:name], admin: role_params[:admin], change_view: role_params[:change_view])
+      if role.save
         if params[:default] == "true"
           #change_defaults is a boolean, set_default expects a boolean
-          if @role.set_default(params[:change_defaults] == "true")
-            flash[:success] = "'" + @role.name + "' was created and set as the default role."
+          if role.set_default(params[:change_defaults] == "true")
+            flash[:success] = "'" + role.name + "' was created and set as the default role."
           else
-            flash[:warning] = "'" + @role.name + "' was created, but couldn't be set to the default role."
+            flash[:warning] = "'" + role.name + "' was created, but couldn't be set to the default role."
           end
           redirect_to roles_path
           return
         else
-          flash[:success] = "'#{@role.name}' was created."
+          flash[:success] = "'#{role.name}' was created."
         end
         redirect_to roles_path
       else
-        flash[:danger] = "'#{@role.name}' couldn't be created."
-        redirect_to roles_path
+        flash[:danger] = "'#{role.name}' couldn't be created."
+        @default = Role.default
+        @role = Role.new
+        render 'new'
         return
       end
     else
       flash[:danger] = "The name '" + @role.name + "' is alredy taken."
-      redirect_to roles_path
+      @default = Role.default
+      @role = Role.new
+      render 'new'
       return
     end
   end
@@ -127,20 +133,55 @@ class RolesController < ApplicationController
   end
 
   def confirm_delete
-    @role = Role.find_by(id: params[:id])
-    @new_role = Role.find_by(id: params[:new_id])
-    if @role.blank? || @new_role.blank?
-      flash[:danger] = "There was an error deleting the role."
-    elsif @role.delete params[:new_id]
-      flash[:success] = "'#{@role.name}' deleted."
+    role = Role.find_by(id: params[:id])
+    new_role = Role.find_by(id: params[:new_id])
+    msg = ""
+    type = "info"
+    if role.blank?
+      msg = "There was an error deleting the role."
+      type = "danger"
+    elsif new_role.blank? && role.users.count > 0
+      msg = "This role has users assigned to it, those users must be reassigned to a new role before it can be deleted."
+      type = "info"
+    elsif role.delete params[:new_id]
+      msg = "#{role.name.capitalize} deleted."
+      type = "success"
     else
-      flash[:danger] = "There was an error deleting the role."
+      msg = "There was an error deleting the role."
+      type = "danger"
     end
+    @default = Role.default
+    @roles = roles_list(params)
+    @role = {notification: notification(type, msg, []), data: role}
+    puts @role
     # redirect_to roles_path
     respond_to do |format|
-      format.js { render :js => "window.location.href='"+roles_path+"'" }
+      format.js
+      format.html
     end
   end
+
+  # def confirm_delete
+  #   role = Property.find(params[:id])
+  #   msg = ""
+  #   type = "info"
+  #   if role.blank?
+  #     msg = "The role couldn't be found."
+  #     type = "danger"
+  #   elsif role.destroy
+  #     msg = "#{role.name} successfully removed."
+  #     type = "success"
+  #   else
+  #     msg = "There was an error destroying the specified role."
+  #     type = "danger"
+  #   end
+  #   @role = {notification: notification(type, msg, []), data: role}
+  #   @roles = _list
+  #   respond_to do |format|
+  #     format.js
+  #     format.html
+  #   end
+  # end
 
   def destroy
     respond_to do |format|

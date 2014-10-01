@@ -240,6 +240,8 @@ module HubHelper
 
     relationship = EntityPropertyRelationship.find_by entity_id: entity.id, group_id: group.id, property_id: property.id
 
+    return ref if relationship.nil?
+
     value = parse_value(relationship.value.to_s, epr)
     return value.to_s
   end

@@ -34,6 +34,11 @@ $(function()
     {
       $("input[type='text']").prop("autocomplete", "off");
     }
+
+    setInterval(function()
+      { 
+        setTimeout(function(){ $("div.notice").fadeOut(1500); }, 3000);
+      }, 5000);
 });
 
 

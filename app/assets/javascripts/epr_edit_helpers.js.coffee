@@ -70,7 +70,7 @@ $ ->
       e.preventDefault()
       return false
 
-    $("body").on "click", "button.epr-math", (e) ->
+    $("body").on "click", "button.epr.calculator", (e) ->
       console.log("id: " + this.id + " button: " + this.innerText + " value: " + this.value )
       _value = $("textarea#"+this.id+".epr-value").val($("textarea#"+this.id+".epr-value").val().trim() + " " + this.value)
       e.preventDefault()
@@ -104,9 +104,9 @@ do_selectize = (_model) ->
       console.log("this id: " + this.id)
       _val = $(this).val()
       if _val.length > 0
-        $("button#"+this.id+".epr-ref-append").removeClass("disabled")
+        $("button#"+this.id+".epr.ref-append").removeClass("disabled")
       else
-        $("button#"+this.id+".epr-ref-append").addClass("disabled")
+        $("button#"+this.id+".epr.ref-append").addClass("disabled")
 
   #if the model is group, get the appropriate eprs for the currently
   #selected entity and group
