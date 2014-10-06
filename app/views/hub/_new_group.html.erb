@@ -16,7 +16,7 @@
                     <%= bootstrap_form_for(@group, url: { controller: "hub", action: "create_group" }, method: :post, remote: true) do |f| %>
                       <%= render 'groups/fields', f: f %>
                       <%= hidden_field_tag :selected_entity, "" %>
-                      <%= f.submit "Create Group", class: "btn btn-sm btn-primary btn100", id: "create-group" %>
+                      <%= f.submit "Create Group", class: "btn btn-sm group btn-primary btn100", id: "create-group" %>
                     <% end %>
                   </div>
                 </div>

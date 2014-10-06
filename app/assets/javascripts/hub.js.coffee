@@ -20,10 +20,6 @@ hub = () ->
     $("div[id^=accordion]").on('hidden.bs.collapse', toggleChevron)
     $("div[id^=accordion]").on('shown.bs.collapse', toggleChevron)
 
-    #Clear all alerts
-    $("body").on "click", "#clear-alerts", (e) ->
-        hubAlert "", ""
-
     ajaxPagination()
 
 getAllParams = () ->

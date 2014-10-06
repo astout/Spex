@@ -45,6 +45,8 @@ $ ->
             #if it's enabled
             unless $(this).hasClass "disabled"
                 clearSelectedGroups()
+                validateGroupSelection()
+                getGPRs window.selected_groups
 
         #When the delete groups button is clicked
         $("body").on "click", "#delete-selected-groups", (e) ->

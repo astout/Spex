@@ -5,7 +5,7 @@
 <%= hidden_field_tag :property_id, @property.id || "new" %>
 
 <span id="<%= _id %>" class="label label-default property name new-property-label">Name</span>
-<%= f.text_field :name, id: _id, class: "input-sm property name", hide_label: true %>
+<%= f.text_field :name, id: _id, class: "input-sm property name", hide_label: true, autocomplete: "off" %>
 
 <span id='<%= _id %>' class="label label-default property default_label new-property-label">Default Label</span>
 <%= f.text_field :default_label, id: _id, class: "property default_label input-sm", hide_label: true %>
@@ -15,7 +15,7 @@
 </div>
 
 <span id='<%= _id %>' class="label label-default property default_value new-property-label"> Default Value</span>
-<%= f.text_field :default_value, id: _id, class: "input-sm property default_value", hide_label: true %>
+<%= f.text_area :default_value, id: _id, class: "input-sm property default_value", hide_label: true, autocomplete: "off" %>
 
 <span id='<%= _id %>' class="label label-default property units new-property-label">Default Units</span>
 <%= f.text_field :units, id: _id, class: "property units input-sm", hide_label: true %>

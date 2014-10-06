@@ -106,18 +106,6 @@ td {
   }
 }
 
-span#quick-links {
-  padding-left: 5px;
-  padding-bottom: 5px;
-  a {
-    color: #44C76A;
-    &:hover {
-      color: #11AB3E;
-      text-decoration: none;
-    }
-  }
-}
-
 /* footer */
 
 footer {
@@ -587,14 +575,6 @@ div.property-position-action {
   }
 }
 
-i#clear-alerts {
-  position: fixed;
-  bottom: 5px;
-  right: 15px;
-  color: #FF0000;
-  cursor: pointer;
-}
-
 span#selected-egr-position-actions {
   background-repeat: no-repeat;  
   background-position: right center;
@@ -780,4 +760,9 @@ tr.role span.delete {
 div.epr-calculator, div.property-calculator {
   padding: 20px;
   clear: right;
+}
+
+ul.nav-tabs-sm>li>a {
+  font-size: 9pt;
+  padding: 5px 1px;
 }

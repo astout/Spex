@@ -11,19 +11,19 @@ $ ->
 
     $("body").on "click", "button.property-text-append", (e) ->
         unless $(this).hasClass "disabled"
-          _value = $("input#"+this.id+".property.default_value").val().trim()
+          _value = $("textarea#"+this.id+".property.default_value").val().trim()
           if _value.length > 0
             _text = _value + " " + $("input#"+this.id+".property-formula-text").val()
           else
             _text = _value + $("input#"+this.id+".property-formula-text").val()
-          $("input#"+this.id+".property.default_value").val( _text )
+          $("textarea#"+this.id+".property.default_value").val( _text )
           $("input#"+this.id+".property-formula-text").val("")
         e.preventDefault()
         return false
 
     $("body").on "click", "button.property.ref-append", (e) ->
         unless $(this).hasClass "disabled"
-          _value = $("input#"+this.id+".property.default_value").val().trim()
+          _value = $("textarea#"+this.id+".property.default_value").val().trim()
           _text = ""
           if _value.length > 0
             _text = _value + " "
@@ -45,13 +45,13 @@ $ ->
           catch error
             console.log("error: couldn't parse the dropdown values")
 
-          $("input#"+this.id+".property.default_value").val(_text)
+          $("textarea#"+this.id+".property.default_value").val(_text)
         e.preventDefault()
         return false
 
     $("body").on "click", "button.property-evaluate", (e) ->
       _id = this.id
-      _value = $("input#"+_id+".property.default_value").val()
+      _value = $("textarea#"+_id+".property.default_value").val()
       console.log("EVALUATING: " + _value)
       params = $.param( {
         value: _value,
@@ -73,7 +73,7 @@ $ ->
 
     $("body").on "click", "button.property.calculator", (e) ->
       console.log("id: " + this.id + " button: " + this.innerText + " value: " + this.value )
-      _value = $("input#"+this.id+".property.default_value").val($("input#"+this.id+".property.default_value").val().trim() + " " + this.value)
+      _value = $("textarea#"+this.id+".property.default_value").val($("textarea#"+this.id+".property.default_value").val().trim() + " " + this.value)
       e.preventDefault()
       return false
 #end startup

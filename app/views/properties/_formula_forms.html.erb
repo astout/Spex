@@ -1,7 +1,7 @@
 <% _id = @property.id || "new" %>
 <label class="control-label" for="property-formula">Value Formula Helper</label>
 <div id='<%= _id %>' class="property-formula panel panel-default">
-  <ul id='<%= _id %>' class="nav nav-tabs sm nav-justified" role="tablist">
+  <ul id='<%= _id %>' class="nav nav-tabs nav-tabs-sm nav-justified" role="tablist">
     <li class="active"><a href='<%= "\#text-#{_id}" %>' role="tab" data-toggle="tab">Text</a></li>
     <li class=""><a href='<%= "\#ref-#{_id}" %>' role="tab" data-toggle="tab">Reference</a></li>
     <li class=""><a href='<%= "\#math-#{_id}" %>' role="tab" data-toggle="tab">Math</a></li>

@@ -25,11 +25,6 @@ $(function()
 {
     window.toolize();
 
-    $("a.refresh").hover(
-        function() { $(this).addClass("fa-spin") },
-        function() { $(this).removeClass("fa-spin") }
-    )
-
     if( !$("body").hasClass("signup") && !$("body").hasClass("signin") )
     {
       $("input[type='text']").prop("autocomplete", "off");

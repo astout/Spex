@@ -143,54 +143,6 @@ moveEPRs = (direction) ->
         url: "/hub/move_eprs?" + params
         type: 'POST'
 
-# topEPRs = (relationship_ids) ->
-#     params = $.param( { 
-#             selected_eprs: relationship_ids, 
-#             selected_egrs: window.selected_egrs 
-#         } )
-
-#     #send the request to add the selected groups to the selected entity
-#     $.ajax 
-#         url: "/hub/top_eprs?" + params
-#         type: 'POST'
-# window.topEPRs = topEPRs
-
-# bottomEPRs = (relationship_ids) ->
-#     params = $.param( { 
-#             selected_eprs: relationship_ids, 
-#             selected_egrs: window.selected_egrs 
-#         } )
-
-#     #send the request to add the selected groups to the selected entity
-#     $.ajax 
-#         url: "/hub/bottom_eprs?" + params
-#         type: 'POST'
-# window.bottomEPRs = bottomEPRs
-
-# upEPRs = (relationship_ids) ->
-#     params = $.param( { 
-#             selected_eprs: relationship_ids, 
-#             selected_egrs: window.selected_egrs 
-#         } )
-
-#     #send the request to add the selected groups to the selected entity
-#     $.ajax 
-#         url: "/hub/up_eprs?" + params
-#         type: 'POST'
-# window.upEPRs = upEPRs
-
-# downEPRs = (relationship_ids) ->
-#     params = $.param( { 
-#             selected_eprs: relationship_ids, 
-#             selected_egrs: window.selected_egrs 
-#         } )
-
-#     #send the request to add the selected groups to the selected entity
-#     $.ajax 
-#         url: "/hub/down_eprs?" + params
-#         type: 'POST'
-# window.downEPRs = downEPRs
-
 validateClearButton = () ->
     open = $("td.edit-epr-trigger.openForm")
     if window.selected_eprs.length > 0 && window.selected_egrs.length == 1 || open.length > 0

@@ -1,0 +1,9 @@
+<div class="panel panel-default col-xs-12">
+    <h6> Edit Property </h6>
+    <div style="border-bottom: 1px solid #ccc; margin: 5px"></div>
+    <%= bootstrap_form_for(property, url: { controller: "hub", action: "update_property" }, method: :post, remote: true) do |f| %>
+      <%= hidden_field_tag :page, 'hub' %>
+      <%= render partial: 'properties/fields', locals: { f: f, property: property } %>
+      <%= f.submit "Update", class: "btn btn-sm btn-primary btn75", id: "update-property" %>
+    <% end %>
+</div>

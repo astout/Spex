@@ -11,6 +11,7 @@ var alert_html = "";
         alert_html += "    </div>";
         //clear the property form fields
         $("input[id^=new].property:not(input[type=submit])").val('');
+        $("textarea#new.property").val('');
         $('select#role_ids.new-property-roles > option').prop("selected", "selected");
         $('select#role_ids.new-property-roles > option').trigger("change");
         // $('input#property_default_visibility').val('0');
@@ -27,6 +28,11 @@ var alert_html = "";
 
 hubAlert("#property-alert1", alert_html);
 persistStyling();
-NewPropertyValidation();
+NewPropertyValidation("new");
 clearPropertyAttributes();
 ajaxPagination();
+
+<% @property = @property[:data] %>
+$('div#ref-<%= params[:current_property] %>.tab-pane').html("<%= j render partial: 'properties/references', locals: { property: nil, entity: nil, group: nil } %>");
+
+properties_selectize_all();

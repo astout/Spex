@@ -16,6 +16,7 @@ gem 'pg', '0.15.1'
 gem 'select2-rails'
 gem 'dentaku', '~> 1.1.0'
 gem 'bootstrap-editable-rails', '~> 0.0.7'
+gem 'alchemist', '~> 0.1.7'
 
 # Use sqlite3 as the database for Active Record
 group :development, :test do

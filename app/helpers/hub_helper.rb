@@ -161,9 +161,9 @@ module HubHelper
     pieces.each do |piece|
       scan = piece.scan(/\[\[([^\]]+)\]\]/).flatten
       unless scan.empty?
-        puts "PIECE BEFORE EVALUATE: #{scan.first}"
+        puts "PIECE BEFORE EVALUATE: #{scan.first}" #the equation will be the first element
         _scan = evaluate_value(scan.first)
-        val = _scan.blank? ? piece : _scan
+        val = _scan.blank? ? piece : _scan #if the result is empty, default to input
         puts "PIECE AFTER EVALUATE: #{val}"
         puts "REPLACING #{piece} WITH #{val}"
         result.sub!(piece, val)
@@ -177,7 +177,16 @@ module HubHelper
   def evaluate_value(value)
     return value if value.blank?
     result = value
-    begin result = Dentaku.evaluate(value)
+    rx = /(\s|^)(([\d]+([.]\d+)?)[.][a-zA-Z]+([.][a-zA-Z]+)*)/
+    if result.scan(rx).flatten.compact.count > 0
+      begin result = eval(result).to_s
+      rescue Exception => e
+        puts "error caught:"
+        puts e.message
+        result = value
+      end
+    end
+    begin result = Dentaku.evaluate(result)
     rescue Exception => e
       puts "error caught:"
       puts e.message
