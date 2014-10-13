@@ -22,6 +22,7 @@ class EntityPropertyRelationship < ActiveRecord::Base
     r.roles = r.property.roles
     r.units = r.property.units
     r.units_short = r.property.units_short
+    r.save
   end
 
   def egr
