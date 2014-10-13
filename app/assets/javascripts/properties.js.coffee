@@ -28,6 +28,18 @@ $ ->
         $("form").on "keypress", (e) ->
           if e.keyCode == 13 && $("input.submit").hasClass("disabled")
             return false
+
+        $("body").on "blur", "input.property.name", (e) ->
+          if $("input#"+this.id+".property.default_label").val().length < 1
+            _val = $(this).val()
+            a = _val.split("_")
+
+            a.forEach(capitalizeFirstElement)
+
+            _val = a.join(" ")
+
+            $("input#" + this.id + ".property.default_label").val(_val)
+          
     
     if $("body").hasClass("properties-index")
       #Every character change in Search field, submit query
@@ -52,6 +64,20 @@ $ ->
           $.ajax
               url: "/properties/confirm_delete?" + params
               type: 'POST'
+
+
+capitalize = (string) ->
+  if typeof(string) != "string"
+    return string
+  if string.length > 0
+    string = string[0].toUpperCase() + string.slice(1)
+  return string
+#end capitalize(string)
+
+capitalizeFirstElement = (element, index, array) ->
+  if index == 0
+    array[index] = capitalize(element)
+#end capitalizeArrayElements(element, index, array)
 
 deleteModal = (_id) ->
     if _id.length < 1
