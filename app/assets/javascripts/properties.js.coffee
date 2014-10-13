@@ -14,7 +14,14 @@ $ ->
             input.property.units,
             input.property.units_short,
             input.property.default_value").on "input", ->
+              NewPropertyValidation(this.id)
+
+        $("body").on "keydown", "input.property.name", (e) ->
+          if e.keyCode == 32 #spacebar pressed
+            e.preventDefault()
+            $(this).val($(this).val() + "_")
             NewPropertyValidation(this.id)
+            return false
 
         window.properties_selectize_all()
         NewPropertyValidation($("input.property.name")[0].id)
