@@ -16,7 +16,7 @@ $ ->
             input.property.default_value").on "input", ->
               NewPropertyValidation(this.id)
 
-        $("body").on "keydown", "input.property.name", (e) ->
+        $("body").on "keypress", "input.property.name", (e) ->
           if e.keyCode == 32 #spacebar pressed
             e.preventDefault()
             $(this).val($(this).val() + "_")
@@ -41,7 +41,10 @@ $ ->
             _val = $(this).val()
             a = _val.split("_")
 
-            a.forEach(capitalizeFirstElement)
+            if a.length > 3
+              a.forEach(capitalizeFirstElement)
+            else
+              a.forEach(capitalizeEachElement)
 
             _val = a.join(" ")
 
@@ -84,7 +87,13 @@ capitalize = (string) ->
 capitalizeFirstElement = (element, index, array) ->
   if index == 0
     array[index] = capitalize(element)
-#end capitalizeArrayElements(element, index, array)
+#end capitalizeFirstElements(element, index, array)
+
+capitalizeEachElement = (element, index, array) ->
+  preps = ["a", "the", "of", "per"]
+  if index == 0 || preps.indexOf(element) < 0
+    array[index] = capitalize(element)
+#end capitalizeEachElements(element, index, array)
 
 deleteModal = (_id) ->
     if _id.length < 1
