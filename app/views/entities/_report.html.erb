@@ -56,7 +56,7 @@
               <% end %>
             <% end %>
             <% @entity.property_relations_via(egr.group).each do |epr| %>
-              <% if epr.roles.pluck(:id).include?(@role['id'].to_i) || (admin_user? && @role['admin'] == true ) %>
+              <% if epr.roles.pluck(:id).include?(@role['id'].to_i) || admin_user? %>
                 <tr id="<%= epr.id %>"  class="epr-row">
                   <td class="property-name" style="padding: 5px 0px 0px 20px">
                     <% found = false %>
@@ -71,22 +71,22 @@
                       <% final_label =  epr.property.name %>
                       <% found = true %>
                     <% end %>
-                    <% if admin_user? && @role['admin'] == true %>
+                    <% if admin_user? %>
                       <a href="#" id="<%= epr.id %>" class="trigger editable" style="color: #494A4A"> <%= final_label %> </a>
                     <% else %>
                       <%= final_label %>
                     <% end %>
                   </td>
                   <td id=<%= epr.id %> class="property-value" style="text-align: right">
-                    <% if admin_user? && @role['admin'] == true %>
-                      <a href="#" id="<%= epr.id %>" class="trigger editable"> <%= parse_value("#{epr.value.dup}", epr).to_s + epr.units_short.to_s %> </a>
+                    <% if admin_user? %>
+                      <a href="#" id="<%= epr.id %>" class="trigger editable"> <%= parse_value("#{epr.value.dup}", epr).to_s + " " + epr.units_short.to_s %> </a>
                     <% else %>
-                      <%= parse_value("#{epr.value}", epr).to_s + epr.units_short.to_s %>
+                      <%= parse_value("#{epr.value}", epr).to_s + " " + epr.units_short.to_s %>
                     <% end %>
                   </td>
                 </tr>
               <% end %>
-              <% if admin_user? && @role['admin'] == true %>
+              <% if admin_user? %>
                 <tr>
                   <td colspan="100%" class="hidden-value">
                     <div id=<%= epr.id %> class="trueValue light-font">
