@@ -10,7 +10,7 @@ class Property < ActiveRecord::Base
   has_and_belongs_to_many :roles
   VALID_NAME_REGEX = /\A[a-z0-9]+[a-z0-9\-\_]*[a-z0-9]+\z/i
   validates :name,  presence: true, format: { with: VALID_NAME_REGEX }, 
-    length: { minimum: 2, maximum: 32 },
+    length: { minimum: 2, maximum: 64 },
     uniqueness: { case_sensitive: false }
 
   before_save do |property|

@@ -16,8 +16,8 @@ class User < ActiveRecord::Base
       return false
     end
   end
-  validates :first,  presence: true, length: { maximum: 30 }
-  validates :last,  presence: true, length: { maximum: 30 }
+  validates :first,  presence: true, length: { maximum: 32 }
+  validates :last,  presence: true, length: { maximum: 32 }
   VALID_LOGIN_REGEX = /\A[a-z0-9]+[a-z0-9\-\_]*[a-z0-9]+\z/i
     validates :login,  presence: true, format: { with: VALID_LOGIN_REGEX }, 
       length: { minimum: 3, maximum: 32 },
