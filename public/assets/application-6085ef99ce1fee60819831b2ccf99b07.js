@@ -24957,9 +24957,17 @@ the specific language governing permissions and limitations under the Apache Lic
         }
         try {
           _text += "{";
-          _text += $("select#" + this.id + ".epr-ref-entity").select2("data").text;
+          if ($("select#" + this.id + ".epr-ref-entity").val() === "" + $("input#" + this.id + ".epr-ename").data().entityId) {
+            _text += "*";
+          } else {
+            _text += $("select#" + this.id + ".epr-ref-entity").select2("data").text;
+          }
           _text += ".";
-          _text += $("select#" + this.id + ".epr-ref-group").select2("data").text;
+          if ($("select#" + this.id + ".epr-ref-group").val() === "" + $("input#" + this.id + ".epr-gname").data().groupId) {
+            _text += "*";
+          } else {
+            _text += $("select#" + this.id + ".epr-ref-group").select2("data").text;
+          }
           _text += ".";
           _text += $("select#" + this.id + ".epr-ref-property").select2("data").text;
           _text += "}";
@@ -24978,7 +24986,8 @@ the specific language governing permissions and limitations under the Apache Lic
       _value = $("textarea#" + _id + ".epr-value").val();
       console.log("EVALUATING: " + _value);
       params = $.param({
-        value: _value
+        value: _value,
+        epr: _id
       });
       $.ajax({
         url: '/hub/epr_evaluate?' + params,
@@ -24996,7 +25005,7 @@ the specific language governing permissions and limitations under the Apache Lic
       e.preventDefault();
       return false;
     });
-    return $("body").on("click", "button.epr-math", function(e) {
+    return $("body").on("click", "button.epr.calculator", function(e) {
       var _value;
       console.log("id: " + this.id + " button: " + this.innerText + " value: " + this.value);
       _value = $("textarea#" + this.id + ".epr-value").val($("textarea#" + this.id + ".epr-value").val().trim() + " " + this.value);
@@ -25029,9 +25038,9 @@ the specific language governing permissions and limitations under the Apache Lic
         console.log("this id: " + this.id);
         _val = $(this).val();
         if (_val.length > 0) {
-          return $("button#" + this.id + ".epr-ref-append").removeClass("disabled");
+          return $("button#" + this.id + ".epr.ref-append").removeClass("disabled");
         } else {
-          return $("button#" + this.id + ".epr-ref-append").addClass("disabled");
+          return $("button#" + this.id + ".epr.ref-append").addClass("disabled");
         }
       });
     }
@@ -25092,9 +25101,33 @@ the specific language governing permissions and limitations under the Apache Lic
 
 }).call(this);
 (function() {
-  var NewEntityValidation, closeAllOpenForms, hideDisabledFields, invalid, openTrueValue, registerHiddenRows, valid;
+  var NewEntityValidation, closeAllOpenForms, delay, deleteModal, get_entity_params, hideDisabledFields, invalid, openTrueValue, registerHiddenRows, valid;
 
   $(function() {
+    if ($("body").hasClass("entities-index")) {
+      $("body").on("input", "input#entity_search_field", function(e) {
+        var params;
+        console.log($(this).val());
+        params = get_entity_params();
+        $.get("entities?" + params);
+        return false;
+      });
+      $("body").on("click", "span.delete", function(e) {
+        deleteModal(this.id);
+        return console.log("delete clicked");
+      });
+      $("body").on("click", "button#btn-delete-confirm", function(e) {
+        var params;
+        console.log("confirm delete");
+        params = $.param({
+          id: $("span.delete-entity-id")[0].id
+        });
+        return $.ajax({
+          url: "/entities/confirm_delete?" + params,
+          type: 'POST'
+        });
+      });
+    }
     if ($("body").hasClass("report")) {
       selectize_all();
       hideDisabledFields();
@@ -25109,9 +25142,6 @@ the specific language governing permissions and limitations under the Apache Lic
         content: function() {
           return $(this).parent().find('.content').html();
         }
-      });
-      $("body").on("click", "button#submit", function(e) {
-        return alert("submitted");
       });
       $("select.roles").select2({
         placeholder: "View As..."
@@ -25130,6 +25160,15 @@ the specific language governing permissions and limitations under the Apache Lic
           type: 'POST'
         });
       });
+      $("body").on("click", "span#print_view", function(e) {
+        var params, print, url;
+        params = $.param({
+          e: $(this).data().entity,
+          v: $(this).data().view
+        });
+        url = "print?" + params;
+        return print = window.open(url, '_blank');
+      });
     }
     if ($("form.new_entity").length > 0 || $("form.edit_entity").length > 0) {
       $("input#entity_name, input#entity_label, input#entity_img").on("input", function() {
@@ -25138,6 +25177,34 @@ the specific language governing permissions and limitations under the Apache Lic
       return NewEntityValidation();
     }
   });
+
+  delay = function(ms, func) {
+    return setTimeout(func, ms);
+  };
+
+  deleteModal = function(_id) {
+    var params;
+    if (_id.length < 1) {
+      return false;
+    }
+    params = $.param({
+      id: _id
+    });
+    return $.ajax({
+      url: "/entities/delete_request?" + params,
+      type: 'POST'
+    });
+  };
+
+  get_entity_params = function() {
+    var params;
+    params = $.param({
+      entity_search: $("input#entity_search_field").val(),
+      entities_page: "1",
+      event: "entity"
+    });
+    return params;
+  };
 
   openTrueValue = function(element) {
     var id, open, openForm;
@@ -25172,7 +25239,7 @@ the specific language governing permissions and limitations under the Apache Lic
     $("label[for='entity_property_relationship_entity']").hide();
     $("label[for='entity_property_relationship_group']").hide();
     $("label[for='entity_property_relationship_property']").hide();
-    return $("label[for='entity_property_relationship_order']").hide();
+    return $("label[for='entity_property_relationship_position']").hide();
   };
 
   window.hideDisabledFields = hideDisabledFields;
@@ -25189,11 +25256,11 @@ the specific language governing permissions and limitations under the Apache Lic
   window.registerHiddenRows = registerHiddenRows;
 
   NewEntityValidation = function() {
-    var image, label, name;
+    var label, name, rx;
     name = $("input#entity_name").val();
     label = $("input#entity_label").val();
-    image = $("input#entity_img").val();
-    if (name.length > 0) {
+    rx = /^[A-Za-z0-9]+[A-Za-z0-9\-\_]*[A-Za-z0-9]+$/;
+    if (name.length > 0 && rx.test(name)) {
       if (!$("span#entity_name").hasClass("valid")) {
         $("span#entity_name").addClass("valid");
       }
@@ -25203,42 +25270,147 @@ the specific language governing permissions and limitations under the Apache Lic
       invalid();
     }
     if (!$("span#entity_label").hasClass("valid")) {
-      $("span#entity_label").addClass("valid");
-    }
-    if (!$("span#entity_img").hasClass("valid")) {
-      return $("span#entity_img").addClass("valid");
+      return $("span#entity_label").addClass("valid");
     }
   };
 
   window.NewEntityValidation = NewEntityValidation;
 
   valid = function() {
-    $("span#entity_name, span#entity_img, span#entity_label").addClass("valid");
-    return $("input[type=submit]").removeClass('disabled');
+    $("span#entity_name, span#entity_label").addClass("valid");
+    $("input[type=submit]").removeClass('disabled');
+    return $("body").on("keydown", "input.entity", function(e) {
+      console.log("enter valid");
+      if (e.keyCode === 13) {
+        return $("form#new_entity").submit();
+      }
+    });
   };
 
   invalid = function() {
-    return $("input[type=submit]").addClass('disabled');
+    $("input[type=submit]").addClass('disabled');
+    return $("body").on("keydown", "input.entity", function(e) {
+      console.log("enter invalid");
+      if (e.keyCode === 13) {
+        e.preventDefault();
+        return false;
+      }
+    });
   };
 
 }).call(this);
 (function() {
-  var NewGroupValidation, invalid, valid;
+  var get_epr_params;
 
   $(function() {
-    if ($("form#new_group").length > 0) {
-      $("input#group_name, input#group_label").on("input", function() {
-        return NewGroupValidation();
+    if ($('body').hasClass("query")) {
+      window.epr_page = "1";
+      window.epr_direction = "desc";
+      window.epr_sort = "updated_at";
+      window.epr_search = "";
+      window.view_id = $("input#epr-r").val();
+      $("body").on('input', "input#epr_search_field", function(e) {
+        var params;
+        window.epr_page = "1";
+        params = get_epr_params();
+        $.get("/query?" + params);
+        return false;
       });
-      return NewGroupValidation();
+      $("select.roles").select2({
+        placeholder: "View As..."
+      });
+      return $("select.roles").on("change", function(e) {
+        var params;
+        console.log("role: " + $(this).val());
+        window.view_id = $(this).val();
+        params = get_epr_params();
+        return $.get("/query?" + params);
+      });
     }
   });
 
+  get_epr_params = function() {
+    var params;
+    params = $.param({
+      epr_search: $("input#epr_search_field").val(),
+      epr_direction: window.epr_direction,
+      epr_sort: window.epr_sort,
+      epr_page: window.epr_page,
+      view_id: window.view_id,
+      event: "epr"
+    });
+    return params;
+  };
+
+}).call(this);
+(function() {
+  var NewGroupValidation, deleteModal, get_group_params, invalid, valid;
+
+  $(function() {
+    if ($("form#new_group").length > 0 || $("form[id^=edit_group]").length > 0) {
+      console.log("edit");
+      $("input#group_name, input#group_label").on("input", function() {
+        return NewGroupValidation();
+      });
+      NewGroupValidation();
+    }
+    if ($("body").hasClass("groups-index")) {
+      $("body").on("input", "input#group_search", function(e) {
+        var params;
+        console.log($(this).val());
+        params = get_group_params();
+        $.get("groups?" + params);
+        return false;
+      });
+      $("body").on("click", "span.delete", function(e) {
+        deleteModal(this.id);
+        return console.log("delete clicked");
+      });
+      return $("body").on("click", "button#btn-delete-confirm", function(e) {
+        var params;
+        console.log("confirm delete");
+        params = $.param({
+          id: $("span.delete-group-id")[0].id
+        });
+        return $.ajax({
+          url: "/groups/confirm_delete?" + params,
+          type: 'POST'
+        });
+      });
+    }
+  });
+
+  deleteModal = function(_id) {
+    var params;
+    if (_id.length < 1) {
+      return false;
+    }
+    params = $.param({
+      id: _id
+    });
+    return $.ajax({
+      url: "/groups/delete_request?" + params,
+      type: 'POST'
+    });
+  };
+
+  get_group_params = function() {
+    var params;
+    params = $.param({
+      group_search: $("input#group_search").val(),
+      groups_page: "1",
+      event: "group"
+    });
+    return params;
+  };
+
   NewGroupValidation = function() {
-    var label, name;
+    var label, name, rx;
+    console.log("validating");
     name = $("input#group_name").val();
     label = $("input#group_label").val();
-    if (name.length > 0) {
+    rx = /^[A-Za-z0-9]+[A-Za-z0-9\-\_]*[A-Za-z0-9]+$/;
+    if (name.length > 0 && rx.test(name)) {
       if (!$("span#group_name").hasClass("valid")) {
         $("span#group_name").addClass("valid");
       }
@@ -25256,11 +25428,28 @@ the specific language governing permissions and limitations under the Apache Lic
 
   valid = function() {
     $("span#group_name, span#group_label").addClass("valid");
-    return $("input[type=submit]#create-group").removeClass('disabled');
+    $("input[type=submit].group").removeClass('disabled');
+    return $("body").on("keydown", "input.group", function(e) {
+      console.log("valid input");
+      if (e.keyCode === 13) {
+        console.log("enter preseed");
+        $("form#new_group").submit();
+        $("form[id^=edit_group]").submit();
+        return false;
+      }
+    });
   };
 
   invalid = function() {
-    return $("input[type=submit]#create-group").addClass('disabled');
+    $("input[type=submit].group").addClass('disabled');
+    return $("body").on("keydown", "input.group", function(e) {
+      console.log("invalid input");
+      if (e.keyCode === 13) {
+        console.log("enter preseed");
+        e.preventDefault();
+        return false;
+      }
+    });
   };
 
 }).call(this);
@@ -25362,7 +25551,7 @@ the specific language governing permissions and limitations under the Apache Lic
   clearSelectedEntity = function() {
     $("tr.selected-entity").removeClass("selected-entity");
     window.selected_entity = -1;
-    window.selected_egr_max_order = -1;
+    window.selected_egr_max_position = -1;
     validateEntitySelection();
     return getEGRs(window.selected_entity);
   };
@@ -25434,6 +25623,7 @@ the specific language governing permissions and limitations under the Apache Lic
     $("#new-property-collapse-heading").on("click", function(e) {
       return e.preventDefault();
     });
+    console.log("hub_property_helpers");
     $("select#role_ids.new-property-roles").select2({
       placeholder: "Roles that see this property..."
     });
@@ -25592,6 +25782,12 @@ the specific language governing permissions and limitations under the Apache Lic
       $("#new-group-collapse-heading").on("click", function(e) {
         return e.preventDefault();
       });
+      $("body").on("keydown", "input.group", function(e) {
+        if (e.keyCode === 13) {
+          $("form#new_group").submit();
+          return false;
+        }
+      });
       $("body").on("click", '.table tr.group', function(e) {
         return toggleGroupSelect(this.id, e.ctrlKey || e.metaKey);
       });
@@ -25612,7 +25808,9 @@ the specific language governing permissions and limitations under the Apache Lic
       });
       $("body").on("click", "#clear-selected-groups", function(e) {
         if (!$(this).hasClass("disabled")) {
-          return clearSelectedGroups();
+          clearSelectedGroups();
+          validateGroupSelection();
+          return getGPRs(window.selected_groups);
         }
       });
       return $("body").on("click", "#delete-selected-groups", function(e) {
@@ -25745,14 +25943,14 @@ the specific language governing permissions and limitations under the Apache Lic
 
   window.selected_egrs = [];
 
-  window.selected_egr_orders = [];
+  window.selected_egr_positions = [];
 
-  window.selected_egr_max_order = -1;
+  window.selected_egr_max_position = -1;
 
   $(function() {
     if ($('body').hasClass("hub")) {
       $("body").on("click", '.table tr.egr', function(e) {
-        return toggleEGRselect(this.id, $(this).data().order, e.ctrlKey || e.metaKey);
+        return toggleEGRselect(this.id, $(this).data().position, e.ctrlKey || e.metaKey);
       });
       $("body").on("click", "#add-selected-groups", function(e) {
         if ($(this).hasClass("enabled")) {
@@ -25793,7 +25991,7 @@ the specific language governing permissions and limitations under the Apache Lic
     }
   });
 
-  toggleEGRselect = function(id, order, multiSelect) {
+  toggleEGRselect = function(id, position, multiSelect) {
     var index;
     id += "";
     index = $.inArray(id, window.selected_egrs);
@@ -25815,12 +26013,12 @@ the specific language governing permissions and limitations under the Apache Lic
       $("tr#" + id + ".egr").addClass("selected-egr");
       window.selected_egrs.push(id);
     }
-    order += "";
-    index = $.inArray(order, window.selected_egr_orders);
+    position += "";
+    index = $.inArray(position, window.selected_egr_positions);
     if (index > -1) {
-      window.selected_egr_orders.splice(index, 1);
+      window.selected_egr_positions.splice(index, 1);
     } else {
-      window.selected_egr_orders.push(order);
+      window.selected_egr_positions.push(position);
     }
     getEntitysProperties(window.selected_egrs);
     return validateEGRselection();
@@ -25879,7 +26077,7 @@ the specific language governing permissions and limitations under the Apache Lic
   window.deleteEntityGroupRelations = deleteEntityGroupRelations;
 
   validateEGRselection = function() {
-    var e, i, index, maxOrder, order, orders, sum, test, valid, _html, _i, _len;
+    var e, i, index, maxPosition, position, positions, sum, test, valid, _html, _i, _len;
     if (window.selected_egrs.length > 0) {
       $("#clear-selected-egrs").removeClass("disabled");
       $("#delete-selected-egrs").removeClass("disabled");
@@ -25895,18 +26093,18 @@ the specific language governing permissions and limitations under the Apache Lic
       $("#clear-selected-egrs").addClass("disabled");
       $("#delete-selected-egrs").addClass("disabled");
     }
-    orders = window.selected_egr_orders;
-    maxOrder = window.selected_egr_max_order + "";
-    if (orders.length < 1) {
-      $("div.group-order-action").removeClass("enabled");
-      return $("div.group-order-action").addClass("disabled");
+    positions = window.selected_egr_positions;
+    maxPosition = window.selected_egr_max_position + "";
+    if (positions.length < 1) {
+      $("div.group-position-action").removeClass("enabled");
+      return $("div.group-position-action").addClass("disabled");
     } else {
-      valid = orders.length * (orders.length + 1) / 2;
+      valid = positions.length * (positions.length + 1) / 2;
       sum = 0;
       try {
-        for (_i = 0, _len = orders.length; _i < _len; _i++) {
-          order = orders[_i];
-          sum += eval(order);
+        for (_i = 0, _len = positions.length; _i < _len; _i++) {
+          position = positions[_i];
+          sum += eval(position);
         }
       } catch (_error) {
         e = _error;
@@ -25930,15 +26128,15 @@ the specific language governing permissions and limitations under the Apache Lic
       }
       sum = 0;
       valid = false;
-      index = $.inArray(window.selected_egr_max_order + "", orders);
+      index = $.inArray(window.selected_egr_max_position + "", positions);
       if (index < 0) {
         valid = true;
       } else {
         try {
-          orders.sort();
+          positions.sort();
           i = 0;
-          while (i < orders.length - 1) {
-            test = eval(orders[i + 1]) - eval(orders[i]);
+          while (i < positions.length - 1) {
+            test = eval(positions[i + 1]) - eval(positions[i]);
             if (test > 1) {
               valid = true;
               break;
@@ -25973,7 +26171,7 @@ the specific language governing permissions and limitations under the Apache Lic
 
   clearSelectedEGRs = function() {
     window.selected_egrs = [];
-    window.selected_egr_orders = [];
+    window.selected_egr_positions = [];
     $("tr.selected-egr").removeClass("selected-egr");
     return clearSelectedEPRs();
   };
@@ -26008,6 +26206,7 @@ the specific language governing permissions and limitations under the Apache Lic
   topEntityGroupRelations = function(relationship_ids) {
     var params;
     params = $.param({
+      move: "top",
       selected_entity: window.selected_entity,
       selected_egrs: relationship_ids.sort(),
       selected_groups: window.selected_groups,
@@ -26019,7 +26218,7 @@ the specific language governing permissions and limitations under the Apache Lic
       entity_sort: window.entity_sort
     });
     return $.ajax({
-      url: "/hub/top_egrs?" + params,
+      url: "/hub/move_egrs?" + params,
       type: 'POST'
     });
   };
@@ -26029,6 +26228,7 @@ the specific language governing permissions and limitations under the Apache Lic
   bottomEntityGroupRelations = function(relationship_ids) {
     var params;
     params = $.param({
+      move: 'bottom',
       selected_entity: window.selected_entity,
       selected_egrs: relationship_ids.sort(),
       selected_groups: window.selected_groups,
@@ -26040,7 +26240,7 @@ the specific language governing permissions and limitations under the Apache Lic
       entity_sort: window.entity_sort
     });
     return $.ajax({
-      url: "/hub/bottom_egrs?" + params,
+      url: "/hub/move_egrs?" + params,
       type: 'POST'
     });
   };
@@ -26050,6 +26250,7 @@ the specific language governing permissions and limitations under the Apache Lic
   upEntityGroupRelations = function(relationship_ids) {
     var params;
     params = $.param({
+      move: 'up',
       selected_entity: window.selected_entity,
       selected_egrs: relationship_ids.sort(),
       selected_groups: window.selected_groups,
@@ -26061,7 +26262,7 @@ the specific language governing permissions and limitations under the Apache Lic
       entity_sort: window.entity_sort
     });
     return $.ajax({
-      url: "/hub/up_egrs?" + params,
+      url: "/hub/move_egrs?" + params,
       type: 'POST'
     });
   };
@@ -26071,6 +26272,7 @@ the specific language governing permissions and limitations under the Apache Lic
   downEntityGroupRelations = function(relationship_ids) {
     var params;
     params = $.param({
+      move: 'down',
       selected_entity: window.selected_entity,
       selected_egrs: relationship_ids.sort(),
       selected_groups: window.selected_groups,
@@ -26082,7 +26284,7 @@ the specific language governing permissions and limitations under the Apache Lic
       entity_sort: window.entity_sort
     });
     return $.ajax({
-      url: "/hub/down_egrs?" + params,
+      url: "/hub/move_egrs?" + params,
       type: 'POST'
     });
   };
@@ -26093,16 +26295,16 @@ the specific language governing permissions and limitations under the Apache Lic
 (function() {
   var clearSelectedEPRs, closeAllEPRforms, getEntitysProperties, moveEPRs, toggleEPRform, toggleEPRselect, validateClearButton, validateEPRselection;
 
-  window.selected_epr_orders = [];
+  window.selected_epr_positions = [];
 
   window.selected_eprs = [];
 
-  window.selected_epr_max_order = -1;
+  window.selected_epr_max_position = -1;
 
   $(function() {
     if ($('body').hasClass("hub")) {
       $("body").on("click", '.table tr.epr', function(e) {
-        return toggleEPRselect(this.id, $(this).data().order, e.metaKey || e.ctrlKey);
+        return toggleEPRselect(this.id, $(this).data().position, e.metaKey || e.ctrlKey);
       });
       $("body").on("click", "td.edit-epr-trigger", function(e) {
         toggleEPRform(this);
@@ -26179,7 +26381,7 @@ the specific language governing permissions and limitations under the Apache Lic
 
   window.closeAllEPRforms = closeAllEPRforms;
 
-  toggleEPRselect = function(id, order, multiSelect) {
+  toggleEPRselect = function(id, position, multiSelect) {
     var index;
     id += "";
     index = $.inArray(id, window.selected_eprs);
@@ -26200,12 +26402,12 @@ the specific language governing permissions and limitations under the Apache Lic
       $("tr#" + id + ".epr").addClass("selected-epr");
       window.selected_eprs.push(id);
     }
-    order += "";
-    index = $.inArray(order, window.selected_epr_orders);
+    position += "";
+    index = $.inArray(position, window.selected_epr_positions);
     if (index > -1) {
-      window.selected_epr_orders.splice(index, 1);
+      window.selected_epr_positions.splice(index, 1);
     } else {
-      window.selected_epr_orders.push(order);
+      window.selected_epr_positions.push(position);
     }
     return validateEPRselection();
   };
@@ -26213,8 +26415,9 @@ the specific language governing permissions and limitations under the Apache Lic
   window.toggleEPRselect = toggleEPRselect;
 
   clearSelectedEPRs = function() {
+    console.log("called clear selected eprs");
     window.selected_eprs = [];
-    window.selected_epr_orders = [];
+    window.selected_epr_positions = [];
     $("tr.selected-epr").removeClass("selected-epr");
     return validateEPRselection();
   };
@@ -26264,19 +26467,19 @@ the specific language governing permissions and limitations under the Apache Lic
   };
 
   validateEPRselection = function() {
-    var e, i, index, order, orders, sum, test, valid, _i, _len;
+    var e, i, index, position, positions, sum, test, valid, _i, _len;
     validateClearButton();
-    orders = window.selected_epr_orders;
-    if (orders.length < 1 || window.selected_egrs.length > 1) {
-      $("div.property-order-action").removeClass("enabled");
-      return $("div.property-order-action").addClass("disabled");
+    positions = window.selected_epr_positions;
+    if (positions.length < 1 || window.selected_egrs.length > 1) {
+      $("div.property-position-action").removeClass("enabled");
+      return $("div.property-position-action").addClass("disabled");
     } else {
-      valid = orders.length * (orders.length + 1) / 2;
+      valid = positions.length * (positions.length + 1) / 2;
       sum = 0;
       try {
-        for (_i = 0, _len = orders.length; _i < _len; _i++) {
-          order = orders[_i];
-          sum += eval(order);
+        for (_i = 0, _len = positions.length; _i < _len; _i++) {
+          position = positions[_i];
+          sum += eval(position);
         }
       } catch (_error) {
         e = _error;
@@ -26299,15 +26502,15 @@ the specific language governing permissions and limitations under the Apache Lic
         $("div#top-selected-eprs").addClass("enabled");
       }
       valid = false;
-      index = $.inArray(window.selected_epr_max_order + "", orders);
+      index = $.inArray(window.selected_epr_max_position + "", positions);
       if (index < 0) {
         valid = true;
       } else {
         try {
-          orders.sort();
+          positions.sort();
           i = 0;
-          while (i < orders.length - 1) {
-            test = eval(orders[i + 1]) - eval(orders[i]);
+          while (i < positions.length - 1) {
+            test = eval(positions[i + 1]) - eval(positions[i]);
             if (test > 1) {
               valid = true;
               break;
@@ -26344,16 +26547,16 @@ the specific language governing permissions and limitations under the Apache Lic
 (function() {
   var bottomGPRs, clearSelectedGPRs, createGPRs, deleteGPRs, downGPRs, getGPRs, toggleGPRselect, topGPRs, upGPRs, validateCreateGPR, validateGroupsPropertySelection;
 
-  window.selected_gpr_orders = [];
+  window.selected_gpr_positions = [];
 
   window.selected_gprs = [];
 
-  window.selected_gpr_max_order = -1;
+  window.selected_gpr_max_position = -1;
 
   $(function() {
     if ($('body').hasClass("hub")) {
       $("body").on("click", '.table tr.gpr', function(e) {
-        return toggleGPRselect(this.id, $(this).data().order, e.metaKey || e.ctrlKey);
+        return toggleGPRselect(this.id, $(this).data().position, e.metaKey || e.ctrlKey);
       });
       $("body").on("click", "#clear-selected-gprs", function(e) {
         if (!$(this).hasClass("disabled")) {
@@ -26422,7 +26625,7 @@ the specific language governing permissions and limitations under the Apache Lic
 
   window.createGPRs = createGPRs;
 
-  toggleGPRselect = function(id, order, multiSelect) {
+  toggleGPRselect = function(id, position, multiSelect) {
     var index;
     id += "";
     index = $.inArray(id, window.selected_gprs);
@@ -26443,12 +26646,12 @@ the specific language governing permissions and limitations under the Apache Lic
       $("tr#" + id + ".gpr").addClass("selected-gpr");
       window.selected_gprs.push(id);
     }
-    order += "";
-    index = $.inArray(order, window.selected_gpr_orders);
+    position += "";
+    index = $.inArray(position, window.selected_gpr_positions);
     if (index > -1) {
-      window.selected_gpr_orders.splice(index, 1);
+      window.selected_gpr_positions.splice(index, 1);
     } else {
-      window.selected_gpr_orders.push(order);
+      window.selected_gpr_positions.push(position);
     }
     return validateGroupsPropertySelection();
   };
@@ -26474,7 +26677,7 @@ the specific language governing permissions and limitations under the Apache Lic
 
   clearSelectedGPRs = function() {
     window.selected_gprs = [];
-    window.selected_gpr_orders = [];
+    window.selected_gpr_positions = [];
     $("tr.selected-gpr").removeClass("selected-gpr");
     return validateGroupsPropertySelection();
   };
@@ -26555,7 +26758,7 @@ the specific language governing permissions and limitations under the Apache Lic
   window.downGPRs = downGPRs;
 
   validateGroupsPropertySelection = function() {
-    var e, i, index, order, orders, sum, test, valid, _i, _len;
+    var e, i, index, position, positions, sum, test, valid, _i, _len;
     if (window.selected_gprs.length > 0 && window.selected_groups.length === 1) {
       $("#clear-selected-gprs").removeClass("disabled");
       $("#delete-selected-gprs").removeClass("disabled");
@@ -26563,17 +26766,17 @@ the specific language governing permissions and limitations under the Apache Lic
       $("#clear-selected-gprs").addClass("disabled");
       $("#delete-selected-gprs").addClass("disabled");
     }
-    orders = window.selected_gpr_orders;
-    if (orders.length < 1 || window.selected_groups.length > 1) {
-      $("div.property-order-action").removeClass("enabled");
-      return $("div.property-order-action").addClass("disabled");
+    positions = window.selected_gpr_positions;
+    if (positions.length < 1 || window.selected_groups.length > 1) {
+      $("div.property-position-action").removeClass("enabled");
+      return $("div.property-position-action").addClass("disabled");
     } else {
-      valid = orders.length * (orders.length + 1) / 2;
+      valid = positions.length * (positions.length + 1) / 2;
       sum = 0;
       try {
-        for (_i = 0, _len = orders.length; _i < _len; _i++) {
-          order = orders[_i];
-          sum += eval(order);
+        for (_i = 0, _len = positions.length; _i < _len; _i++) {
+          position = positions[_i];
+          sum += eval(position);
         }
       } catch (_error) {
         e = _error;
@@ -26596,15 +26799,15 @@ the specific language governing permissions and limitations under the Apache Lic
         $("div#top-selected-gprs").addClass("enabled");
       }
       valid = false;
-      index = $.inArray(window.selected_gpr_max_order + "", orders);
+      index = $.inArray(window.selected_gpr_max_position + "", positions);
       if (index < 0) {
         valid = true;
       } else {
         try {
-          orders.sort();
+          positions.sort();
           i = 0;
-          while (i < orders.length - 1) {
-            test = eval(orders[i + 1]) - eval(orders[i]);
+          while (i < positions.length - 1) {
+            test = eval(positions[i + 1]) - eval(positions[i]);
             if (test > 1) {
               valid = true;
               break;
@@ -26650,9 +26853,6 @@ the specific language governing permissions and limitations under the Apache Lic
   hub = function() {
     $("div[id^=accordion]").on('hidden.bs.collapse', toggleChevron);
     $("div[id^=accordion]").on('shown.bs.collapse', toggleChevron);
-    $("body").on("click", "#clear-alerts", function(e) {
-      return hubAlert("", "");
-    });
     return ajaxPagination();
   };
 
@@ -26773,91 +26973,333 @@ the specific language governing permissions and limitations under the Apache Lic
 
 }).call(this);
 (function() {
-  var NewPropertyValidation, invalid, valid;
+  var do_selectize, properties_selectize_all;
 
   $(function() {
-    if ($("form#new_property").length > 0) {
-      $("input#property_name, input#property_default_label, input#property_units, input#property_units_short, input#property_default_value").on("input", function() {
-        return NewPropertyValidation();
+    console.log("property edit js loaded");
+    $("body").on("input", "input.property-formula-text", function(e) {
+      var _text;
+      _text = $(this).val();
+      if (_text.length > 0) {
+        return $("button#" + this.id + ".property-text-append").removeClass("disabled");
+      } else {
+        return $("button#" + this.id + ".property-text-append").addClass("disabled");
+      }
+    });
+    $("body").on("click", "button.property-text-append", function(e) {
+      var _text, _value;
+      if (!$(this).hasClass("disabled")) {
+        _value = $("textarea#" + this.id + ".property.default_value").val().trim();
+        if (_value.length > 0) {
+          _text = _value + " " + $("input#" + this.id + ".property-formula-text").val();
+        } else {
+          _text = _value + $("input#" + this.id + ".property-formula-text").val();
+        }
+        $("textarea#" + this.id + ".property.default_value").val(_text);
+        $("input#" + this.id + ".property-formula-text").val("");
+      }
+      e.preventDefault();
+      return false;
+    });
+    $("body").on("click", "button.property.ref-append", function(e) {
+      var error, temp, _text, _value;
+      if (!$(this).hasClass("disabled")) {
+        _value = $("textarea#" + this.id + ".property.default_value").val().trim();
+        _text = "";
+        if (_value.length > 0) {
+          _text = _value + " ";
+        }
+        try {
+          temp = "{";
+          if ($("select#" + this.id + ".property-ref-entity").val() === "") {
+            temp += "*";
+          } else {
+            temp += $("select#" + this.id + ".property-ref-entity").select2("data").text;
+          }
+          temp += ".";
+          if ($("select#" + this.id + ".property-ref-group").val() === "") {
+            temp += "*";
+          } else {
+            temp += $("select#" + this.id + ".property-ref-group").select2("data").text;
+          }
+          temp += ".";
+          temp += $("select#" + this.id + ".property-ref-property").select2("data").text;
+          temp += "}";
+          _text += temp;
+        } catch (_error) {
+          error = _error;
+          console.log("error: couldn't parse the dropdown values");
+        }
+        $("textarea#" + this.id + ".property.default_value").val(_text);
+      }
+      e.preventDefault();
+      return false;
+    });
+    $("body").on("click", "button.property-evaluate", function(e) {
+      var params, _id, _value;
+      _id = this.id;
+      _value = $("textarea#" + _id + ".property.default_value").val();
+      console.log("EVALUATING: " + _value);
+      params = $.param({
+        value: _value,
+        property: _id
       });
-      return NewPropertyValidation();
+      $.ajax({
+        url: '/hub/property_evaluate?' + params,
+        type: 'GET',
+        success: function(data, textStatus, jqXHR) {
+          $("input#" + _id + ".property-evaluated-text").val(data);
+          console.log("data");
+          console.log(data);
+          console.log("textStatus");
+          console.log(textStatus);
+          console.log("jqXHR");
+          return console.log(jqXHR);
+        }
+      });
+      e.preventDefault();
+      return false;
+    });
+    return $("body").on("click", "button.property.calculator", function(e) {
+      var _value;
+      console.log("id: " + this.id + " button: " + this.innerText + " value: " + this.value);
+      _value = $("textarea#" + this.id + ".property.default_value").val($("textarea#" + this.id + ".property.default_value").val().trim() + " " + this.value);
+      e.preventDefault();
+      return false;
+    });
+  });
+
+  properties_selectize_all = function() {
+    do_selectize("entity");
+    do_selectize("group");
+    do_selectize("property");
+    return $("select.property.role_ids").select2({
+      placeholder: "Roles that see this property..."
+    });
+  };
+
+  window.properties_selectize_all = properties_selectize_all;
+
+  do_selectize = function(_model) {
+    console.log("selectizing " + _model);
+    if (_model === "property") {
+      $("select.property-ref-" + _model).select2({
+        placeholder: "Choose a " + _model + "...",
+        allowClear: true
+      });
+      $("select.property-ref-property").on("change", function(e) {
+        var _val;
+        console.log("property: " + $(this).val());
+        console.log("this id: " + this.id);
+        _val = $(this).val();
+        if (_val.length > 0) {
+          return $("button#" + this.id + ".property.ref-append").removeClass("disabled");
+        } else {
+          return $("button#" + this.id + ".property.ref-append").addClass("disabled");
+        }
+      });
+    }
+    if (_model === "group") {
+      $("select.property-ref-" + _model).select2({
+        placeholder: "Choose a " + _model + "...",
+        allowClear: true
+      });
+      $("select.property-ref-group").on("change", function(e) {
+        var params;
+        console.log("property id: " + this.id);
+        console.log("group id: " + $(this).val());
+        params = $.param({
+          property_ref_entity: $("select#" + this.id + ".property-ref-entity").val(),
+          property_ref_group: $(this).val(),
+          current_property: this.id
+        });
+        console.log(params);
+        return $.ajax({
+          url: "/hub/property_ref_update?" + params,
+          type: 'GET'
+        });
+      });
+    }
+    if (_model === "entity") {
+      $("select.property-ref-" + _model).select2({
+        placeholder: "Choose an " + _model + "...",
+        allowClear: true
+      });
+      $("select.property-ref-entity").on("change", function(e) {
+        var params;
+        console.log("property id: " + this.id);
+        try {
+          console.log("entity text: " + $(this).select2('data').text);
+        } catch (_error) {
+          e = _error;
+        }
+        console.log("entity id: " + $(this).val());
+        params = $.param({
+          property_ref_entity: $(this).val(),
+          property_ref_group: -1,
+          current_property: this.id
+        });
+        $;
+        console.log(params);
+        return $.ajax({
+          url: "/hub/property_ref_update?" + params,
+          type: 'GET'
+        });
+      });
+    }
+    return $("button.property-ref-" + _model).on("click", function(e) {
+      $("div#s2id_" + this.id + ".select2-container.property-ref-" + _model).select2("open");
+      e.preventDefault();
+      return false;
+    });
+  };
+
+}).call(this);
+(function() {
+  var NewPropertyValidation, deleteModal, get_property_params, invalid, valid;
+
+  $(function() {
+    console.log("properties.js");
+    if ($("form#new_property").length > 0 || $("form.edit_property").length > 0) {
+      $("input.property.name, input.property.default_label, input.property.units, input.property.units_short, input.property.default_value").on("input", function() {
+        return NewPropertyValidation(this.id);
+      });
+      window.properties_selectize_all();
+      NewPropertyValidation($("input.property.name")[0].id);
+      $("form").on("keypress", function(e) {
+        if (e.keyCode === 13 && $("input.submit").hasClass("disabled")) {
+          return false;
+        }
+      });
+    }
+    if ($("body").hasClass("properties-index")) {
+      $("body").on("input", "input#property_search", function(e) {
+        var params;
+        console.log($(this).val());
+        params = get_property_params();
+        $.get("properties?" + params);
+        return false;
+      });
+      $("body").on("click", "span.delete", function(e) {
+        console.log("delete clicked");
+        deleteModal(this.id);
+        return console.log("delete clicked");
+      });
+      return $("body").on("click", "button#btn-delete-confirm", function(e) {
+        var params;
+        console.log("confirm delete");
+        params = $.param({
+          id: $("span.delete-property-id")[0].id
+        });
+        return $.ajax({
+          url: "/properties/confirm_delete?" + params,
+          type: 'POST'
+        });
+      });
     }
   });
 
-  NewPropertyValidation = function() {
+  deleteModal = function(_id) {
+    var params;
+    if (_id.length < 1) {
+      return false;
+    }
+    params = $.param({
+      id: _id
+    });
+    return $.ajax({
+      url: "/properties/delete_request?" + params,
+      type: 'POST'
+    });
+  };
+
+  get_property_params = function() {
+    var params;
+    params = $.param({
+      property_search: $("input#property_search").val(),
+      properties_page: "1",
+      event: "property"
+    });
+    return params;
+  };
+
+  NewPropertyValidation = function(_id) {
     var label, name, roles, rx, units, units_short, value, _valid;
-    name = $("input#property_name").val();
-    label = $("input#property_default_label").val();
-    units = $("input#property_units").val();
-    units_short = $("input#property_units_short").val();
-    value = $("input#property_default_value").val();
-    roles = $("select#role_ids.new-property-roles").val();
+    name = $("input#" + _id + ".property.name").val();
+    label = $("input#" + _id + ".property.default_label").val();
+    units = $("input#" + _id + ".property.units").val();
+    units_short = $("input#" + _id + ".property.units_short").val();
+    value = $("input#" + _id + ".property.default_value").val();
+    roles = $("select#" + _id + ".property.role_ids").val();
     _valid = true;
-    if (name.length > 0) {
-      if (!$("span#property_name").hasClass("valid")) {
-        $("span#property_name").addClass("valid");
+    rx = /^[A-Za-z0-9]+[A-Za-z0-9\-\_]*[A-Za-z0-9]+$/;
+    if (name.length > 1 && rx.test(name)) {
+      if (!$("span#" + _id + ".property.name").hasClass("valid")) {
+        $("span#" + _id + ".property.name").addClass("valid");
       }
     } else {
-      $("span#property_name").removeClass("valid");
+      $("span#" + _id + ".property.name").removeClass("valid");
       _valid = false;
     }
-    rx = /^\d+$/;
-    if (!$("span#property_default_label").hasClass("valid")) {
-      $("span#property_default_label").addClass("valid");
+    if (!$("span#" + _id + ".property.default_label").hasClass("valid")) {
+      $("span#" + _id + ".property.default_label").addClass("valid");
     }
-    if (!$("span#property_units").hasClass("valid")) {
-      $("span#property_units").addClass("valid");
+    if (!$("span#" + _id + ".property.units").hasClass("valid")) {
+      $("span#" + _id + ".property.units").addClass("valid");
     }
-    if (!$("span#property_units_short").hasClass("valid")) {
-      $("span#property_units_short").addClass("valid");
+    if (!$("span#" + _id + ".property.units_short").hasClass("valid")) {
+      $("span#" + _id + ".property.units_short").addClass("valid");
     }
-    if (!$("span#property_default_value").hasClass("valid")) {
-      $("span#property_default_value").addClass("valid");
+    if (!$("span#" + _id + ".property.default_value").hasClass("valid")) {
+      $("span#" + _id + ".property.default_value").addClass("valid");
     }
-    if (!$("span#property_roles").hasClass("valid")) {
-      $("span#property_roles").addClass("valid");
+    if (!$("span#" + _id + ".property.role_ids").hasClass("valid")) {
+      $("span#" + _id + ".property.role_ids").addClass("valid");
     }
     if (_valid) {
-      return valid();
+      return valid(_id);
     } else {
-      return invalid();
+      return invalid(_id);
     }
   };
 
   window.NewPropertyValidation = NewPropertyValidation;
 
-  valid = function() {
-    $("span#property_name, span#property_units, span#property_default_label, span#property_default_value, span#property_units_short").addClass("valid");
-    return $("input[type=submit]#create-property").removeClass('disabled');
+  valid = function(_id) {
+    $("span#" + _id + ".property.name, span#" + _id + ".property.units, span#" + _id + ".property.default_label, span#" + _id + ".property.default_value, span#" + _id + ".property.units_short").addClass("valid");
+    return $("input#" + _id + ".submit.property").removeClass('disabled');
   };
 
-  invalid = function() {
-    return $("input[type=submit]#create-property").addClass('disabled');
+  invalid = function(_id) {
+    return $("input#" + _id + ".property.submit").addClass('disabled');
   };
 
 }).call(this);
 (function() {
-  var confirmDefault, deleteModal, resetDefaultChangeButtons, setLabel, validateName;
+  var confirmDefault, deleteModal, get_role_params, resetDefaultChangeButtons, setLabel, validateName;
 
-  window.save_def_change = false;
+  window.save_def_change = 0;
+
+  window.test = 0;
 
   $(function() {
     if ($('body').hasClass("roles")) {
       console.log("roles");
       $("input[type='text']").prop("autocomplete", "off");
+      $("#delete-confirm").on("shown.bs.modal", function(e) {
+        console.log("show delete confirm");
+        return $("span#new-default").html($("select#new-default")[0].options[$("select#new-default")[0].selectedIndex].text);
+      });
       $("#default-confirm").on("hidden.bs.modal", function(e) {
         var _def_change;
         _def_change = $("button.def-change.selected")[0].id;
-        if (window.save_def_change) {
-          if (_def_change === "true") {
-            $("input#role_change_defaults").val("true");
-          } else if (_def_change === "false") {
-            $("input#role_change_defaults").val("false");
-          }
+        console.log("change defaults: " + _def_change);
+        if (window.save_def_change > 0) {
+          $("input#role_change_defaults").val(_def_change);
         } else {
           $("button#role_default").click();
         }
-        return window.save_def_change = false;
+        return window.save_def_change = 0;
       });
       setLabel("role_admin");
       setLabel("role_default");
@@ -26905,6 +27347,7 @@ the specific language governing permissions and limitations under the Apache Lic
           $("span#final-message").html("WILL BE");
           $("span#final-message").removeClass("alert-success");
           $("span#final-message").addClass("alert-danger");
+          $("input#role_change_default_users").val("true");
         } else if (clicked === _false[0].id && !_false.hasClass("selected")) {
           _true.removeClass("selected");
           _true.removeClass("btn-danger");
@@ -26913,6 +27356,7 @@ the specific language governing permissions and limitations under the Apache Lic
           $("span#final-message").html("WILL NOT BE");
           $("span#final-message").removeClass("alert-danger");
           $("span#final-message").addClass("alert-success");
+          $("input#role_change_default_users").val("false");
         }
         return false;
       });
@@ -26924,11 +27368,10 @@ the specific language governing permissions and limitations under the Apache Lic
         return console.log("delete default clicked");
       });
       $("body").on("click", "button.close-modal", function(e) {
-        e.preventDefault();
         if ($(this).hasClass("save")) {
-          window.save_def_change = true;
+          save_def_change++;
+          test++;
         }
-        return false;
       });
       $("body").on("change", "select#new-role", function(e) {
         var new_role;
@@ -26938,20 +27381,37 @@ the specific language governing permissions and limitations under the Apache Lic
         }
         return $("span#new-role").html(new_role);
       });
-      return $("body").on("click", "button#btn-delete-confirm", function(e) {
+      $("body").on("click", "button#btn-delete-confirm", function(e) {
         var params;
         console.log("confirm delete");
         params = $.param({
           id: $("span.delete-role-id")[0].id,
-          new_id: $("select#new-role").val()
+          new_id: $("select#new-default").val()
         });
         return $.ajax({
           url: "/roles/confirm_delete?" + params,
           type: 'POST'
         });
       });
+      return $("body").on("input", "input#role_search", function(e) {
+        var params;
+        console.log($(this).val());
+        params = get_role_params();
+        $.get("roles?" + params);
+        return false;
+      });
     }
   });
+
+  get_role_params = function() {
+    var params;
+    params = $.param({
+      role_search: $("input#role_search").val(),
+      roles_page: "1",
+      event: "role"
+    });
+    return params;
+  };
 
   deleteModal = function(_id) {
     var params;
@@ -26988,24 +27448,39 @@ the specific language governing permissions and limitations under the Apache Lic
   confirmDefault = function() {
     var default_val;
     default_val = $("input#role_default").val();
+    console.log("val: " + default_val);
     if (default_val === "true") {
       return $("#default-confirm").modal("show");
     }
   };
 
   validateName = function(input) {
-    var label, submit;
+    var label, rx, submit;
     label = $("span#role_name");
     submit = $("input[type=submit]");
-    if (input.length > 0 && label.hasClass("label-default")) {
+    rx = /^[A-Za-z0-9]+[A-Za-z0-9\-\_]*[A-Za-z0-9]+$/;
+    if (input.length > 0 && rx.test(input) && label.hasClass("label-default")) {
       label.removeClass("label-default");
       label.addClass("label-success");
       submit.removeClass("disabled");
+      $("body").on("keydown", "input.role", function(e) {
+        console.log("enter valid");
+        if (e.keyCode === 13) {
+          return $("form").submit();
+        }
+      });
     }
-    if (input.length < 1 && label.hasClass("label-success")) {
+    if ((input.length < 1 || !rx.test(input)) && label.hasClass("label-success")) {
       label.removeClass("label-success");
       label.addClass("label-default");
-      return submit.addClass("disabled");
+      submit.addClass("disabled");
+      return $("body").on("keydown", "input.role", function(e) {
+        console.log("enter valid");
+        if (e.keyCode === 13) {
+          e.preventDefault();
+          return false;
+        }
+      });
     }
   };
 
@@ -27019,20 +27494,66 @@ the specific language governing permissions and limitations under the Apache Lic
 
 }).call(this);
 (function() {
+  var deleteModal, get_user_params;
+
   $(function() {
-    if ($("body").hasClass("edit-user")) {
+    if ($("body").hasClass("edit-user") || $("body").hasClass("signup")) {
       console.log("hell0?");
-      $("select#set_role").select2({
+      $("select#role_id").select2({
         placeholder: "Choose a Role...",
         allowClear: false
       });
-      $("select#set_role").on("change", function(e) {
-        var _val;
-        return _val = $(this).val();
+    }
+    if ($("body").hasClass("users-index")) {
+      $("body").on("input", "input#user_search", function(e) {
+        var params;
+        console.log($(this).val());
+        params = get_user_params();
+        $.get("users?" + params);
+        return false;
       });
-      return console.log("value: " + _val);
+      $("body").on("click", "span.delete", function(e) {
+        console.log("delete clicked");
+        deleteModal(this.id);
+        return console.log("delete clicked");
+      });
+      return $("body").on("click", "button#btn-delete-confirm", function(e) {
+        var params;
+        console.log("confirm delete");
+        params = $.param({
+          id: $("span.delete-user-id")[0].id
+        });
+        return $.ajax({
+          url: "/users/confirm_delete?" + params,
+          type: 'POST'
+        });
+      });
     }
   });
+
+  deleteModal = function(_id) {
+    var params;
+    if (_id.length < 1) {
+      return false;
+    }
+    params = $.param({
+      id: _id
+    });
+    return $.ajax({
+      url: "/users/delete_request?" + params,
+      type: 'POST'
+    });
+  };
+
+  get_user_params = function() {
+    var params;
+    params = $.param({
+      user_search: $("input#user_search").val(),
+      users_page: "1",
+      event: "user"
+    });
+    return params;
+  };
 
 }).call(this);
 // This is a manifest file that'll be compiled into application.js, which will include all the files
@@ -27062,15 +27583,15 @@ $(function()
 {
     window.toolize();
 
-    $("a.refresh").hover(
-        function() { $(this).addClass("fa-spin") },
-        function() { $(this).removeClass("fa-spin") }
-    )
-
     if( !$("body").hasClass("signup") && !$("body").hasClass("signin") )
     {
       $("input[type='text']").prop("autocomplete", "off");
     }
+
+    setInterval(function()
+      { 
+        setTimeout(function(){ $("div.notice").fadeOut(1500); }, 3000);
+      }, 5000);
 });
 
 

@@ -17,3 +17,6 @@
 
 #security
 /.secret
+
+#Mac OS indexing
+.DS_Store
