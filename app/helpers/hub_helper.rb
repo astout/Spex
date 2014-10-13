@@ -174,11 +174,29 @@ module HubHelper
     result
   end
 
+  def replace_converters(string)
+    result = string
+    rx = /(\s|^)(?<converter>([\d]+([.]\d+)?){1}([.][a-zA-Z]+){1,3})/
+    _scan = string.scan(rx).flatten.compact
+    return string if _scan.empty?
+    _scan.each do |part|
+      puts "adding .value to: '#{part}'"
+      replace = part
+      replace += ".value"
+      result.sub!(part, replace)
+    end
+    puts "result: '#{result}'"
+    return result
+  end
+
   def evaluate_value(value)
     return value if value.blank?
-    result = value
-    rx = /(\s|^)(([\d]+([.]\d+)?)[.][a-zA-Z]+([.][a-zA-Z]+)*)/
-    if result.scan(rx).flatten.compact.count > 0
+    # result = value
+    result = replace_converters(value)
+    # rx = /(\s|^)(([\d]+([.]\d+)?)[.][a-zA-Z]+([.][a-zA-Z]+){0,2})/
+    rx = /(\s|^)(?<converter>([\d]+([.]\d+)?){1}([.][a-zA-Z]+){1,3})/
+    # rx = /(\s|^)(([\d]+([.]\d+)?){1}([.][a-zA-Z]+){1,3})/
+    if result.scan(rx).flatten.compact.count > 0 || ["round", "ceil", "floor"].any? { |word| value.include?(word) }
       begin result = eval(result).to_s
       rescue Exception => e
         puts "error caught:"
