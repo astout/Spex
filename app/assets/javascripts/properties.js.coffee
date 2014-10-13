@@ -16,12 +16,13 @@ $ ->
             input.property.default_value").on "input", ->
               NewPropertyValidation(this.id)
 
-        $("body").on "keypress", "input.property.name", (e) ->
+        $("body").on "keyup", "input.property.name", (e) ->
           if e.keyCode == 32 #spacebar pressed
-            e.preventDefault()
-            $(this).val($(this).val() + "_")
+            # e.preventDefault()
+            # $(this).val($(this).val() + "_")
+            $(this).val($(this).val().replace(" ", "_"))
             NewPropertyValidation(this.id)
-            return false
+            # return false
 
         window.properties_selectize_all()
         NewPropertyValidation($("input.property.name")[0].id)
