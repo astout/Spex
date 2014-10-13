@@ -1,6 +1,0 @@
-<% if @all_properties.any? %>
-  <ol class="property_associations" id="property-list">
-    <%= render partial: 'add_property', collection: @all_properties %>
-  </ol>
-  <%= will_paginate @all_properties %>
-<% end %>

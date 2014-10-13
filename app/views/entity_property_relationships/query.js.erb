@@ -1,3 +1,9 @@
-console.log("1");
-$("div#epr_list").html("<%= j render partial: 'entity_property_relationships/epr_list' %>");
-console.log("2");
+if ($("body").hasClass("query"))
+{
+    $("div#epr_list").html("<%= j render partial: 'entity_property_relationships/epr_list', locals: { columns: ['entity', 'group', 'property', 'label', 'value', 'units', 'units_short', 'updated'] } %>");
+}
+else
+{
+    $("div#epr_list").html("<%= j render partial: 'entity_property_relationships/epr_list', locals: {columns: ['property', 'value', 'edit'] } %>");
+}
+window.eprRefresh();

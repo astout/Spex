@@ -34,6 +34,15 @@ module EntityGroupRelationsHelper
     return created_relations
   end
 
+  def egrs_index
+    inclusion = []
+    e = selected_entity()
+    unless e.blank?
+      inclusion = e.group_relations
+    end
+    EntityGroupRelationship.index(params[:egr_search], egr_sort_column, egr_sort_direction, params[:egr_page], 10, [], inclusion)
+  end
+
   def get_egrs(selected_entity)
     entitys_group_relations = { status: -1, msg: "", data: [] }
     #if nothing selected
@@ -59,12 +68,6 @@ module EntityGroupRelationsHelper
   def egr_list(selected_entity)
     # egrs = EntityGroupRelationship.index("", "position", "ASC", params[:egrs_page], 10, [], selected_entity.group_relations)
     egrs = selected_entity.group_relations.paginate(page: params[:egrs_page], per_page: 10, position: 'position ASC')
-    puts "-- EGR LIST --"
-    egrs.each do |egr|
-      puts egr['entity_id']
-      puts egr['group_id']
-      puts egr['position']
-    end
     return egrs
   end
 
@@ -152,6 +155,10 @@ module EntityGroupRelationsHelper
       end
     end
     return moved_egrs
+  end
+
+  def egr_params
+    params.require(:entity_group_relationship).permit(:label)
   end
 
   def egr_sort_column

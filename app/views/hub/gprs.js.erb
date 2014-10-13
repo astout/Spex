@@ -57,6 +57,7 @@ $('#properties').html("<%= j render partial: 'properties/properties', locals: { 
 
 $('#gprs').html("<%= j render partial: 'groups/properties', locals: { show_units: false, show_created: false, show_remove: false, show_position: true } %>");
 
+eprPagination();
 persistStyling();
 $(".edit-epr-form").hide();
 // $("ul.nav-tabs").tab();

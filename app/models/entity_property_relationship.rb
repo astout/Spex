@@ -22,6 +22,12 @@ class EntityPropertyRelationship < ActiveRecord::Base
     r.roles = r.property.roles
     r.units = r.property.units
     r.units_short = r.property.units_short
+    r.save
+  end
+
+  def display_name
+    return self.label unless self.label.blank?
+    return self.property.display_name
   end
 
   def egr

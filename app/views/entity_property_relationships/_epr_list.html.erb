@@ -1,10 +1,12 @@
-
+<% unless defined? columns %>
+    <% columns = [] %>
+<% end %>
 <% unless @role.viewables.count < 1 %>
     <script type="text/javascript">
         $("div#search-field").show();
     </script>
     <!-- List -->
-    <%= render partial: "entity_property_relationships/eprs", locals: { show_remove: false } %>
+    <%= render partial: "entity_property_relationships/eprs", locals: { columns: columns } %>
 <% else %>
     <script type="text/javascript">
         $("div#search-field").hide();

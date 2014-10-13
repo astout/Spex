@@ -2,6 +2,16 @@
 
 <% _id = @property.id || "new" %>
 
+<% if _id == "new" %>
+    <label class="control-label" for="copy_from" style="font-size: 9pt">Copy Fields From</label>
+    <br>
+    <%= select_tag :copy_from, options_from_collection_for_select(Property.all, "id", "name", ""), id: _id, class: "form-control property copy_from col-xs-12 input-sm", include_blank: true, autocomplete: "off"%>
+
+    <div style="float: right; width: 100%">
+        <%= button_tag "Copy", type: "button", class: "btn btn-sm property copy btn-success", id: _id, style: "float: right; margin-bottom: 5px" %>
+    </div>
+<% end %>
+
 <%= hidden_field_tag :property_id, @property.id || "new" %>
 
 <span id="<%= _id %>" class="label label-default property name new-property-label">Name</span>

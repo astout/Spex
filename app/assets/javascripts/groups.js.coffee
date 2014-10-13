@@ -10,7 +10,7 @@ $ ->
             NewGroupValidation()
         NewGroupValidation()
 
-    if $("body").hasClass("groups-index")
+    if $("body").hasClass("groups")
       #Every character change in Search field, submit query
       $("body").on "input", "input#group_search", (e) ->
           console.log $(this).val()

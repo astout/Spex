@@ -15,7 +15,7 @@ $ ->
     #   console.log("value: " + _val)
     #   $("input#role_id").val(_val)
 
-  if $("body").hasClass("users-index")
+  if $("body").hasClass("users")
     #Every character change in Search field, submit query
       $("body").on "input", "input#user_search", (e) ->
           console.log $(this).val()

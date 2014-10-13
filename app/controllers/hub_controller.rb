@@ -595,6 +595,18 @@ class HubController < ApplicationController
     end
   end
 
+  def property_copy_fields
+    @property = Property.find_by id: params[:copy_id]
+    # @property.id = "new" unless @property.blank?
+    # puts "property"
+    # puts @property
+    # puts @property.role_ids
+    respond_to do |format|
+      format.js
+      format.html
+    end
+  end
+
   #deletes the properties passed as :selected_properties param
   #:selected_properties is expected to be an array
   def delete_properties

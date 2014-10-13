@@ -10,7 +10,7 @@ class Group < ActiveRecord::Base
     inverse_of: :groups
   VALID_NAME_REGEX = /\A[a-z0-9]+[a-z0-9\-\_]*[a-z0-9]+\z/i
   validates :name,  presence: true, format: { with: VALID_NAME_REGEX }, 
-    length: { minimum: 2, maximum: 32 },
+    length: { minimum: 2, maximum: 64 },
     uniqueness: { case_sensitive: false }
 
   before_save do |group|
@@ -34,6 +34,12 @@ class Group < ActiveRecord::Base
 
   def label
     self.default_label
+  end
+
+  def display_name
+    return self.default_label unless self.default_label.blank?
+    return self.name unless self.name.blank?
+    return self.id
   end
 
   #####################

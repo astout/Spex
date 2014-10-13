@@ -46,6 +46,11 @@ class User < ActiveRecord::Base
     User.where("id not in (?)", User.admins.pluck(:id))
   end
 
+  def display_name
+    return self.first.to_s.capitalize + " " + self.last.to_s.capitalize unless self.first.blank? && self.last.blank?
+    return self.login
+  end
+
   #true if user role has admin rights
   def admin?
     return false if self.role.nil?

@@ -1,5 +1,4 @@
 
-
 $ ->
 
     $("body").on "input", "input.epr-formula-text", (e) ->
@@ -160,3 +159,4 @@ do_selectize = (_model) ->
       $("div#s2id_"+this.id+".select2-container.epr-ref-"+_model).select2("open")
       e.preventDefault()
       return false
+#end do_selectize

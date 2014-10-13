@@ -9,7 +9,7 @@ class Role < ActiveRecord::Base
 
   VALID_NAME_REGEX = /\A[a-z0-9]+\s?[a-z0-9\-\_]*\s?[a-z0-9]+\z/i
   validates :name,  presence: true, format: { with: VALID_NAME_REGEX }, 
-    length: { minimum: 2, maximum: 20 },
+    length: { minimum: 2, maximum: 32 },
     uniqueness: { case_sensitive: false }
 
 

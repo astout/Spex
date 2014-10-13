@@ -29,7 +29,7 @@ $ ->
           if e.keyCode == 13 && $("input.submit").hasClass("disabled")
             return false
     
-    if $("body").hasClass("properties-index")
+    if $("body").hasClass("properties")
       #Every character change in Search field, submit query
       $("body").on "input", "input#property_search", (e) ->
           console.log $(this).val()

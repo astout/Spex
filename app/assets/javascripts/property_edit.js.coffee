@@ -76,6 +76,19 @@ $ ->
       _value = $("textarea#"+this.id+".property.default_value").val($("textarea#"+this.id+".property.default_value").val().trim() + " " + this.value)
       e.preventDefault()
       return false
+
+    $("body").on "click", "button#new.property.copy", (e) ->
+      e.preventDefault()
+      console.log("id: " + $("select.property.copy_from").val() + " copy")
+      _id = $("select.property.copy_from").val()
+      params = $.param( { 
+        copy_id: _id
+        } )
+      $.ajax 
+        url: "/hub/property_copy_fields?" + params
+        type: 'GET'
+      return false
+
 #end startup
 
 properties_selectize_all = () ->
@@ -84,6 +97,10 @@ properties_selectize_all = () ->
   do_selectize("property")
   $("select.property.role_ids").select2({
     placeholder: "Roles that see this property...",
+    })
+  $("select.property.copy_from").select2({
+    placeholder: "Copy fields from...",
+    allowClear: true
     })
 window.properties_selectize_all = properties_selectize_all
 

@@ -10,7 +10,8 @@
   </head>
   <body>
     <%= render 'layouts/header' %>
-    <div class="container">
+    <div id="content" class="outer container">
+      <div id="content" class="inner">
         <div class="inner-padding15">
             <% flash.each do |key, value| %>
                 <div id="flash">
@@ -21,6 +22,7 @@
             <%= render 'layouts/footer' %>
             <%= debug(params) if Rails.env.development? %>
         </div>
+      </div>
     </div>
   </body>
 </html>

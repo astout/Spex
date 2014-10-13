@@ -1,30 +1,46 @@
 <% if @role.viewables.pluck(:id).include? epr.id %>
   <tr id=<%= "#{epr.id}" %> class="list-item epr">
-      <td>
-        <%= link_to epr.entity.name.capitalize, epr.entity %>
-      </td>
-      <td>
-        <%= link_to epr.group.name.capitalize, epr.group %>
-      </td>
-      <td>
-        <%= link_to epr.property.name, epr.property %>
-      </td>
-      <td>
-        <%= epr.label %>
-      </td>
-      <td>
-        <%= parse_value(epr.value.dup, epr) %>
-      </td>
-      <td>
-        <%= epr.units %>
-      </td>
-      <td>
-        <%= epr.units_short %>
-      </td>
-      <td>
-        <%= "#{epr.updated_at.strftime('%m/%d/%Y %H:%M')}" %>
-      </td>
-      <% if admin_user? && show_remove %>
+      <% if columns.include? "entity" %>
+        <td>
+          <%= link_to epr.entity.name.capitalize, epr.entity %>
+        </td>
+      <% end %>
+      <% if columns.include? "group" %>
+        <td>
+          <%= link_to epr.group.name.capitalize, epr.group %>
+        </td>
+      <% end %>
+      <% if columns.include? "property" %>
+        <td>
+          <%= link_to epr.property.name, epr.property %>
+        </td>
+      <% end %>
+      <% if columns.include? "label" %>
+        <td>
+          <%= epr.label %>
+        </td>
+      <% end %>
+      <% if columns.include? "value" %>
+        <td>
+          <%= parse_value(epr.value.dup, epr) %>
+        </td>
+      <% end %>
+      <% if columns.include? "units" %>
+        <td>
+          <%= epr.units %>
+        </td>
+      <% end %>
+      <% if columns.include? "units_short" %>
+        <td>
+          <%= epr.units_short %>
+        </td>
+      <% end %>
+      <% if columns.include? "updated" %>
+        <td>
+          <%= "#{epr.updated_at.strftime('%m/%d/%Y %H:%M')}" %>
+        </td>
+      <% end %>
+      <% if columns.include? 'remove' %>
           <td class="delete-epr">
             <span id="<%= epr.id %>"  class="glyphicon glyphicon-trash delete alert-danger">
             </span>

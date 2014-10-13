@@ -22,6 +22,8 @@ class EntityPropertyRelationshipsController < ApplicationController
       @eprs = eprs_index
 
       @role = Role.find_by(id: params[:view_id] || current_user.role_id)
+      @role = Role.find_by(id: current_user.role_id) if @role.blank?
+      puts "role: #{@role}"
     end
 
     respond_to do |format|
@@ -40,7 +42,7 @@ class EntityPropertyRelationshipsController < ApplicationController
     match_params = {entity_id: epr_params[:entity_id], group_id: epr_params[:group_id], property_id: epr_params[:property_id]}
     @epr = EntityPropertyRelationship.find_by(match_params)
     @result = {msg: "", r: -1}
-    # @eprs = EntityPropertyRelationship.search(params[:epr_search]).order(epr_sort_column + ' ' + epr_sort_direction).paginate(page: params[:eprs_page], per_page: 10, order: 'created_at DESC')
+    # @eprs = EntityPropertyRelationship.search(params[:epr_search]).order(epr_sort_column + ' ' + epr_sort_direction).paginate(page: params[:epr_page], per_page: 10, order: 'created_at DESC')
 
     if @epr.nil?
       @epr = EntityPropertyRelationship.new(epr_params)
@@ -51,7 +53,7 @@ class EntityPropertyRelationshipsController < ApplicationController
         @result[:r] = 1
         @result[:msg] = "'#{@epr.entity.name @epr.property.name}' was saved."
         #entities needs to be updated to get the latest addition
-        # @eprs = EntityPropertyRelationship.search(params[:epr_search]).order(epr_sort_column + ' ' + epr_sort_direction).paginate(page: params[:eprs_page], per_page: 10, order: 'created_at DESC')
+        # @eprs = EntityPropertyRelationship.search(params[:epr_search]).order(epr_sort_column + ' ' + epr_sort_direction).paginate(page: params[:epr_page], per_page: 10, order: 'created_at DESC')
       end
     else
       @result[:r] = 0

@@ -1,4 +1,5 @@
 module EntityPropertyRelationsHelper
+  include EntityGroupRelationsHelper
 
   #retrieve the DB instances of the selected entity property relations
   def selected_eprs
@@ -46,7 +47,8 @@ module EntityPropertyRelationsHelper
   end
 
   def eprs_index
-    EntityPropertyRelationship.index(params[:epr_search], epr_sort_column, epr_sort_direction, params[:eprs_page], 10, [], [])
+    inclusion = epr_prioritize(selected_egrs())
+    EntityPropertyRelationship.index(params[:epr_search], epr_sort_column, epr_sort_direction, params[:epr_page], 10, [], inclusion)
   end
 
   #get the entity property relations for the selected group
@@ -77,7 +79,37 @@ module EntityPropertyRelationsHelper
     
     end #end each entity group relation
 
-    eprs = eprs.paginate(page: params[:gprs_page], per_page: 10, position: 'position ASC')
+    eprs = eprs.paginate(page: params[:epr_page], per_page: 10, position: 'position ASC')
+  end
+
+  def epr_prioritize(selected_egrs)
+    #start a list of properties that are being listed
+    used_properties = []
+
+    eprs = []
+
+    #for each selected entity group relation
+    selected_egrs.each do |group_relation|
+
+      #get the entity property relations that involve the current entity group relation
+      group_relation.eprs.each do |epr|
+
+        #unless the current entity property relation's property is already listed
+        unless used_properties.include? epr.property
+          
+          #add the entity property relation to the list
+          eprs |= [epr]
+
+          #
+          used_properties |= [epr.property]
+
+        end #end add to list
+      
+      end #end each entity property relation
+    
+    end #end each entity group relation
+
+    return eprs
   end
 
   def get_eprs(selected_egrs)

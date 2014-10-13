@@ -21,8 +21,26 @@
 //= require jquery.tokeninput
 //= require_tree .
 
+window.loading = false;
+
 $(function()
 {
+    $(document).on('page:fetch', function() {
+      console.log("loading");
+      window.loading = true;
+
+      setTimeout(function()
+        {
+          waiting();
+        }, 750);
+
+    });
+    $(document).on('page:change', function() {
+      window.loading = false;
+      console.log("loaded");
+    });
+
+
     window.toolize();
 
     if( !$("body").hasClass("signup") && !$("body").hasClass("signin") )
@@ -35,6 +53,15 @@ $(function()
         setTimeout(function(){ $("div.notice").fadeOut(1500); }, 3000);
       }, 5000);
 });
+
+function waiting () {
+  if (window.loading == true)
+  {
+    $("div#content.inner").fadeOut(300);
+    $("div#content.outer").html('<div id="content" class="inner" style="display: none;"><div class="loading outer"><h1>Loading <span class="fa fa-circle-o-notch fa-spin"></span></h1></div></div>');
+    $("div#content.inner").fadeIn(300);
+  }
+}
 
 
 function collapisbles () {

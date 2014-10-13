@@ -1,5 +1,11 @@
 <%= javascript_tag do %>
     $('body').addClass('hub');
+    $('body').addClass('entities');
+    $('body').addClass('properties');
+    $('body').addClass('entity_group_relationships');
+    $('body').addClass('entity_property_relationships');
+    $('body').addClass('group_property_relationships');
+    $('body').addClass('groups');
 <% end %>
 <div style="margin-bottom: 10px">
     <%= link_to "Home", root_path, style: "color: #494A4A" %>
@@ -7,7 +13,6 @@
     <%= link_to "Hub", hub_path, style: "color: #494A4A" %>
     <br>
 </div>
-
 <div id="hub-alert"></div>
 <div class="row">
     <aside class="col-xs-4 v-divider">
@@ -21,12 +26,12 @@
                 Existing Entities
             </h6>
             <div id="entity-alert2"></div>
-            <%= render partial: 'entities/search', locals: { path: hub_path, remote: true } %>
-            <div id="clear-selected-entity" class="btn btn-default btn-sm disabled">Clear</div>
-            <div id="delete-selected-entity" class="btn btn-danger btn-sm disabled">Delete</div>
-            <div style="padding-top: 10px"></div>
-            <div id="entities">
-                <%= render partial: 'entities/entities', locals: { show_created: false, show_remove: false } %>
+            <div id="entity" class="actions">
+                <%= render partial: 'entities/search', locals: { path: hub_path, remote: true } %>
+                <%= render partial: 'entities/actions'%>
+            </div>
+            <div id="entities" class="entities list">
+                <%= render partial: 'entities/entities', locals: { columns: ['name', 'updated'] } %>
             </div>
             <div id='ajax-test'></div>
         </row>
@@ -42,8 +47,7 @@
                 Selected Entity's Groups
             </h6>
             <div id="entitys-groups-alert"></div>
-            <div id="egrs"> 
-                <%= render partial: 'entities/groups', locals: { show_created: false, show_remove: false } %>
+            <div id="egrs" class="entity_group_relationships list"> 
             </div>
         </row>
         <row>
@@ -69,12 +73,13 @@
         </row>
         <row>
             <h6>
-                Selected Group's Properties
+                Selected Entity's Properties via Selected Group
             </h6>
             <div id="groups-properties-alert"></div>
             <div style="padding-top: 10px"></div>
-            <div id="gprs"> 
-                <%= render partial: 'groups/properties', locals: { show_units: false, show_created: false, show_position: true, show_remove: false } %>
+            <div id="eprs_gprs"> 
+                <div id="gpr_list"></div>
+                <div id="epr_list"></div>
             </div>
         </row>
         <row>
@@ -93,4 +98,5 @@
         </row>
     </aside>
 </div>
+<div id="delete-modal"></div>
 <br/>

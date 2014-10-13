@@ -1,23 +1,33 @@
+<% unless defined? columns %>
+    <% columns = [] %>
+<% end %>
+
 <table class="table table-condensed entities">
-    <th>
-        <%= entity_sortable "name" %>
-    </th>
-    <th>
-        <%= entity_sortable "label" %>
-    </th>
-    <% if show_created %>
+    <% if columns.include? 'name' %>
+        <th>
+            <%= entity_sortable "name" %>
+        </th>
+    <% end %>
+    <% if columns.include? 'label' %>
+        <th>
+            <%= entity_sortable "label" %>
+        </th>
+    <% end %>
+    <% if columns.include? 'created' %>
         <th>
             <%= entity_sortable "created_at", "Created" %>
         </th>
     <% end %>
-    <th>
-        <%= entity_sortable "updated_at", "Updated" %>
-    </th>
-    <% if show_remove && admin_user? %>
+    <% if columns.include? 'updated' %>
+        <th>
+            <%= entity_sortable "updated_at", "Updated" %>
+        </th>
+    <% end %>
+    <% if columns.include? 'remove' && admin_user? %>
         <th>
             Remove
         </th>
     <% end %>
-  <%= render partial: 'entities/entity', collection: @entities, locals: { show_created: show_created, show_remove: show_remove }  %>
+  <%= render partial: 'entities/entity', collection: @entities, locals: { columns: columns }  %>
 </table>
 <%= will_paginate @entities, inner_window: 0, outer_window: 0, param_name: 'entities_page', params: { event: 'entity' } %>

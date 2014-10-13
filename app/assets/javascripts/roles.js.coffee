@@ -27,7 +27,7 @@ $ ->
         setLabel("role_default")
         setLabel("role_change_view")
 
-        unless $('body').hasClass "roles-index"
+        unless $('body').hasClass "index"
             validateName($("input#role_name").val())
 
         $("body").on "click", "button.role-bool", (e) ->

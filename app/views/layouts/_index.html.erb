@@ -1,7 +1,7 @@
 <% provide(:title, "All #{model.capitalize.pluralize}") %>
 <div id="notice"></div>
 <script type="text/javascript">
-    $("body").addClass('<%= "#{model.pluralize}-index" %>');
+    $("body").addClass('<%= "#{model.pluralize} index" %>');
 </script>
 <!-- Reload defaults -->
 <div style="margin-bottom: 10px">
@@ -23,10 +23,13 @@
 <br/>
 
 <!-- Search Form -->
+<div id='<%="#{model}"%>' class="actions">
 <%= render partial: 'search', locals: { path: send("#{model.pluralize}_path"), remote: true } %>
+<%= render partial: 'actions' %>
+</div>
 
 <!-- List -->
-<div id="list">
+<div class='<%= "#{model.pluralize} list" %>'>
     <%= render partial: "#{model.pluralize}/#{model.pluralize}", locals: locale %>
 </div>
 

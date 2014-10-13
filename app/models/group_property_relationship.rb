@@ -20,4 +20,8 @@ class GroupPropertyRelationship < ActiveRecord::Base
     EntityPropertyRelationship.destroy_all group_id: r.group_id, property_id: r.property_id
     r.group.update_position(r.position)
   end
+
+  def display_name
+    return self.property.display_name
+  end
 end

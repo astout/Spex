@@ -19,9 +19,11 @@ Spex::Application.routes.draw do
   post "hub/delete_groups"
   post "hub/delete_properties"
   post "hub/create_property"
+  get "hub/property_copy_fields"
   get "hub/property_ref_update"
   post "hub/create_egrs"
   post "hub/delete_gprs"
+  get "hub/eprs"
   # post "hub/top_egrs"
   # post "hub/bottom_egrs"
   # post "hub/up_egrs"
@@ -95,7 +97,9 @@ Spex::Application.routes.draw do
   match '/signout', to: 'sessions#destroy',     via: 'delete'
   match '/help',    to: 'static_pages#help',    via: 'get'
   match '/home',    to: 'static_pages#home',    via: 'get'
-  match '/query',   to: 'entity_property_relationships#query',    via: 'get'
+  match '/epr_query',   to: 'entity_property_relationships#query',    via: 'get'
+  match '/egr_query',   to: 'entity_group_relationships#index',    via: 'get'
+  match '/entity_query',   to: 'entities#index',    via: 'get'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
