@@ -86,7 +86,7 @@
                   </td>
                 </tr>
               <% end %>
-              <% if admin_user? %>
+              <% if admin_user? && @role['admin'] == true %>
                 <tr>
                   <td colspan="100%" class="hidden-value">
                     <div id=<%= epr.id %> class="trueValue light-font">
