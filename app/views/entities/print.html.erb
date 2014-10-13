@@ -81,6 +81,12 @@
   }
 
 </style>
+<head>
+    <title><%= full_title(@entity.name) %></title>
+    <%= favicon_link_tag %>
+    <%= csrf_meta_tags %>
+    <%= render 'layouts/shim' %>
+</head>
 
 <% if @entity.properties.any? %>
   <table>
