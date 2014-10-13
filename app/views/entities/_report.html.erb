@@ -56,7 +56,7 @@
               <% end %>
             <% end %>
             <% @entity.property_relations_via(egr.group).each do |epr| %>
-              <% if epr.roles.pluck(:id).include?(@role['id'].to_i) || admin_user? %>
+              <% if epr.roles.pluck(:id).include?(@role['id'].to_i) || (admin_user? && @role['admin'] == true) %>
                 <tr id="<%= epr.id %>"  class="epr-row">
                   <td class="property-name" style="padding: 5px 0px 0px 20px">
                     <% found = false %>
