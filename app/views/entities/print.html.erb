@@ -83,97 +83,117 @@
 </style>
 <head>
     <title><%= full_title(@entity.name) %></title>
+    <%= javascript_include_tag "jquery", "data-turbolinks-track" => true %>
     <%= favicon_link_tag %>
     <%= csrf_meta_tags %>
     <%= render 'layouts/shim' %>
 </head>
-
-<% if @entity.properties.any? %>
+<body>
   <table>
     <tbody>
-    <% if @role.entity_viewables(@entity.id) < 1 %>
-      <tr>
-        <div class="empty">
-          <p><i>There are no properties defined for '<%= @label %>'</i></p>
-        </div>
-      </tr>
-    <% else %>
-      <% @counter = 0 %>
-      <tr class="header">
-       <% @counter += 1 %>
-       <td class="left">Technical
-       Specifications</td>
-       <td class="right">&nbsp;</td>
-      </tr>
-      <tr class='<%= "title #{@counter.even? ? 'even' : 'odd'}" %>'>
-       <% @counter += 1 %>
-       <td class="left">Product:</td>
-       <td class="right"><%= @label %></td>
-      </tr>
-      <% @entity.group_relations.each do |egr| %>
-        <% unless @role.blank? %>
-          <% unless @role.egr_viewables(egr.entity_id, egr.group_id) < 1 %>
-            <tr class='<%= "blank #{@counter.even? ? 'even' : 'odd'}" %>'>
-              <% @counter += 1 %>
-              <td class="left">&nbsp;</td>
-              <td class="right">&nbsp;</td>
-            </tr>
-            <tr class='<%= "group #{@counter.even? ? 'even' : 'odd'}" %>'>
-              <% @counter += 1 %>
-              <td class="left">
-                <% found = false %>
-                <% if !egr.label.blank? && !found %>
-                  <%= "#{egr.label}:" %>
-                  <% found = true %>
-                <% elsif !egr.group.default_label.blank? && !found %>
-                  <%= "#{egr.group.default_label}:" %>
-                  <% found = true %>
-                <% else !egr.group.name.blank? && !found %>
-                  <%= "#{egr.group.name}:" %>
-                  <% found = true %>
+      <% if @entity.properties.any? %>
+        <% if @role.entity_viewables(@entity.id) < 1 %>
+          <tr>
+            <td class="empty" colspan="2">
+              <p align="center"><i>There are no properties defined for '<%= @label %>'</i></p>
+            </td>
+          </tr>
+        <% else %>
+          <% @row_counter = 0 %>
+          <tr class="header">
+           <% @row_counter += 1 %>
+           <td class="left">Technical
+           Specifications</td>
+           <td class="right">&nbsp;</td>
+          </tr>
+          <tr class='<%= "title #{@row_counter.even? ? 'even' : 'odd'}" %>'>
+           <% @row_counter += 1 %>
+           <td class="left">Product:</td>
+           <td class="right"><%= @label %></td>
+          </tr>
+          <% group_count = 0 %>
+          <% @entity.group_relations.each do |egr| %>
+            <% unless @role.blank? %>
+              <% unless @role.egr_viewables(egr.entity_id, egr.group_id) < 1 %>
+                <tbody id='<%= egr.id %>'>
+                  <% unless group_count == 0 %>
+                    <tr class='<%= "blank #{@row_counter.even? ? 'even' : 'odd'}" %>'>
+                      <% @row_counter += 1 %>
+                      <td class="left">&nbsp;</td>
+                      <td class="right">&nbsp;</td>
+                    </tr>
+                  <% end %>
+                  <tr class='<%= "group #{@row_counter.even? ? 'even' : 'odd'}" %>'>
+                    <% @row_counter += 1 %>
+                    <% group_count += 1 %>
+                    <td class="left">
+                      <% found = false %>
+                      <% if !egr.label.blank? && !found %>
+                        <%= "#{egr.label}:" %>
+                        <% found = true %>
+                      <% elsif !egr.group.default_label.blank? && !found %>
+                        <%= "#{egr.group.default_label}:" %>
+                        <% found = true %>
+                      <% else !egr.group.name.blank? && !found %>
+                        <%= "#{egr.group.name}:" %>
+                        <% found = true %>
+                      <% end %>
+                    </td>
+                    <td class="right">&nbsp;</td>
+                  </tr>
+              <% end %>
+            <% end %>
+            <% valid_count = 0 %>
+            <% @entity.property_relations_via(egr.group).each do |epr| %>
+              <% value = parse_value("#{epr.value}", epr).to_s %>
+              <% if epr.roles.pluck(:id).include?(@role['id'].to_i) || (admin_user? && @role['admin'] == true ) %>
+                <% if (!value.blank? && (value =~ /\{|\}/i).blank?) || (admin_user? && @role['admin'] == true) %>      
+                  <tr id="<%= epr.id %>" class='<%= "property #{@row_counter.even? ? 'even' : 'odd'}" %>'>
+                    <% @row_counter += 1 %>
+                    <td class="left">
+                      <% found = false %>
+                      <% final_label = "" %>
+                      <% if !epr.label.blank? && !found %>
+                        <% final_label = epr.label %>
+                        <% found = true %>
+                      <% elsif !epr.property.default_label.blank? && !found %>
+                        <% final_label = epr.property.default_label %>
+                        <% found = true %>
+                      <% else !epr.property.name.blank? && !found %>
+                        <% final_label =  epr.property.name %>
+                        <% found = true %>
+                      <% end %>
+                      <%= final_label %>
+                    </td>
+                    <td id=<%= epr.id %> class="right">
+                      <%= value + " " + epr.units_short.to_s %>
+                    </td>
+                  </tr>
+                  <% valid_count += 1 %>
                 <% end %>
-              </td>
-              <td class="right">&nbsp;</td>
-            </tr>
+              <% end %>
+            <% end %>
+            </tbody>
+            <% if valid_count == 0 %>
+              <% group_count -= 1 %>
+              <% @row_counter -= 1 %>
+              <script type="text/javascript">
+                $('tbody#<%=egr.id%>').html("");
+              </script>
+            <% end %>
           <% end %>
         <% end %>
-        <% @entity.property_relations_via(egr.group).each do |epr| %>
-          <% if epr.roles.pluck(:id).include?(@role['id'].to_i) || (admin_user? && @role['admin'] == true ) %>
-            <tr id="<%= epr.id %>" class='<%= "property #{@counter.even? ? 'even' : 'odd'}" %>'>
-              <% @counter += 1 %>
-              <td class="left">
-                <% found = false %>
-                <% final_label = "" %>
-                <% if !epr.label.blank? && !found %>
-                  <% final_label = epr.label %>
-                  <% found = true %>
-                <% elsif !epr.property.default_label.blank? && !found %>
-                  <% final_label = epr.property.default_label %>
-                  <% found = true %>
-                <% else !epr.property.name.blank? && !found %>
-                  <% final_label =  epr.property.name %>
-                  <% found = true %>
-                <% end %>
-                <%= final_label %>
-              </td>
-              <td id=<%= epr.id %> class="right">
-                <%= parse_value("#{epr.value}", epr).to_s + " " + epr.units_short.to_s %>
-              </td>
-            </tr>
-          <% end %>
-        <% end %>
+        <tr class="last">
+          <td></td>
+          <td></td>
+        </tr>
+      <% else %>
+        <tr>
+          <td colspan="2">
+            <p align="center"><i>There are no properties defined for '<%= @label %>'</i></p>
+          </td>
+        </tr>
       <% end %>
-    <% end %>
-    <tr class="last">
-      <td></td>
-      <td></td>
-    </tr>
-  </tbody>
+    </tbody>
   </table>
-<% else %>
-  <tr>
-    <div class="empty">
-      <p><i>There are no properties defined for '<%= @label %>'</i></p>
-    </div>
-  </tr>
-<% end %>
+</body>
