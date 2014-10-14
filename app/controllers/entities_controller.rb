@@ -102,8 +102,10 @@ class EntitiesController < ApplicationController
     end
     @role = Role.find_by(id: params[:view_id] || current_user.role_id).attributes
 
-    @groups_all = @entity.groups
-    @properties_all = @entity.properties_via(@entity.groups.first)
+    unless @entity.blank?
+      @groups_all = @entity.groups
+      @properties_all = @entity.properties_via(@entity.groups.first)
+    end
     @updated_property = params[:property]
   end
 

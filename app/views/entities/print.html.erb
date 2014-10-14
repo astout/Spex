@@ -113,6 +113,11 @@
       <% @entity.group_relations.each do |egr| %>
         <% unless @role.blank? %>
           <% unless @role.egr_viewables(egr.entity_id, egr.group_id) < 1 %>
+            <tr class='<%= "blank #{@counter.even? ? 'even' : 'odd'}" %>'>
+              <% @counter += 1 %>
+              <td class="left">&nbsp;</td>
+              <td class="right">&nbsp;</td>
+            </tr>
             <tr class='<%= "group #{@counter.even? ? 'even' : 'odd'}" %>'>
               <% @counter += 1 %>
               <td class="left">
@@ -152,7 +157,7 @@
                 <%= final_label %>
               </td>
               <td id=<%= epr.id %> class="right">
-                <%= parse_value("#{epr.value}", epr).to_s + epr.units_short.to_s %>
+                <%= parse_value("#{epr.value}", epr).to_s + " " + epr.units_short.to_s %>
               </td>
             </tr>
           <% end %>
