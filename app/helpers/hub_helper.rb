@@ -126,7 +126,6 @@ module HubHelper
   def parse_value(value, epr=nil)
     return unless value.class == String
     result = value
-    vars = []
     #split the string by variable references
     # rx = /([{]\w*\s*\w+[.]\w*\s*\w+[.]\w*\s*\w+[}])|([{][\*][.]\w*\s*\w+[.]\w*\s*\w+[}])|([{][\*][.][\*][.]\w*\s*\w+[}])/
     rx = /([{]\w*\s*\w+[.]\w*\s*\w+[.]\w*\s*\w+[}])|([{][\*][.]\w*\s*\w+[.]\w*\s*\w+[}])|([{][\*][.][\*][.]\w*\s*\w+[}])|
@@ -268,6 +267,12 @@ module HubHelper
     relationship = EntityPropertyRelationship.find_by entity_id: entity.id, group_id: group.id, property_id: property.id
 
     return ref if relationship.nil?
+
+    #prevent circular dependencies
+    if !epr.blank? && epr == relationship
+      puts "CIRCULAR DEPENDENCY"
+      return ref
+    end
 
     value = parse_value(relationship.value.to_s, epr)
     return value.to_s
