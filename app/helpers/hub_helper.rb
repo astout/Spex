@@ -175,17 +175,37 @@ module HubHelper
 
   def replace_converters(string)
     result = string
-    rx = /(\s|^)(?<converter>([\d]+([.]\d+)?){1}([.][a-zA-Z]+){1,3})/
-    _scan = string.scan(rx).flatten.compact
-    return string if _scan.empty?
-    _scan.each do |part|
-      puts "adding .value to: '#{part}'"
-      replace = part
-      replace += ".value"
-      result.sub!(part, replace)
+    # rx = /(\s|^)(?<converter>([\d]+([.]\d+)?){1}([.][a-zA-Z]+){1,3})/
+    rx = /(\s|^)(?<number>([\d]+([.]\d+)?){1})(?<converter>(([.](?!round)(?!floor)(?!ceil)[a-zA-Z]+){1,3}))(?<rounder>([.]?((round)|(ceil)|(floor))(\({1}[-]?\w*\){1})?))?/ 
+
+    m = result.match(rx)
+
+    if !m.blank? && !m['converter'].blank?
+      result.sub!( m['converter'].to_s, m['converter'].to_s + ".value" )
     end
+
     puts "result: '#{result}'"
     return result
+
+    # _scan = string.scan(rx).flatten.compact
+    # return string if _scan.empty?
+    # puts "-- - - - -- - SCAN - - -- - - -"
+    # puts _scan
+    # _scan.each do |part|
+
+    #   #match round, ceil, and floor with or without parameters
+    #   rx = /[.]?((round)|(ceil)|(floor))(\({1}[-]?\w*\){1})?/
+
+    #   puts "adding .value to: '#{part}'"
+    #   # replace = part
+    #   # replace += ".value"
+    #   temp = part.gsub(rx, '')  #chop off match
+    #   temp += ".value"          #append .value
+    #   temp += part[rx].to_s     #append match
+    #   result.sub!(part, temp)   #replace
+    # end
+    # puts "result: '#{result}'"
+    # return result
   end
 
   def evaluate_value(value)
