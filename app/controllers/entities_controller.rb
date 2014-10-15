@@ -240,7 +240,14 @@ class EntitiesController < ApplicationController
   def print
     @entity = Entity.find_by(id: params[:e])
     @role = Role.find_by(id: params[:v])
-    @role = Role.default if @role.blank?
+    # @role = Role.default if @role.blank?
+    @role = Role.default if (!signed_in? || @role.blank?)
+
+    if signed_in?
+      if !@current_user.role.change_view?
+        @role = Role.default
+      end
+    end
 
     @label = ''
     unless @entity.label.blank?

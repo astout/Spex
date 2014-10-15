@@ -123,7 +123,15 @@ module HubHelper
   #match each occurrence of enclosures of double brackets
   #\[\[([^]]+)\]\]
 
-  def parse_value(value, epr=nil)
+  def parse_value(value, epr=nil, epr_list=[])
+
+    if epr_list.include? epr
+      puts "- - - - - -CIRCULAR DEPENDENCY- - - - - - -"
+      return value
+    else
+      epr_list.push epr
+    end
+
     return unless value.class == String
     result = value
     #split the string by variable references
@@ -144,7 +152,7 @@ module HubHelper
         puts "GETTING VALUE FOR: "
         puts scan.first
         #parse the reference, get the value
-        val = parse_reference(scan.first, epr)
+        val = parse_reference(scan.first, epr, epr_list)
         puts "VALUE RETRIEVED: "
         puts val
         val = piece if val == scan.first
@@ -238,7 +246,7 @@ module HubHelper
     pieces = formula.scan(/\{(.*?)\}/)
   end
 
-  def parse_reference(ref, epr=nil)
+  def parse_reference(ref, epr=nil, epr_list=[])
     return ref unless ref.class == String
     pieces = ref.split "."
     return ref if pieces.empty?
@@ -288,13 +296,7 @@ module HubHelper
 
     return ref if relationship.nil?
 
-    #prevent circular dependencies
-    if !epr.blank? && epr == relationship
-      puts "CIRCULAR DEPENDENCY"
-      return ref
-    end
-
-    value = parse_value(relationship.value.to_s, relationship)
+    value = parse_value(relationship.value.to_s, relationship, epr_list)
     return value.to_s
   end
 
