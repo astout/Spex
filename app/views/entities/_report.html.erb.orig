@@ -94,7 +94,11 @@
                   <% valid_count += 1 %>
                 <% end %>
               <% end %>
+<<<<<<< HEAD
+              <% if admin_user? && @role['admin'] == true %>
+=======
               <% if admin_user? && shown %>
+>>>>>>> master
                 <tr>
                   <td colspan="100%" class="hidden-value">
                     <div id=<%= epr.id %> class="trueValue light-font">

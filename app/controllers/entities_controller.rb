@@ -102,8 +102,10 @@ class EntitiesController < ApplicationController
     end
     @role = Role.find_by(id: params[:view_id] || current_user.role_id).attributes
 
-    @groups_all = @entity.groups
-    @properties_all = @entity.properties_via(@entity.groups.first)
+    unless @entity.blank?
+      @groups_all = @entity.groups
+      @properties_all = @entity.properties_via(@entity.groups.first)
+    end
     @updated_property = params[:property]
   end
 
@@ -238,7 +240,14 @@ class EntitiesController < ApplicationController
   def print
     @entity = Entity.find_by(id: params[:e])
     @role = Role.find_by(id: params[:v])
-    @role = Role.default if @role.blank?
+    # @role = Role.default if @role.blank?
+    @role = Role.default if (!signed_in? || @role.blank?)
+
+    if signed_in?
+      if !@current_user.role.change_view?
+        @role = Role.default
+      end
+    end
 
     @label = ''
     unless @entity.label.blank?

@@ -14,7 +14,15 @@ $ ->
             input.property.units,
             input.property.units_short,
             input.property.default_value").on "input", ->
+              NewPropertyValidation(this.id)
+
+        $("body").on "keyup", "input.property.name", (e) ->
+          if e.keyCode == 32 #spacebar pressed
+            # e.preventDefault()
+            # $(this).val($(this).val() + "_")
+            $(this).val($(this).val().replace(" ", "_"))
             NewPropertyValidation(this.id)
+            # return false
 
         window.properties_selectize_all()
         NewPropertyValidation($("input.property.name")[0].id)
@@ -28,6 +36,21 @@ $ ->
         $("form").on "keypress", (e) ->
           if e.keyCode == 13 && $("input.submit").hasClass("disabled")
             return false
+
+        $("body").on "blur", "input.property.name", (e) ->
+          if $("input#"+this.id+".property.default_label").val().length < 1
+            _val = $(this).val()
+            a = _val.split("_")
+
+            if a.length > 3
+              a.forEach(capitalizeFirstElement)
+            else
+              a.forEach(capitalizeEachElement)
+
+            _val = a.join(" ")
+
+            $("input#" + this.id + ".property.default_label").val(_val)
+          
     
     if $("body").hasClass("properties")
       #Every character change in Search field, submit query
@@ -52,6 +75,26 @@ $ ->
           $.ajax
               url: "/properties/confirm_delete?" + params
               type: 'POST'
+
+
+capitalize = (string) ->
+  if typeof(string) != "string"
+    return string
+  if string.length > 0
+    string = string[0].toUpperCase() + string.slice(1)
+  return string
+#end capitalize(string)
+
+capitalizeFirstElement = (element, index, array) ->
+  if index == 0
+    array[index] = capitalize(element)
+#end capitalizeFirstElements(element, index, array)
+
+capitalizeEachElement = (element, index, array) ->
+  preps = ["a", "the", "of", "per"]
+  if index == 0 || preps.indexOf(element) < 0
+    array[index] = capitalize(element)
+#end capitalizeEachElements(element, index, array)
 
 deleteModal = (_id) ->
     if _id.length < 1
