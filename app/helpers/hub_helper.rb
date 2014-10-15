@@ -294,7 +294,7 @@ module HubHelper
       return ref
     end
 
-    value = parse_value(relationship.value.to_s, epr)
+    value = parse_value(relationship.value.to_s, relationship)
     return value.to_s
   end
 
