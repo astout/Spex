@@ -1,0 +1,13 @@
+<%= form_tag path, method: 'get', remote: remote do %>
+    <%= hidden_field_tag :egr_direction, params[:egr_direction] %>
+    <%= hidden_field_tag :egr_sort, params[:egr_sort] %>
+    <%= hidden_field_tag :event, 'egr' %>
+    <%= hidden_field_tag :egr_page, "1" %>
+    <%= hidden_field_tag :search, "egr" %>
+    <div class="input-group" id="search-field" style="margin-bottom: 15px">
+        <%= text_field_tag :egr_search, params[:egr_search], class: "form-control", id: "egr_search_field" %>
+        <span class="input-group-btn" >
+            <%= submit_tag "Search", name: nil, class: "btn btn-default" %>
+        </span>
+    </div>
+<% end %>

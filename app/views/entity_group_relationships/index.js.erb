@@ -1,0 +1,10 @@
+
+if ($("body").hasClass("index"))
+{
+	$("div.entity_group_relationships.list").html("<%= j render partial: 'entity_group_relationships/entity_group_relationships', locals: { columns: ['created', 'group', 'entity', 'updated', 'remove'] } %>");
+}
+else
+{
+	$("div.entity_group_relationships.list").html("<%= j render partial: 'entity_group_relationships/entity_group_relationships', locals: { columns: ['entity', 'label'] } %>");
+}
+window.egrRefresh();

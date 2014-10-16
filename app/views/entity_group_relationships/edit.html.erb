@@ -1,0 +1,28 @@
+<% unless @egr.label.blank? %>
+  <% @label = "#{@egr.label.to_s}" %>
+<% else %>
+  <% @label = "No label" %>
+<% end %>
+
+<% provide(:title, "Edit #{@label}") %>
+<div>
+    <%= link_to "Home", root_path, style: "color: #494A4A" %>
+    <span class="glyphicon glyphicon-chevron-right", style="font-size: 12px;"></span>
+    <%= link_to "Entity Group Relationships", entity_group_relationships_path, style: "color: #494A4A" %>
+    <span class="glyphicon glyphicon-chevron-right", style="font-size: 12px;"></span>
+    <%= @label %>
+    <span class="glyphicon glyphicon-chevron-right", style="font-size: 12px;"></span>
+    Edit
+</div>
+
+<h1>Edit Entity Group Relationship</h1>
+
+<div class="row">
+  <div class="col-xs-6 col-xs-offset-3">
+    <%= bootstrap_form_for(@egr, url: { controller: "entity_group_relationships", action: "update" }, remote: false) do |f| %>
+      <%= hidden_field_tag :page, 'egr_edit' %>
+      <%= render partial: 'entity_group_relationships/fields', locals: { f: f, relation: @egr } %>
+      <%= f.submit "Update", class: "btn btn-sm btn-primary btn75", id: "update-egr" %>
+    <% end %>
+  </div>
+</div>

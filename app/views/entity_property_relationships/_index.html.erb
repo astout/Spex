@@ -1,0 +1,4 @@
+<%= render partial: 'search', locals: { path: entity_property_relationships_path, remote: true } %>
+<div id="epr_list" class="row">
+    <%= render partial: 'entity_property_relationships/epr_list', locals: {columns: ['entity', 'group', 'property', 'label', 'value', 'units', 'units_short', 'updated'] } %>
+</div>

@@ -1,0 +1,24 @@
+$("#debug").html('<%= params %>');
+
+console.log("select change:");
+console.log(<%= @property.role_ids %>);
+
+<% unless @property.blank? %>
+    $("input#new.property.name").val("<%= @property.name %>");
+    $("input#new.property.default_label").val("<%= @property.default_label %>");
+    $("textarea#new.property.default_value").val("<%= @property.default_value %>");
+    $("input#new.property.units").val("<%= @property.units %>");
+    $("input#new.property.units_short").val("<%= @property.units_short %>");
+    $("select#new.property.role_ids").select2("val", <%= @property.role_ids %>);
+    <% @property.id = "new" %>
+<% end %>
+
+console.log("copied property fields");
+
+// persistStyling();
+// NewPropertyValidation("new");
+// clearPropertyAttributes();
+// ajaxPagination();
+
+
+// properties_selectize_all();

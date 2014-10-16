@@ -1,0 +1,28 @@
+<tr id=<%= "#{egr.id}" %> class="list-item egr">
+    <% if columns.include? "entity" %>
+      <td>
+        <%= link_to egr.entity.name.capitalize, egr.entity %>
+      </td>
+    <% end %>
+    <% if columns.include? "group" %>
+      <td>
+        <%= link_to egr.group.name.capitalize, egr.group %>
+      </td>
+    <% end %>
+    <% if columns.include? "label" %>
+      <td>
+        <%= egr.label %>
+      </td>
+    <% end %>
+    <% if columns.include? "updated" %>
+      <td>
+        <%= "#{egr.updated_at.strftime('%m/%d/%Y %H:%M')}" %>
+      </td>
+    <% end %>
+    <% if columns.include? 'remove' %>
+        <td class="delete-egr">
+          <span id="<%= egr.id %>"  class="glyphicon glyphicon-trash delete alert-danger">
+          </span>
+        </td>
+    <% end %>
+</tr>

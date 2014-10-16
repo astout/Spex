@@ -1,0 +1,15 @@
+<!--%= render 'shared/error_messages', object: f.object %-->
+
+<% _id = relation.id || "new" %>
+
+<%= f.hidden_field :id, id: _id, value: _id || "", autocomplete: "off" %>
+
+<%= f.text_field :entity, disabled: true, id: _id, class: "input-sm egr-ename", value: relation.entity.name || "", autocomplete: "off", data: {entity_id: relation.entity.id} %>
+
+<%= f.text_field :group, disabled: true, id: _id, class: "input-sm egr-gname", value: relation.group.name || "", autocomplete: "off", data: {group_id: relation.group.id} %>
+
+<%= f.number_field :position, disabled: true, id: _id, class: "input-sm egr-position", value: relation.position+1 || "", autocomplete: "off"%>
+
+<%= f.text_field :label, id: _id, class: "input-sm egr-label", value: relation.label || "", autocomplete: "off" %>
+
+

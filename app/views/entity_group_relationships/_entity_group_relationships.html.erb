@@ -1,0 +1,36 @@
+<% unless columns.blank? %>
+    <table class="table table-condensed egrs">
+        <% if columns.include? 'entity' %>
+            <th>
+                Entity
+            </th>
+        <% end %>
+        <% if columns.include? 'group' %>
+            <th>
+                Group
+            </th>
+        <% end %>
+        <% if columns.include? 'label' %>
+            <th>
+                <%= egr_sortable "label", "Label" %>
+            </th>
+        <% end %>
+        <% if columns.include? 'value' %>
+            <th>
+                Value
+            </th>
+        <% end %>
+        <% if columns.include? 'updated' %>
+            <th>
+                <%= egr_sortable "updated_at", "Updated" %>
+            </th>
+        <% end %>
+        <% if columns.include? 'remove' %>
+            <th>
+                Remove
+            </th>
+        <% end %>
+      <%= render partial: 'entity_group_relationships/egr', collection: @egrs, locals: { columns: columns }  %>
+    </table>
+    <%= will_paginate @egrs, inner_window: 0, outer_window: 0, param_name: 'egr_page', params: { event: 'egr' } %>
+<% end %>
