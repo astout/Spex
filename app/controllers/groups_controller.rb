@@ -7,6 +7,7 @@ class GroupsController < ApplicationController
   end
 
   def index
+    puts "groups controller: index"
     @groups = groups_list(nil)
 
     respond_to do |format|
@@ -99,23 +100,25 @@ class GroupsController < ApplicationController
   # end
 
   def confirm_delete
-    group = Group.find(params[:id])
+    groups = Group.where(id: params[:selected])
     msg = ""
     type = "info"
-    if group.blank?
-      msg = "The group couldn't be found."
+    if groups.blank?
+      msg = "The groups couldn't be found."
       type = "danger"
-    elsif group.destroy
-      msg = "#{group.name} successfully removed."
-      type = "success"
-    else
-      msg = "There was an error destroying the specified group."
-      type = "danger"
+    else 
+      groups.each do |group|
+        if group.destroy
+          msg += "<p>#{group.display_name} deleted</p>"
+        else
+          msg += "<p>#{group.display_name} not deleted.</p>"
+        end
+      end
     end
-    @group = {notification: notification(type, msg, []), data: group}
+    
+    @result = {notification: notification(type, msg, []), data: groups}
+    puts @result
     @groups = groups_list(nil)
-    puts "finishing"
-    puts @group
     respond_to do |format|
       format.js
       format.html

@@ -1,27 +1,38 @@
-<tr id=<%= "#{property.id}" %> class="list-item property">
+<tr id='<%= "#{property.id}" %>' class="list-item property" data-model="property" data-id='<%= "#{property.id}" %>'>
+  <% if columns.include? 'name' %>
     <td>
       <%= link_to property.name, property %>
     </td>
-    <% if show_units %>
-        <td>
-            <%= link_to property.units || "", property %>
-        </td>
-    <% end %>
+  <% end %>
+   <% if columns.include? 'label' %>
+    <td>
+      <%= link_to property.default_label, property %>
+    </td>
+  <% end %>
+  <% if columns.include? 'units' %>
+    <td>
+        <%= link_to property.units || "", property %>
+    </td>
+  <% end %>
+  <% if columns.include? 'units_short' %>
     <td>
       <%= link_to property.units_short || "", property %>
     </td>
-    <% if show_created %>
-      <td>
-        <%= "#{property.created_at.strftime('%m/%d/%Y')}" %>
-      </td>
-    <% end %>
+  <% end %>
+  <% if columns.include? 'created' %>
+    <td>
+      <%= "#{property.created_at.strftime('%m/%d/%Y')}" %>
+    </td>
+  <% end %>
+  <% if columns.include? 'updated' %>
     <td>
       <%= "#{property.updated_at.strftime('%m/%d/%Y %H:%M')}" %>
     </td>
-    <% if admin_user? && show_remove %>
-      <td class="delete-property">
-        <span id="<%= property.id %>"  class="glyphicon glyphicon-trash delete alert-danger">
-        </span>
-      </td>
-    <% end %>
+  <% end %>
+  <% if columns.include?("remove") && admin_user? %>
+    <td class="delete-property">
+      <span id="<%= property.id %>"  class="glyphicon glyphicon-trash delete alert-danger">
+      </span>
+    </td>
+  <% end %>
 </tr>

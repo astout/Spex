@@ -1,28 +1,43 @@
+<% unless defined? columns %>
+    <% columns = [] %>
+<% end %>
+
 <table class="table table-condensed properties">
+  <% if columns.include? 'name' %>
     <th>
-        <%= property_sortable "name" %>
+      <%= sortable('property', "name") %>
     </th>
-    <% if show_units %>
-        <th>
-            <%= property_sortable "units" %>
-        </th>
-    <% end %>
+  <% end %>
+  <% if columns.include? 'label' %>
     <th>
-        <%= property_sortable "units_short", "Short Units" %>
+      <%= sortable('property', "default_label", "Label") %>
     </th>
-    <% if show_created %>
-        <th>
-            <%= property_sortable "created_at", "Created" %>
-        </th>
-    <% end %>
+  <% end %>
+  <% if columns.include? 'units' %>
     <th>
-        <%= property_sortable "updated_at", "Updated" %>
+      <%= sortable('property', "units") %>
     </th>
-    <% if show_remove %>
-        <th>
-            Remove
-        </th>
-    <% end %>
-  <%= render partial: 'properties/property', collection: @properties, locals: { show_units: show_units, show_created: show_created, show_remove: show_remove }  %>
+  <% end %>
+  <% if columns.include? 'units_short' %>
+    <th>
+      <%= sortable('property', "units_short", "Short Units") %>
+    </th>
+  <% end %>
+  <% if columns.include? 'created' %>
+    <th>
+      <%= sortable('property', "created_at", "Created") %>
+    </th>
+  <% end %>
+  <% if columns.include? 'updated' %>
+    <th>
+      <%= sortable('property', "updated_at", "Updated") %>
+    </th>
+  <% end %>
+  <% if columns.include? 'remove' %>
+    <th>
+        Remove
+    </th>
+  <% end %>
+  <%= render partial: 'properties/property', collection: @properties, locals: { columns: columns }  %>
 </table>
 <%= will_paginate @properties, inner_window: 0, outer_window: 0, param_name: 'properties_page', params: { event: 'property' } %>

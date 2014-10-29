@@ -4,8 +4,8 @@
 
 <%= hidden_field_tag :event, 'entity' %>
 
-<span id="entity_name" class="label label-default new-entity-label">Name</span>
-<%= f.text_field :name, class: "entity input-sm", hide_label: true %>
+<span id="entity_name" class="label label-default name form-label entity">Name</span>
+<%= f.text_field :name, class: "entity input-sm name form-field", hide_label: true %>
 
-<span id="entity_label" class="label label-default new-entity-label">Label</span>
-<%= f.text_field :label, class: "entity input-sm", hide_label: true  %>
+<span id="entity_label" class="label label-default _label form-label entity">Label</span>
+<%= f.text_field :label, class: "input-sm entity form-field _label", hide_label: true  %>

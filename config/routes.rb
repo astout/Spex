@@ -100,6 +100,7 @@ Spex::Application.routes.draw do
   match '/epr_query',   to: 'entity_property_relationships#query',    via: 'get'
   match '/egr_query',   to: 'entity_group_relationships#index',    via: 'get'
   match '/entity_query',   to: 'entities#index',    via: 'get'
+  match '/delete_request', to: 'application#delete_request', via: 'post'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

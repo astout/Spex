@@ -1,1 +1,1 @@
-<%= render partial: 'layouts/index', locals: {model: params[:controller].singularize, locale: { show_units: true, show_created: true, show_remove: true}, alt_title: "", show_new: true } %>
+<%= render partial: 'layouts/index', locals: {model: params[:controller].singularize, locale: { columns: ['name', 'label', 'created', 'updated', 'remove'] }, alt_title: "", show_new: true } %>

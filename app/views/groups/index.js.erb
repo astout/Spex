@@ -1,1 +1,1 @@
-$("div#list").html("<%= j render partial: 'groups/groups', locals: { show_created: true, show_remove: true } %>");
+$("div.groups.list").html("<%= j render partial: 'groups/groups', locals: { columns: ['name', 'label', 'created', 'updated'] } %>");

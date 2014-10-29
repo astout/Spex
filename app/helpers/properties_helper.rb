@@ -39,7 +39,7 @@ module PropertiesHelper
       end
     end
     # puts reject_properties
-    properties = Property.index(params[:property_search], property_sort_column, property_sort_direction, params[:properties_page], 10, reject_properties, [])
+    properties = Property.index(params[:search], sort_column("property"), sort_direction, params[:page], 10, reject_properties, [])
   end
 
   def property_create(prop_params)

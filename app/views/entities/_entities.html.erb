@@ -5,22 +5,23 @@
 <table class="table table-condensed entities">
     <% if columns.include? 'name' %>
         <th>
-            <%= entity_sortable "name" %>
+            <!-- model = 'entity', column = 'name', title = nil -->
+            <%= sortable("entity", "name") %>
         </th>
     <% end %>
     <% if columns.include? 'label' %>
         <th>
-            <%= entity_sortable "label" %>
+            <%= sortable('entity', "label") %>
         </th>
     <% end %>
     <% if columns.include? 'created' %>
         <th>
-            <%= entity_sortable "created_at", "Created" %>
+            <%= sortable('entity', "created_at", "Created") %>
         </th>
     <% end %>
     <% if columns.include? 'updated' %>
         <th>
-            <%= entity_sortable "updated_at", "Updated" %>
+            <%= sortable('entity', "updated_at", "Updated") %>
         </th>
     <% end %>
     <% if columns.include? 'remove' && admin_user? %>

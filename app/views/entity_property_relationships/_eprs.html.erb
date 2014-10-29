@@ -17,7 +17,7 @@
         <% end %>
         <% if columns.include? 'label' %>
             <th>
-                <%= epr_sortable "label", "Property Label" %>
+                <%= sortable("epr", "label", "Property Label") %>
             </th>
         <% end %>
         <% if columns.include? 'value' %>
@@ -27,17 +27,17 @@
         <% end %>
         <% if columns.include? 'units' %>
             <th>
-                <%= epr_sortable "units" %>
+                <%= sortable("epr", "units") %>
             </th>
         <% end %>
         <% if columns.include? 'units_short' %>
             <th>
-                <%= epr_sortable "units_short" %>
+                <%= sortable("epr", "units_short") %>
             </th>
         <% end %>
         <% if columns.include? 'updated' %>
             <th>
-                <%= epr_sortable "updated_at", "Updated" %>
+                <%= sortable("epr", "updated_at", "Updated") %>
             </th>
         <% end %>
         <% if columns.include? 'remove' %>

@@ -14,4 +14,13 @@ module RolesHelper
   def role_sort_direction
     %w[asc desc].include?(params[:role_direction]) ? params[:role_direction] : "desc"
   end
+
+  def current_role_id
+    if signed_in?
+      @role = Role.find_by(id: params[:view_id] || current_user.role_id)
+      @role = Role.find_by(id: current_user.role_id) if @role.blank?
+      return @role.id
+    end
+    return @role
+  end
 end

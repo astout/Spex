@@ -1,0 +1,9 @@
+$("#debug").html('<%= params %>');
+<% unless @deletions.blank? %>
+    $("div#delete-modal").html("<%= j render partial: 'layouts/confirm_delete' %>");
+    $("#delete-confirm").modal("show");
+<% else %>
+    $("div#notice").html("<div class='alert notice alert-danger center'>There was an error with the request.</div> ")
+<% end %>
+
+console.log("delete requested for <%= params[:model] %>");

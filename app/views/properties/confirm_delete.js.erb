@@ -9,6 +9,6 @@ $("#debug").html('<%= params %>');
     $("div#notice").html("<div class='alert notice alert-danger center'>There was an error with the request.</div> ");
 <% end %>
 
-$("div#list").html("<%= j render partial: 'properties/properties', locals: { show_units: true, show_created: true, show_remove: true, show_position: true }  %>");
+$("div.properties.list").html("<%= j render partial: 'properties/properties', locals: { show_units: true, show_created: true, show_remove: true, show_position: true }  %>");
 
 

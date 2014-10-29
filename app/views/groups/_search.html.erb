@@ -3,7 +3,7 @@
     <%= hidden_field_tag :group_sort, params[:group_sort] %>
     <%= hidden_field_tag :event, 'group' %>
     <div class="input-group" style="margin-bottom: 15px">
-        <%= text_field_tag :group_search, params[:group_search], class: "form-control" %>
+        <%= text_field_tag :group_search, params[:group_search], class: "form-control search", model: "group" %>
         <span class="input-group-btn" >
             <%= submit_tag "Search", name: nil, class: "btn btn-default" %>
         </span>

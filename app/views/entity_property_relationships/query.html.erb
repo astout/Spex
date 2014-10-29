@@ -1,14 +1,13 @@
 <% if signed_in? %>
     <% provide(:title, "Spex Query") %>
     <script type="text/javascript">
-        $("body").addClass('<%= "epr_query" %>');
+        $("body").addClass("epr");
     </script>
     <!-- Reload defaults -->
     <div style="margin-bottom: 10px">
         <%= link_to "Home", root_path, style: "color: #494A4A" %>
     </div>
     <h1>Spex Query</h1>
-        <input type="hidden" id="epr-r" value=<%= @role['id'] %>>
         <% if current_user.role.change_view? %>
             <div class="row">
                 <div class="col-xs-4">

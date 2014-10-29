@@ -1,4 +1,6 @@
 module EntitiesHelper
+  include ApplicationHelper
+  
   def current_entity
     @current_entity = Entity.find(params[:id])
   end
@@ -13,7 +15,8 @@ module EntitiesHelper
 
   #Get the list of entities based on pagination page, search field, and sort it
   def entities_list
-    Entity.index(params[:entity_search], entity_sort_column, entity_sort_direction, params[:entities_page], 10, [], [])
+    puts "enitities_list()"
+    Entity.index(params[:search], sort_column("entity"), sort_direction, params[:page], 10, [], [])
     # Entity.search(params[:entity_search]).order(entity_sort_column + ' ' + entity_sort_direction).paginate(page: params[:entities_page].blank? ? 1 : params[:entities_page], per_page: 10)
   end
 

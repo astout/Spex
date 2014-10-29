@@ -1,4 +1,5 @@
 module GroupsHelper
+  include ApplicationHelper
 
   def selected_groups
     @selected_groups = []
@@ -20,9 +21,9 @@ module GroupsHelper
 
   def groups_list(selected_entity)
     if selected_entity.blank?
-      groups = Group.index(params[:group_search], group_sort_column, group_sort_direction, params[:groups_page], 10, [], [])
+      groups = Group.index(params[:search], sort_column("group"), sort_direction, params[:page], 10, [], [])
     else
-      groups = Group.index(params[:group_search], group_sort_column, group_sort_direction, params[:groups_page], 10, selected_entity.groups, [])
+      groups = Group.index(params[:search], sort_column("group"), sort_direction, params[:page], 10, selected_entity.groups, [])
     end
     return groups
   end

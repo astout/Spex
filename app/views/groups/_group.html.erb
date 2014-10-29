@@ -1,22 +1,28 @@
-<tr id=<%= "#{group.id}" %> class="list-item group">
+<tr id='<%= "#{group.id}" %>' class="list-item group" data-model="group" data-id='<%= "#{group.id}" %>' >
+  <% if columns.include? 'name' %>
     <td>
       <%= link_to group.name, group %>
     </td>
+  <% end %>
+  <% if columns.include? 'label' %>
     <td>
       <%= link_to group.default_label, group %>
     </td>
-    <% if show_created %>
-      <td>
-        <%= "#{group.created_at.strftime('%m/%d/%Y')}" %>
-      </td>
-    <% end %>
+  <% end %>
+  <% if columns.include? 'created' %>
+    <td>
+      <%= "#{group.created_at.strftime('%m/%d/%Y')}" %>
+    </td>
+  <% end %>
+  <% if columns.include? 'updated' %>
     <td>
       <%= "#{group.updated_at.strftime('%m/%d/%Y %H:%M')}" %>
     </td>
-    <% if admin_user? && show_remove %>
-      <td class="delete-group">
-        <span id="<%= group.id %>"  class="glyphicon glyphicon-trash delete alert-danger">
-        </span>
-      </td>
-    <% end %>
+  <% end %>
+  <% if columns.include?('remove') && admin_user? %>
+    <td class="delete-group">
+      <span id="<%= group.id %>"  class="glyphicon glyphicon-trash delete alert-danger">
+      </span>
+    </td>
+  <% end %>
 </tr>

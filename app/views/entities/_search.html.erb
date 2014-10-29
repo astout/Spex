@@ -5,7 +5,7 @@
     <%= hidden_field_tag :entities_page, "1" %>
     <%= hidden_field_tag :search, "entity" %>
     <div class="input-group" style="margin-bottom: 15px">
-        <%= text_field_tag :entity_search, params[:entity_search], class: "form-control", id: "entity_search_field" %>
+        <%= text_field_tag :entity_search, params[:entity_search], class: "form-control search", id: "entity_search_field", model: "entity" %>
         <span class="input-group-btn" >
             <%= submit_tag "Search", name: nil, class: "btn btn-default" %>
         </span>

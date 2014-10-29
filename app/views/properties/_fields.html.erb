@@ -1,15 +1,30 @@
-<!--%= render 'shared/error_messages', object: f.object %-->
-
 <% _id = @property.id || "new" %>
 
 <% if _id == "new" %>
     <label class="control-label" for="copy_from" style="font-size: 9pt">Copy Fields From</label>
     <br>
-    <%= select_tag :copy_from, options_from_collection_for_select(Property.all, "id", "name", ""), id: _id, class: "form-control property copy_from col-xs-12 input-sm", include_blank: true, autocomplete: "off"%>
+    <%= select_tag "properties", options_for_select((@properties_all || Property.all.reject{|p| p.id == _id}).map{ |p| [p.name, p.id, {'data-search' => p.attributes.map { |k,v| v unless k == "created_at" || k == "updated_at" || v.class == Fixnum }.compact.join(" ")}] }), id: _id, class: "form-control copy_from property col-xs-12", include_blank: true %>
 
     <div style="float: right; width: 100%">
         <%= button_tag "Copy", type: "button", class: "btn btn-sm property copy btn-success", id: _id, style: "float: right; margin-bottom: 5px" %>
     </div>
+    <script type="text/javascript">
+        //selectize copy_from select field
+        $("select.property.copy_from").select2({
+            allowClear: true,
+            placeholder: "Copy fields from...",
+            matcher: window.getMatcherFunction()
+        });
+
+        //when copy button clicked request the values for each of the selected property's fields
+        $('body').on("click", '<%= "button\##{_id}.copy.property" %>', function(e) {
+            e.preventDefault();
+            console.log("id: " + $("select.property.copy_from").val() + " copy");
+            _id = $("select.property.copy_from").val();
+            $.get("/hub/property_copy_fields?" + $.param( { copy_id: _id } ));
+            return false;
+        });
+    </script>
 <% end %>
 
 <%= hidden_field_tag :property_id, @property.id || "new" %>
@@ -36,4 +51,5 @@
 <span id='<%= _id %>' class="label label-default property role_ids new-property-label">Default Viewers</span>
 
 <%= select_tag :role_ids, options_from_collection_for_select(Role.where(admin: false), "id", "name", @property.roles.select(:id).where(admin: false).pluck(:id)), id: _id, class: "form-control property role_ids col-xs-12 input-sm", multiple: true %>
+<!-- TODO: selectize roles -->
 

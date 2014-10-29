@@ -1,2 +1,2 @@
-$("div#list").html("<%= j render partial: 'properties/properties', locals: { show_units: true, show_created: true, show_remove: true } %>");
+$("div.properties.list").html("<%= j render partial: 'properties/properties', locals: { columns: ['name', 'label', 'created', 'updated', 'remove'] } %>");
 

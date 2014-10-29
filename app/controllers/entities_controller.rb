@@ -6,7 +6,8 @@ class EntitiesController < ApplicationController
   helper_method :egr_sort_column, :egr_sort_direction
 
   def index
-    @entities = entities_list
+    puts "entities controller: index"
+    @entities = entities_list()
 
     respond_to do |format|
       format.js
@@ -144,7 +145,7 @@ class EntitiesController < ApplicationController
   end
 
   def delete_request
-    @entity = Entity.find_by(id: params[:id])
+    @entities_to_delete = Entity.where(id: params[:selected])
     respond_to do |format|
       format.js 
     end
@@ -165,21 +166,24 @@ class EntitiesController < ApplicationController
   # end
 
   def confirm_delete
-    entity = Entity.find(params[:id])
+    entities = Entity.where(id: params[:selected])
     msg = ""
     type = "info"
-    if entity.blank?
-      msg = "The entity couldn't be found."
+    if entities.blank?
+      msg = "The entities couldn't be found."
       type = "danger"
-    elsif entity.destroy
-      msg = "#{entity.name} successfully removed."
-      type = "success"
-    else
-      msg = "There was an error destroying the specified entity."
-      type = "danger"
+    else 
+      entities.each do |entity|
+        if entity.destroy
+          msg += "<p>#{entity.display_name} deleted</p>"
+        else
+          msg += "<p>#{entity.display_name} not deleted.</p>"
+        end
+      end
     end
-    @entity = {notification: notification(type, msg, []), data: entity}
-    puts @entity
+    
+    @result = {notification: notification(type, msg, []), data: entities}
+    puts @result
     @entities = entities_list
     respond_to do |format|
       format.js

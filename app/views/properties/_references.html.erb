@@ -1,26 +1,29 @@
 <% _id = @property.id || "new" %>
 <div class="input-group input-group-sm select2-bootstrap-prepend">
   <span class="input-group-btn">
-    <button id='<%= _id %>' class="btn btn-default property-ref-entity" type="button" >
+    <button id='<%= _id %>' class="btn btn-default property-ref entity" type="button" >
       Entity
     </button>
   </span>
-  <%= select_tag "entities", options_from_collection_for_select(Entity.all, "id", "name", entity || ""), id: _id, class: "form-control property-ref property-ref-entity col-xs-12", include_blank: true %>
+  <%= select_tag "entities", options_for_select(Entity.all.map{ |e| [e.name, e.id, {'data-search' => e.attributes.map { |k,v| v unless k == "created_at" || k == "updated_at" || v.class == Fixnum }.compact.join(" ")}] }), id: _id, class: "form-control property-ref entity col-xs-12", include_blank: true, data: {model: 'property', reference: 'entity', placeholder: 'Select an Entity...'}, onchange: "referenceChange(this);" %>
 </div>
 <div class="input-group input-group-sm select2-bootstrap-prepend">
   <span class="input-group-btn">
-    <button id='<%= _id %>' class="btn btn-default property-ref-group" type="button">
+    <button id='<%= _id %>' class="btn btn-default property-ref group" type="button">
       Group
     </button>
   </span>
-  <%= select_tag "groups", options_from_collection_for_select(@groups_all || Group.all, "id", "name", group || ""), id: _id, class: "form-control property-ref property-ref-group col-xs-12", include_blank: true %>
+  <%= select_tag "groups", options_for_select((@groups_all || Group.all).map{ |g| [g.name, g.id, {'data-search' => g.attributes.map { |k,v| v unless k == "created_at" || k == "updated_at" || v.class == Fixnum }.compact.join(" ")}] }), id: _id, class: "form-control property-ref group col-xs-12", include_blank: true, data: {model: 'property', reference: 'group', placeholder: 'Select a Group...'}, onchange: "referenceChange(this);" %>
 </div>
 <div class="input-group input-group-sm select2-bootstrap-prepend">
   <span class="input-group-btn">
-    <button id='<%= _id %>' class="btn btn-default property-ref-property" type="button">
+    <button id='<%= _id %>' class="btn btn-default property-ref property" type="button">
       Property
     </button>
   </span>
-  <%= select_tag "properties", options_from_collection_for_select(@properties_all || Property.all.reject {|p| p.id == _id }, "id", "name"), id: _id, class: "form-control property-ref property-ref-property col-xs-12", include_blank: true %>
+  <%= select_tag "properties", options_for_select((@properties_all || Property.all.reject{|p| p.id == _id}).map{ |p| [p.name, p.id, {'data-search' => p.attributes.map { |k,v| v unless k == "created_at" || k == "updated_at" || v.class == Fixnum }.compact.join(" ")}] }), id: _id, class: "form-control property-ref property col-xs-12", include_blank: true, data: {model: 'property', reference: 'property', placeholder: 'Select a Property...'}, onchange: "referenceChange(this);" %>
 </div>
 <button id='<%= _id %>' type="button" class="btn btn-success btn-sm property ref-append disabled"><span class="glyphicon glyphicon-plus"></span></button>
+<script type="text/javascript">
+  referenceSelectize($('<%= "select\##{_id}.property-ref" %>'));
+</script>

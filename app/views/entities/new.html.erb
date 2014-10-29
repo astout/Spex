@@ -1,5 +1,9 @@
 <% provide(:title, 'New Entity') %>
 
+<script type="text/javascript">
+  $("body").addClass("entity")
+</script>
+
 <div style="margin-bottom: 10px;">
     <%= link_to "Home", root_path, style: "color: #494A4A" %>
     <span class="glyphicon glyphicon-chevron-right", style="font-size: 12px;"></span>
@@ -13,8 +17,9 @@
 <div class="row">
   <div class="col-xs-6 col-xs-offset-3">
     <%= bootstrap_form_for(@entity, inline_errors: true) do |f| %>
+      <input type="hidden" class="form-model entity" model="entity">
       <%= render 'entities/fields', f: f %>
-      <%= f.submit "Create Entity", class: "btn btn-large btn-primary btn150"%>
+      <%= f.submit "Create Entity", class: "btn btn-large btn-primary entity btn150"%>
     <% end %>
   </div>
 </div>

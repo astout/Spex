@@ -3,7 +3,7 @@
     <%= hidden_field_tag :property_sort, params[:property_sort] %>
     <%= hidden_field_tag :event, 'property' %>
     <div class="input-group" style="margin-bottom: 15px">
-        <%= text_field_tag :property_search, params[:property_search], class: "form-control" %>
+        <%= text_field_tag :property_search, params[:property_search], class: "form-control search", model: 'property' %>
         <span class="input-group-btn" >
             <%= submit_tag "Search", name: nil, class: "btn btn-default" %>
         </span>

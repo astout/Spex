@@ -406,14 +406,22 @@ tr.list-item {
   }
 }
 
-tr.selected-entity, tr.selected-egr, tr.selected-group, 
-tr.selected-gpr, tr.selected-property, tr.selected-epr {
+tr.list-item.selected {
   background-color: #AADFFF; //soft-blue
   &:hover {
     background-color: #AFDFE8; //other blue
     text-decoration: none;
   }
 }
+
+// tr.selected-entity, tr.selected-egr, tr.selected-group, 
+// tr.selected-gpr, tr.selected-property, tr.selected-epr {
+//   background-color: #AADFFF; //soft-blue
+//   &:hover {
+//     background-color: #AFDFE8; //other blue
+//     text-decoration: none;
+//   }
+// }
 
 aside.v-divider {
   border-right: 1px solid black;
@@ -434,12 +442,6 @@ aside.v-divider {
     font-family: 'Glyphicons Halflings';
     content: "\e114";    
     color: grey;   
-  }
-}
-
-span.new-entity-label, span.new-group-label, span.new-property-label {
-  &.valid {
-    background-color: #21B82F;
   }
 }
 

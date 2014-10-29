@@ -25,10 +25,10 @@ class HubController < ApplicationController
   #controller request for main
   def main
     #get entities list
-    @entities = entities_list
+    @entities = entities_list()
 
     #get groups list
-    @groups = groups_list(selected_entity)
+    @groups = groups_list( selected_entity() )
     
     #get properties list
     @properties = properties_list(selected_egrs, selected_groups)
@@ -42,6 +42,15 @@ class HubController < ApplicationController
     respond_to do |format|
       format.js
       format.html
+    end
+  end
+
+  def query
+    model = params[:model]
+    if model == "entity"
+      @entities = entities_list()
+    elsif model == "group"
+      @groups = groups_list( selected_entity() )
     end
   end
 

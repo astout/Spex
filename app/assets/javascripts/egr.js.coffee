@@ -20,7 +20,7 @@ $ ->
       $("body").on "click", "#add-selected-groups", (e) ->
           #if it's enabled
           if $(this).hasClass "enabled"
-              addGroupsToEntity window.selected_groups, window.selected_entity
+              addGroupsToEntity window.selected_groups, window.selected_entities
 
       #On EntityGroupRelationship element click
       $("body").on "click", '.table tr.egr', (e) ->
@@ -50,7 +50,7 @@ $ ->
 
 # deleteEntityGroupRelations = (relationship_ids) ->
 #     params = $.param( { 
-#         selected_entity: window.selected_entity,
+#         selected_entities: window.selected_entities,
 #         selected_egrs: relationship_ids, 
 #         selected_groups: window.selected_groups,
 #         group_search: $("input#group_search_field").val(), 
@@ -70,7 +70,7 @@ $ ->
 validateAddGroupsToEntity = () ->
     #if there are selected groups && a selected entity,
     #enable the add-groups button
-    if window.selected_groups.length > 0 && window.selected_entity > -1
+    if window.selected_groups.length > 0 && window.selected_entities.length > 0
         $("#add-selected-groups").removeClass("disabled")
         $("#add-selected-groups").addClass("enabled")
     else
@@ -81,7 +81,7 @@ window.validateAddGroupsToEntity = validateAddGroupsToEntity
 addGroupsToEntity = (groups, entity) ->
     #ajaxify the selected parameters
     params = $.param( { 
-        selected_entity: window.selected_entity, 
+        selected_entities: window.selected_entities, 
         selected_groups: window.selected_groups,
         group_direction: window.group_direction,
         group_sort: window.group_sort,
@@ -237,7 +237,7 @@ window.clearSelectedEGRs = clearSelectedEGRs
 get_egr_params = () ->
     params = $.param( {
         selected_egrs: window.selected_egrs || [],
-        selected_entity: window.selected_entity || -1,
+        selected_entities: window.selected_entities || [],
         egr_search: $("input#egr_search_field").val(), 
         egr_direction: window.egr_direction, 
         egr_sort: window.egr_sort,  
